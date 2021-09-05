@@ -1,15 +1,19 @@
-import DiscordJS from 'discord.js';
+import Discord from 'discord.js';
 import { Intents, MessageEmbed } from 'discord.js';
 import dotenv from 'dotenv';
+import * as variables from './utils/variables.js';
+import * as moderation from './commands/moderation.js';
+import * as misc from './commands/misc.js';
 dotenv.config();
 
+const PREFIX = variables.prefix;
 
-const client = new DiscordJS.Client({
+const client = new Discord.Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
     ]
-});
+}); 
 
 client.on("ready", () => {
     console.log('Bot is ready.');
@@ -18,16 +22,22 @@ client.on("ready", () => {
 
 
 client.on("messageCreate", (message) => {
-    if (message.content === "ping") {
-        let embed = new MessageEmbed();
-        message.channel.send({ embeds: [{
-            color: 3447003,
-            description: "description",
-            title: "woosh ",
-            author: {name:"author", iconURL:"https://abs.twimg.com/icons/apple-touch-icon-192x192.png"}
-        }]});
+    if (!message.content.startsWith(PREFIX)) return;  // Not a command
+
+    const words = message.content.split(' ');
+    const command = words[1];
+
+    if (command === "ping") {
+        moderation.ping(message);
+    }
+
+    else if (command === "sendinfo") {
+        moderation.sendInfo(message);
+    }
+
+    else if (command === "8ball") {
+        misc.eightBall(message, words.slice(2));
     }
 });
 
 client.login(process.env.DISCORD_TOKEN);
-
