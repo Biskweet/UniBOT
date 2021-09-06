@@ -22,22 +22,36 @@ client.on("ready", () => {
 
 
 client.on("messageCreate", (message) => {
-    if (!message.content.startsWith(PREFIX)) return;  // Not a command
+    if (!message.content.startsWith(PREFIX))
+        return;  // Not a command
 
     const words = message.content.split(' ');
     const command = words[1];
 
-    if (command === "ping") {
+    // --- Moderation ---
+    if (command == "ping") {
         moderation.ping(message);
     }
 
-    else if (command === "sendinfo") {
+    if (command == "sendinfo") {
         moderation.sendInfo(message);
     }
 
-    else if (command === "8ball") {
+    if (command == "kick") {
+
+    }
+    // ------------------
+
+
+    // --- Miscellaneous ---
+    if (command == "8ball") {
         misc.eightBall(message, words.slice(2));
     }
+
+    if (command == "wiki") {
+        misc.wiki(message, words.slice(2));
+    }
+    
 });
 
 client.login(process.env.DISCORD_TOKEN);

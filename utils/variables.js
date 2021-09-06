@@ -1,4 +1,5 @@
 export const SuHex = 0x1d2769;
+export const WikiIcon = "https://wikipedia.org/static/apple-touch/wikipedia.png";
 export const prefix = "unib ";
 export const eightBallAnswers = ["C'est certain", 
                      "Décidément, oui",
