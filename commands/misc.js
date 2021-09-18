@@ -1,5 +1,6 @@
-import { SuHex, eightBallAnswers, WikiIcon } from '../utils/variables.js';
+import { SuHex, eightBallAnswers, WikiIcon, WikiLocales } from '../utils/variables.js';
 import { request } from '../utils/utils.js';
+import axios from 'axios';
 
 
 export function eightBall(message, question) {
@@ -29,77 +30,96 @@ export async function wiki(message, article) {
     let locale, wikiTitle, data;
 
     if (!article.length)
-        return;
+        return message.channel.send({ embeds : [{
+                                    description: "Vous avez oublié de préciser la langue !"
+                                }]}
+        );
 
     locale = article[0];
-    wikiTitle = article.slice(1).join('_');
+    if (!WikiLocales.includes(locale)) {
+        return message.channel.send("") 
+    }
+
+    wikiTitle = encodeURI(article.slice(1).join('_'));
 
     // Random article
     if (wikiTitle === '') {
         let pageId, embedAuthor, pageText;
 
-        data = request(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
-                       `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`);
-        if (data == null) return;
-
-        data = data.query.pages
-
-        pageId = Object.keys(data)[0];
-
-        embedAuthor = {name: data[key].title, iconURL: WikiIcon};
-        pageText = data[key].extract
-
-        if (pageText.length > 2000) {
-            pageText = description.slice(1, 2000) + "...";
-        }
-
-        pageText += `\n\n[Ouvrir](${data[key].title.replaceAll(' ', '_')})`
-
-        message.channel.send({ embeds: [{
-            color: 0xFFFFFF,
-            author: embedAuthor,
-            description: pageText
-        }]});
-    }
-
-    // Precise article
-    else {
-        data = await request(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`)
-        if (data === null) return;
-
-        [, , results, links] = data;
-
-
-        if (results.length) {  // If matching articles are found, taking first result
-            let embedAuthor, pageId, pageText;
-
-            data = await request(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
-                            `prop=extracts&exintro=1&explaintext=1&titles=${results[0].replaceAll(' ', '_')}`);
-            if (data === null) return;
-
-            data = data.query.pages;
-
-            embedAuthor = {name: data[key], iconURL: WikiIcon};
+        axios.get(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
+                  `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`)
+        
+        .then( (response) => {
+            data = response.data.query.pages;
 
             pageId = Object.keys(data)[0];
 
-            pageText = data[key].extract;
+            embedAuthor = {name: data[pageId].title, iconURL: WikiIcon};
+            pageText = data[pageId].extract;
+
             if (pageText.length > 2000) {
                 pageText = description.slice(1, 2000) + "...";
             }
 
-            pageText += `\n\n[Ouvrir](${links[0]})`;
+            pageText += `\n\n[Ouvrir](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
 
             message.channel.send({ embeds: [{
+                color: 0xFFFFFF,
                 author: embedAuthor,
                 description: pageText
-            }]})
-        }
+            }]});
+        })
+    }
 
-        else {
-            message.channel.send({ embeds: [{
-                author: {name: "Article introuvable"}
-            }]})
-        }
+    // Precise article
+    else {
+        axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`)
+        
+        .then( (response) => {
+            let results, links;
+
+            [, results, , links] = response.data;
+
+
+            if (results.length) {  // If matching articles are found, then use the first result
+                let embedAuthor, pageId, pageText;
+
+                axios.get(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
+                                `prop=extracts&exintro=1&explaintext=1&titles=${encodeURI(results[0].replaceAll(' ', '_'))}`)
+
+                .then( (response) => {
+
+                    data = response.data.query.pages;
+
+                    pageId = Object.keys(data)[0];
+
+                    pageText = data[pageId].extract;
+                    if (pageText.length > 2000) {
+                        pageText = pageText.slice(0, 2000) + "...";
+                    }
+
+                    pageText += `\n\n[Ouvrir](${links[0]})`;
+
+                    embedAuthor = {name: data[pageId].title, iconURL: WikiIcon};
+                    message.channel.send({ embeds: [{
+                        author: embedAuthor,
+                        description: pageText,
+                        color: 0xFFFFFF
+                    }]})
+                })
+            }
+
+            else {
+                message.channel.send({ embeds: [{
+                    author: {name: "Article introuvable"}
+                }]})
+            }
+            });
     }
 }
+
+
+
+
+
+

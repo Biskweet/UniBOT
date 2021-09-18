@@ -27,8 +27,7 @@ client.on("messageCreate", (message) => {
 
     const words = message.content.split(' ');
     const command = words[1];
-
-    // --- Moderation ---
+    // ---- Moderation -----
     if (command == "ping") {
         moderation.ping(message);
     }
@@ -37,10 +36,16 @@ client.on("messageCreate", (message) => {
         moderation.sendInfo(message);
     }
 
-    if (command == "kick") {
-
+    if (command == "destroy") {
+        console.log("Going offline.")
+        client.destroy();
     }
-    // ------------------
+
+    if (command == "temp2") {
+        let msg = client.channels.cache.get("498225252195762192").messages.fetch("884935471598288937")
+            .then(msg => msg.edit(msg.content + " <@329718763698257931>"));
+    }
+    // ---------------------
 
 
     // --- Miscellaneous ---

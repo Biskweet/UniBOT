@@ -13,8 +13,8 @@ export function sendInfo(message) {
     message.channel.send(
         {embeds: [{
             color: SuHex,
-            description: "**channel: ** " + message.channel +
-                         "\n**server: ** " + message.guild.name +
-                         "\n**user: **" + message.author.tag
+            description: "**channel:** " + message.channel +
+                         "\n**server:** " + message.guild.name +
+                         "\n**user:** " + message.author.tag
         }]})
 }
