@@ -4,6 +4,10 @@ export const WikiIcon = "https://wikipedia.org/static/apple-touch/wikipedia.png"
 
 export const prefix = "unib ";
 
+export const boosterRoleId = "852891262659067924";
+
+export const modoRoleId = "872267559423053825";
+
 export const eightBallAnswers = ["C'est certain", 
                      "Décidément, oui",
                      "Sans l'ombre d'un doute",

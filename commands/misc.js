@@ -1,6 +1,25 @@
 import { SuHex, eightBallAnswers, WikiIcon, WikiLocales } from '../utils/variables.js';
-import { request } from '../utils/utils.js';
 import axios from 'axios';
+
+
+export function ping(message) {
+    message.channel.send(
+        {embeds: [{
+           color: SuHex,
+           title: `Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`}]
+        })
+}
+
+
+export function sendInfo(message) {
+    message.channel.send(
+        {embeds: [{
+            color: SuHex,
+            description: "**channel:** " + message.channel +
+                         "\n**server:** " + message.guild.name +
+                         "\n**user:** " + message.author.tag
+        }]})
+}
 
 
 export function eightBall(message, question) {
@@ -119,7 +138,21 @@ export async function wiki(message, article) {
 }
 
 
+export async function couleur(message, color) {
+    let role = message.member.roles.cache.get("872267637177069609");
+    if (role == null) {
+        return message.channel.send(`Tu n'as pas le rôle requis (<@&872267637177069609>)`);
+    }
 
+
+    if (color.length > 1 || color[0].length > 7 || color[0].length < 6) {
+        return help(message, "couleur");
+    }
+
+    color = color[0];
+
+    message.channel.send(`Oui tu as le rôle <@&${role.id}> et tu demandes la couleur ${color.toUpperCase()}`);
+}
 
 
 

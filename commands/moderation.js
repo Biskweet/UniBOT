@@ -1,20 +1,15 @@
 import { SuHex } from '../utils/variables.js';
-
-export function ping(message) {
-    message.channel.send(
-        {embeds: [{
-           color: SuHex,
-           title: `Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`}]
-        })
-}
+import * as utils from '../utils/utils.js'
 
 
-export function sendInfo(message) {
-    message.channel.send(
-        {embeds: [{
-            color: SuHex,
-            description: "**channel:** " + message.channel +
-                         "\n**server:** " + message.guild.name +
-                         "\n**user:** " + message.author.tag
-        }]})
+export function destroyClient(message, client) {
+    if (utils.isModo(message.member)) {
+
+        message.channel.send(":smiling_face_with_tear: Au-revoir.")
+        .then( (reply) => {
+            console.log("Shutting down.");
+            
+            client.destroy();
+        });
+    }
 }
