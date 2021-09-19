@@ -88,6 +88,10 @@ export async function wiki(message, article) {
                 description: pageText
             }]});
         })
+
+        .catch( (error) => {
+            console.log(error)
+        })
     }
 
     // Precise article
@@ -103,7 +107,7 @@ export async function wiki(message, article) {
             if (results.length) {  // If matching articles are found, then use the first result
                 let embedAuthor, pageId, pageText;
 
-                axios.get(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
+                axios.get(`https://${locale}.wikipedia.og/w/api.php?format=json&action=query&` +
                                 `prop=extracts&exintro=1&explaintext=1&titles=${encodeURI(results[0].replaceAll(' ', '_'))}`)
 
                 .then( (response) => {
@@ -126,6 +130,10 @@ export async function wiki(message, article) {
                         color: 0xFFFFFF
                     }]})
                 })
+
+                .catch( (error) => {
+                    console.log(error)
+                })
             }
 
             else {
@@ -133,7 +141,11 @@ export async function wiki(message, article) {
                     author: {name: "Article introuvable"}
                 }]})
             }
-            });
+            })
+
+        .catch( (error) => {
+            console.log(error)
+        });
     }
 }
 

@@ -18,7 +18,7 @@ const client = new Discord.Client({
 
 
 client.on("ready", () => {
-    console.log('Bot is ready.');
+    console.log(client.user.username + "#" + client.user.discriminator, "is ready.");
 });
 
 
@@ -30,6 +30,14 @@ client.on("messageCreate", (message) => {
     const words = message.content.split(' ');
     const command = words[1];
 
+
+    // ------- Help --------
+    if (command === "help") {
+        help(message, words.slice(2).join());
+    }
+    // ---------------------
+
+
     // ---- Moderation -----
     if (command == "destroy") {
         moderation.destroyClient(message, client);
@@ -38,13 +46,6 @@ client.on("messageCreate", (message) => {
     if (command == "temp2") {
         let msg = client.channels.cache.get("498225252195762192").messages.fetch("884935471598288937")
             .then(msg => msg.edit(msg.content + " <@329718763698257931>"));
-    }
-    // ---------------------
-
-
-    // ------- Help --------
-    if (command === "help") {
-        help(message, words.slice(2).join());
     }
     // ---------------------
 
@@ -71,6 +72,11 @@ client.on("messageCreate", (message) => {
     }
     // ---------------------
 });
+
+
+client.on("error", (error) => {
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+})
 
 
 client.login(process.env.DISCORD_TOKEN);
