@@ -44,8 +44,12 @@ client.on("messageCreate", (message) => {
     }
 
     if (command == "temp2") {
-        let msg = client.channels.cache.get("498225252195762192").messages.fetch("884935471598288937")
-            .then(msg => msg.edit(msg.content + " <@329718763698257931>"));
+        client.channels.cache.get("498225252195762192").messages.fetch("884935471598288937")
+        .then(msg => msg.edit(msg.content + " <@329718763698257931>"));
+    }
+
+    if (command === "kick") {
+        moderation.kick(message, words.slice(3).join(' '))
     }
     // ---------------------
 
