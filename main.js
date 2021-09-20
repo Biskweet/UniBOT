@@ -13,14 +13,26 @@ const client = new Discord.Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.DIRECT_MESSAGES,
+        Intents.FLAGS.GUILD_BANS
     ]
 }); 
 
 
 client.on("ready", () => {
-    console.log(client.user.username + "#" + client.user.discriminator, "is ready.");
+    console.log(client.user.tag, "is ready.");
 });
 
+
+client.on("guildMemberAdd", (member) => {
+    client.channels.cache.get("498225252195762192").send(`${member} a rejoint le putain de serveur sa grand-mère`)
+})
+
+
+client.on("guildMemberRemove", (member) => {
+    client.channels.cache.get("498225252195762192").send(`${member} est parti niquer sa mère ailleurs`)
+})
 
 
 client.on("messageCreate", (message) => {
@@ -39,48 +51,47 @@ client.on("messageCreate", (message) => {
 
 
     // ---- Moderation -----
-    if (command == "destroy") {
+    if (command === "destroy") {
         moderation.destroyClient(message, client);
-    }
-
-    if (command == "temp2") {
-        client.channels.cache.get("498225252195762192").messages.fetch("884935471598288937")
-        .then(msg => msg.edit(msg.content + " <@329718763698257931>"));
     }
 
     if (command === "kick") {
         moderation.kick(message, words.slice(3).join(' '))
     }
+
+    if (command === "ban") {
+        moderation.ban(message, words.slice(3).join(' '))
+    }
+
     // ---------------------
 
 
     // --- Miscellaneous ---
-    if (command == "sendinfo") {
+    if (command === "sendinfo") {
         misc.sendInfo(message);
     }
 
-    if (command == "ping") {
+    if (command === "ping") {
         misc.ping(message);
     }
 
-    if (command == "8ball") {
+    if (command === "8ball") {
         misc.eightBall(message, words.slice(2));
     }
 
-    if (command == "wiki") {
+    if (command === "wiki") {
         misc.wiki(message, words.slice(2));
     }
 
-    if (command == "couleur") {
+    if (command === "couleur") {
         misc.couleur(message, words.slice(2))
     }
     // ---------------------
 });
 
 
-client.on("error", (error) => {
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-})
-
-
 client.login(process.env.DISCORD_TOKEN);
+
+
+// client.channels.cache.get("498225252195762192").messages.fetch("889274655502909460")
+//             .then(msg => msg.edit(msg.content + " <@329718763698257931>"));

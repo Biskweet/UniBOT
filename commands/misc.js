@@ -12,13 +12,13 @@ export function ping(message) {
 
 
 export function sendInfo(message) {
-    message.channel.send(
-        {embeds: [{
-            color: SuHex,
-            description: "**channel:** " + message.channel +
-                         "\n**server:** " + message.guild.name +
-                         "\n**user:** " + message.author.tag
-        }]})
+    let embedDesc = "**channel:** " + message.channel +
+                    "\n**server:** " + message.guild.name +
+                    "\n**user:** " + message.author.tag
+    message.channel.send( {embeds: [{
+        color: SuHex,
+        description: embedDesc
+    }]})
 }
 
 
