@@ -20,21 +20,24 @@ const client = new Discord.Client({
 }); 
 
 
+// ---------- Events ----------
 client.on("ready", () => {
-    console.log(client.user.tag, "is ready.");
+    events.onReady();
 });
 
 
 client.on("guildMemberAdd", (member) => {
-    client.channels.cache.get("498225252195762192").send(`${member} a rejoint le putain de serveur sa grand-mère`)
+    events.guildMemberAdd(member);
 })
 
 
 client.on("guildMemberRemove", (member) => {
-    client.channels.cache.get("498225252195762192").send(`${member} est parti niquer sa mère ailleurs`)
+    events.guildMemberRemove(member);
 })
+// ----------------------------
 
 
+// -------- On message --------
 client.on("messageCreate", (message) => {
     if (!message.content.startsWith(PREFIX))
         return;  // Not a command
@@ -88,6 +91,7 @@ client.on("messageCreate", (message) => {
     }
     // ---------------------
 });
+// ---------------------------
 
 
 client.login(process.env.DISCORD_TOKEN);
