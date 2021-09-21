@@ -7,12 +7,15 @@ export function destroyClient(message, client) {
 
         let embedTitle = ":smiling_face_with_tear: Au-revoir.";
 
-        message.channel.send()
-        .then( (reply) => {
-            console.log("Shutting down.");
+        message.channel.send( { embeds: [{
+            title: embedTitle,
+            color: SuHex
+        }]})
+            .then( (reply) => {
+                console.log("Shutting down.");
 
-            client.destroy();
-        });
+                client.destroy();
+             });
     }
 }
 
@@ -20,36 +23,31 @@ export function destroyClient(message, client) {
 export function kick(message, reason) {
     if (utils.isModo(message.member)) {
 
+        let member = message.mentions.members.first();
+
         try {
-
-            let member = message.mentions.members.first();
-
             if (!member.kickable) {  // Client does not have permission
-                throw new Error("Permissions insuffisantes.");
+                    throw new Error("Permissions insuffisantes.");
             }
-
+        
             let alert = "Vous avez été expulsé du serveur Discord Étudiant Sorbonne Université.";
             if (reason.length) {
                 alert += "\n\nMotif : " + reason;
             }
 
+            member.kick();
+            message.react('✅');
+
             member.send(alert)
-                .then(() => {
-                    member.kick();
-                })
-                .catch(() => {
-                    member.kick();
-                    throw new Error("Error when sending message.") ;
-                });
+                .catch((err) => {console.log(`Could not send kick alert to ${member.user.tag}`)})
+
         }
 
         catch (error) {
             console.log("-------------------------\n", error, "\n-------------------------");
             message.channel.send("Il y a eu une erreur lors de l'expulsion des membres !\n" + error.message);
             message.react('❌');
-            return;
-        }; 
-        message.react('✅');
+        }
     }
 }
 
@@ -107,5 +105,23 @@ export function unban(message, userId) {
             message.react('❌');
         })
 }
+
+
+export function filterMessage(message) {
+
+    if (message.channel.id != "754653542178095195" && (message.content.includes("discord.gg/") ||
+                                                       message.content.includes("https://chat.whatsapp.com/"))) {
+       
+        message.delete();
+
+        message.channel.send({ embeds: [{
+            title: '❌ Votre message a été supprimé.',
+            description: "Désolé ! Les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés dans le serveur.",
+            footer: "Contactez la modération pour partager un lien.",
+            color: SuHex
+        }]})
+    }
+}
+
 
 

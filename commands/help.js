@@ -1,7 +1,7 @@
 import { SuHex } from '../utils/variables.js';
 
 
-export function help(message, command='') {
+export async function help(message, command='') {
     let embedTitle, embedDesc, embedFooter, embedIcon;
 
     embedFooter = {text: "Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]"};
@@ -132,7 +132,8 @@ export function helpWiki() {
                      "l'introduction de celle-ci. Si aucun titre n'est fourni, renvoie un article choisi au hasard.\n\n" +
                      "Modèle d'utilisation : `unibot wiki [langue] [article]`.\n\n" +
                      "Exemple d'utilisation :\n`unibot wiki en` (article en anglais au hasard)\n`unibot wiki fr victor hugo` (article français sur Victor Hugo).\n\n" +
-                     "[Obtenir la liste des langues disponibles](https://en.wikipedia.org/wiki/List_of_Wikipedias#Editions_overview)"
+                     "Obtenez la liste des langues [en cliquant ici](https://en.wikipedia.org/wiki/List_of_Wikipedias#Editions_overview)" +
+                     " ou en lançant la commande `unibot wiki listelangues`."
 
     return [embedTitle, embedDesc];
 }

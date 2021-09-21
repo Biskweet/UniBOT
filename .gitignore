@@ -2,3 +2,4 @@ index.ts
 .env
 tsconfig.json
 node_modules/
+cache.json

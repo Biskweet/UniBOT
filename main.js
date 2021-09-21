@@ -1,10 +1,12 @@
+import { Intents, MessageEmbed, MessageActionRow, MessageButton } from 'discord.js';
 import Discord from 'discord.js';
 import dotenv from 'dotenv';
-import { Intents, MessageEmbed } from 'discord.js';
-import { help } from './commands/help.js';
-import * as variables from './utils/variables.js';
+import * as events from './events/events.js';
 import * as moderation from './commands/moderation.js';
+import * as variables from './utils/variables.js';
 import * as misc from './commands/misc.js';
+import { help } from './commands/help.js';
+
 dotenv.config();
 
 const PREFIX = variables.prefix;
@@ -22,25 +24,25 @@ const client = new Discord.Client({
 
 // ---------- Events ----------
 client.on("ready", () => {
-    events.onReady();
+    events.onReady(client);
 });
 
 
 client.on("guildMemberAdd", (member) => {
-    events.guildMemberAdd(member);
+    events.guildMemberAdd(client, member);
 })
 
 
 client.on("guildMemberRemove", (member) => {
-    events.guildMemberRemove(member);
+    events.guildMemberRemove(client, member);
 })
 // ----------------------------
 
 
 // -------- On message --------
-client.on("messageCreate", (message) => {
-    if (!message.content.startsWith(PREFIX))
-        return;  // Not a command
+client.on("messageCreate", async (message) => {
+    if (message.author.bot)
+        return;  // Do not react to self or other bots
 
     const words = message.content.split(' ');
     const command = words[1];
@@ -48,9 +50,22 @@ client.on("messageCreate", (message) => {
 
     // ------- Help --------
     if (command === "help") {
-        help(message, words.slice(2).join());
+        await help(message, words.slice(2).join());
     }
     // ---------------------
+
+    // if (command === "temp") {
+    //     let row = new MessageActionRow()
+    //         .addComponents(
+    //             new MessageButton()
+    //                 .setCustomId("roleSelectEtudiant")
+    //                 .setEmoji("<:logosu:889983398788079617>")
+    //                 .setLabel("Étudiant")
+    //                 .setStyle(3908957)
+    //         );
+
+    //     message.channel.send({ content: "OwO", components: [row] });
+    // }
 
 
     // ---- Moderation -----
@@ -59,11 +74,11 @@ client.on("messageCreate", (message) => {
     }
 
     if (command === "kick") {
-        moderation.kick(message, words.slice(3).join(' '))
+        await moderation.kick(message, words.slice(3).join(' '))
     }
 
     if (command === "ban") {
-        moderation.ban(message, words.slice(3).join(' '))
+        await moderation.ban(message, words.slice(3).join(' '))
     }
 
     // ---------------------
@@ -71,31 +86,29 @@ client.on("messageCreate", (message) => {
 
     // --- Miscellaneous ---
     if (command === "sendinfo") {
-        misc.sendInfo(message);
+        await misc.sendInfo(message);
     }
 
     if (command === "ping") {
-        misc.ping(message);
+        await misc.ping(message);
     }
 
     if (command === "8ball") {
-        misc.eightBall(message, words.slice(2));
+        await misc.eightBall(message, words.slice(2));
     }
 
     if (command === "wiki") {
-        misc.wiki(message, words.slice(2));
+        await misc.wiki(message, words.slice(2));
     }
 
     if (command === "couleur") {
-        misc.couleur(message, words.slice(2))
+        await misc.couleur(message, words.slice(2))
     }
     // ---------------------
+
+    await moderation.filterMessage(message);
 });
 // ---------------------------
 
 
 client.login(process.env.DISCORD_TOKEN);
-
-
-// client.channels.cache.get("498225252195762192").messages.fetch("889274655502909460")
-//             .then(msg => msg.edit(msg.content + " <@329718763698257931>"));

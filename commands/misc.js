@@ -1,8 +1,9 @@
 import { SuHex, eightBallAnswers, WikiIcon, WikiLocales } from '../utils/variables.js';
+import { help } from './help.js';
 import axios from 'axios';
 
 
-export function ping(message) {
+export async function ping(message) {
     message.channel.send(
         {embeds: [{
            color: SuHex,
@@ -11,7 +12,7 @@ export function ping(message) {
 }
 
 
-export function sendInfo(message) {
+export async function sendInfo(message) {
     let embedDesc = "**channel:** " + message.channel +
                     "\n**server:** " + message.guild.name +
                     "\n**user:** " + message.author.tag
@@ -22,7 +23,7 @@ export function sendInfo(message) {
 }
 
 
-export function eightBall(message, question) {
+export async function eightBall(message, question) {
     let embedAuthor, embedDesc;
 
     question = question.join(" ");
@@ -50,13 +51,28 @@ export async function wiki(message, article) {
 
     if (!article.length)
         return message.channel.send({ embeds : [{
-                                    description: "Vous avez oublié de préciser la langue !"
+                                    author: {name: "Vous avez oublié de préciser la langue !"},
+                                    color: SuHex
                                 }]}
         );
 
     locale = article[0];
+    if (locale == "listelangues")
+        return message.channel.send({ embeds : [{
+                                    title: "Liste des préfixes de langues disponibles :",
+                                    description: "```" + WikiLocales.join(' ') + "```",
+                                    color: SuHex
+                                }]}
+        );
+
     if (!WikiLocales.includes(locale)) {
-        return message.channel.send("") 
+        message.channel.send({ embeds: [{
+            title: ":grey_question: Langue incorrecte",
+            description: "Pour obtenir la liste des langues, lancez la commande `unibot wiki listelangues` ou mieux, [cliquez ici](https://en.wikipedia.org/wiki/List_of_Wikipedias#Editions_overview).",
+            color: SuHex
+        }]})
+        help(message, "wiki");
+        return;
     }
 
     wikiTitle = encodeURI(article.slice(1).join('_'));
@@ -107,7 +123,7 @@ export async function wiki(message, article) {
             if (results.length) {  // If matching articles are found, then use the first result
                 let embedAuthor, pageId, pageText;
 
-                axios.get(`https://${locale}.wikipedia.og/w/api.php?format=json&action=query&` +
+                axios.get(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
                                 `prop=extracts&exintro=1&explaintext=1&titles=${encodeURI(results[0].replaceAll(' ', '_'))}`)
 
                 .then( (response) => {

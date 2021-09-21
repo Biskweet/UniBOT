@@ -1,4 +1,5 @@
 import { boosterRoleId, modoRoleId } from './variables.js';
+import fs from 'fs';
 
 
 export function isBooster(member) {
@@ -11,7 +12,25 @@ export function isModo(member) {
 }
 
 
-export function updateWelcomeMessage(action, member) {
+export function loadCache(path="cache.json") {
+    return fs.readFile("cache.json", "utf-8")
+}
+
+
+export function saveCache(data) {
+    let textData = JSON.stringify(data);
+    fs.writeFile("cache.json", textData, (error) => {
+        if (error) {
+            console.log("ERROR WHILE DUMPING CACHE!");
+        }
+        else {
+            console.log("Cache updated.")
+        };
+    });
+}
+
+
+export function updateWelcomeMessage(client, action, member) {
     if (action === "append") {
         client.channels.cache.get("498225252195762192").message.fetch("889583657596108810")
             .then( (message) => {
@@ -41,3 +60,6 @@ export function updateWelcomeMessage(action, member) {
             })
     }
 }
+
+
+
