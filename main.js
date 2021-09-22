@@ -85,10 +85,6 @@ client.on("messageCreate", async (message) => {
 
 
     // --- Miscellaneous ---
-    if (command === "sendinfo") {
-        await misc.sendInfo(message);
-    }
-
     if (command === "ping") {
         await misc.ping(message);
     }
@@ -101,8 +97,12 @@ client.on("messageCreate", async (message) => {
         await misc.wiki(message, words.slice(2));
     }
 
-    if (command === "couleur") {
+    if (command === "couleur" || command === "color") {
         await misc.couleur(message, words.slice(2))
+    }
+
+    if (command === "sendinfo" || command === "send_info") {
+        await misc.sendInfo(message);
     }
     // ---------------------
 
