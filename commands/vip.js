@@ -8,8 +8,8 @@ export function couleur(message, hexcode) {
     //     return;  // Not a server booster
     // }
 
-    if (hexcode.length != 1) {
-        return help(message, "couleur");  // Incorrect input
+    if (hexcode.length != 1) {  // Incorrect input
+        return help(message, "couleur");
     }
 
     hexcode = hexcode[0].toUpperCase();
@@ -21,6 +21,14 @@ export function couleur(message, hexcode) {
     if (!re.test(hexcode)) {
         return help(message, "couleur");  // Not a valid hex code
     }
+
+    if (hexcode.length != 6) {
+        return message.channel.send({ embeds: [{
+            description: "Votre code hexadécimal doit faire 6 caractères (exemples : `#F0230F`, `8A012E`, etc.)",
+            color: SuHex
+        }]});
+    }
+
     // =====
 
     let oldRole = message.member.roles.cache.find((role) => role.name.startsWith("VIP "));

@@ -84,7 +84,7 @@ export function helpCouleur() {
     let embedDesc  = "__**(Réservé aux membres boosters)**__\n" +
                      "Crée un rôle de couleur et l'assigne au membre selon la couleur passée en paramètre.\n\n" +
                      "Exemple d'utilisation :\n`unibot couleur FFABF4`\n\n" +
-                     "Vous pouvez trouver le code hexadécimal de la couleur de votre choix __**[ici](https://g.co/kgs/QLJzXN)**__."
+                     "**Vous pouvez trouver le code hexadécimal de la couleur de votre choix __[ici](https://g.co/kgs/QLJzXN)__.**"
 
     return [embedTitle, embedDesc];
 }
