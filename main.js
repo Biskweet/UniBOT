@@ -5,6 +5,7 @@ import * as events from './events/events.js';
 import * as moderation from './commands/moderation.js';
 import * as variables from './utils/variables.js';
 import * as misc from './commands/misc.js';
+import * as vip from './commands/vip.js'
 import { help } from './commands/help.js';
 
 dotenv.config();
@@ -82,35 +83,37 @@ client.on("messageCreate", async (message) => {
     }
 
     if (command === "kick") {
-        await moderation.kick(message, words.slice(3).join(' '))
+        moderation.kick(message, words.slice(3).join(' '))
     }
 
     if (command === "ban") {
-        await moderation.ban(message, words.slice(3).join(' '))
+        moderation.ban(message, words.slice(3).join(' '))
     }
 
     // ---------------------
 
 
+    // ------- VIP --------
+    if (command === "couleur") {
+        vip.couleur(message, words.slice(2));
+    }
+
+
     // --- Miscellaneous ---
     if (command === "ping") {
-        await misc.ping(message);
+        misc.ping(message);
     }
 
     if (command === "8ball") {
-        await misc.eightBall(message, words.slice(2));
+        misc.eightBall(message, words.slice(2));
     }
 
     if (command === "wiki") {
-        await misc.wiki(message, words.slice(2));
-    }
-
-    if (command === "couleur" || command === "color") {
-        await misc.couleur(message, words.slice(2))
+        misc.wiki(message, words.slice(2));
     }
 
     if (command === "sendinfo" || command === "send_info") {
-        await misc.sendInfo(message);
+        misc.sendInfo(message);
     }
 
     if (command == "test") {
@@ -120,10 +123,9 @@ client.on("messageCreate", async (message) => {
     if (command == "resetwelcome") {
         utils.updateWelcomeMessage("reset", member);
     }
-
     // ---------------------
 
-    await moderation.filterMessage(message);
+    moderation.filterMessage(message);
 });
 // ---------------------------
 

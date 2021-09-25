@@ -1,7 +1,7 @@
 import { SuHex } from '../utils/variables.js';
 
 
-export async function help(message, command='') {
+export function help(message, command='') {
     let embedTitle, embedDesc, embedFooter, embedIcon;
 
     embedFooter = {text: "Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]"};
@@ -83,7 +83,7 @@ export function helpCouleur() {
     let embedTitle = "Help :arrow_right: __couleur__";
     let embedDesc  = "__**(Réservé aux membres boosters)**__\n" +
                      "Crée un rôle de couleur et l'assigne au membre selon la couleur passée en paramètre.\n\n" +
-                     "Exemple d'utilisation :\n`unibot couleur C72CB0`\n\n" +
+                     "Exemple d'utilisation :\n`unibot couleur FFABF4`\n\n" +
                      "Vous pouvez trouver le code hexadécimal de la couleur de votre choix __**[ici](https://g.co/kgs/QLJzXN)**__."
 
     return [embedTitle, embedDesc];

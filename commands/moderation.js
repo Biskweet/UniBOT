@@ -2,7 +2,7 @@ import { SuHex } from '../utils/variables.js';
 import * as utils from '../utils/utils.js'
 
 
-export function destroyClient(message, client) {
+export function destroyClient(message) {
     if (utils.isModo(message.member)) {
 
         let embedTitle = ":smiling_face_with_tear: Au-revoir.";
@@ -44,8 +44,11 @@ export function kick(message, reason) {
         }
 
         catch (error) {
-            console.log("-------------------------\n", error, "\n-------------------------");
-            message.channel.send("Il y a eu une erreur lors de l'expulsion du membre !\n" + error.message);
+            console.log("-------------------------\nNew error: ", error.message, "\n-------------------------");
+            message.channel.send({ embeds: [{
+                title: "Il y a eu une erreur lors de l'expulsion du membre : " + error.message,
+                color: SuHex
+            }]});
             message.react('❌');
         }
     }
@@ -76,8 +79,11 @@ export function ban(message, reason) {
         }
 
         catch (error) {
-            console.log("-------------------------\n", error, "\n-------------------------");
-            message.channel.send("Il y a eu une erreur lors du bannissement du membre !\n" + error.message);
+            console.log("-------------------------\nNew error: ", error, "\n-------------------------");
+            message.channel.send({ embeds: [{
+                title: "Il y a eu une erreur lors du bannissement du membre : " + error.message,
+                color: SuHex
+            }]});
             message.react('❌');
         }
     }
