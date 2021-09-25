@@ -11,7 +11,7 @@ dotenv.config();
 
 const PREFIX = variables.prefix;
 
-const client = new Discord.Client({
+global.client = new Discord.Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
@@ -22,19 +22,27 @@ const client = new Discord.Client({
 }); 
 
 
+global.welcomeQueue = [];
+
+
 // ---------- Events ----------
 client.on("ready", () => {
-    events.onReady(client);
+    events.onReady();
 });
 
 
 client.on("guildMemberAdd", (member) => {
-    events.guildMemberAdd(client, member);
+    events.guildMemberAdd(member);
 })
 
 
 client.on("guildMemberRemove", (member) => {
-    events.guildMemberRemove(client, member);
+    events.guildMemberRemove(member);
+})
+
+
+client.on("guildMemberUpdate", (oldMember, newMember) => {
+    events.checkMemberUpdate(oldMember, newMember);
 })
 // ----------------------------
 
@@ -70,7 +78,7 @@ client.on("messageCreate", async (message) => {
 
     // ---- Moderation -----
     if (command === "destroy") {
-        moderation.destroyClient(message, client);
+        moderation.destroyClient(message);
     }
 
     if (command === "kick") {
@@ -104,6 +112,15 @@ client.on("messageCreate", async (message) => {
     if (command === "sendinfo" || command === "send_info") {
         await misc.sendInfo(message);
     }
+
+    if (command == "test") {
+        message.channel.send("Nothing yet.");
+    }
+
+    if (command == "resetwelcome") {
+        utils.updateWelcomeMessage("reset", member);
+    }
+
     // ---------------------
 
     await moderation.filterMessage(message);

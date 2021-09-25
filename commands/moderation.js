@@ -52,13 +52,13 @@ export function kick(message, reason) {
 }
 
 
-export function kick(message, reason) {
+export function ban(message, reason) {
     if (utils.isModo(message.member)) {
 
         let member = message.mentions.members.first();
 
         try {
-            if (!member.kickable) {  // Client does not have permission
+            if (!member.bannable) {  // Client does not have permission
                     throw new Error("Permissions insuffisantes.");
             }
         

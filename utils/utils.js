@@ -3,17 +3,19 @@ import fs from 'fs';
 
 
 export function isBooster(member) {
-    return !!member.roles.cache.get(boosterRoleId);
+    return member.roles.cache.has(boosterRoleId);
 }
 
 
 export function isModo(member) {
-    return !!member.roles.cache.get(modoRoleId);
+    return member.roles.cache.has(modoRoleId);
 }
 
 
 export function loadCache(path="cache.json") {
-    return fs.readFile("cache.json", "utf-8")
+    return JSON.parse(
+        fs.readFileSync("cache.json")
+    );
 }
 
 
@@ -30,31 +32,35 @@ export function saveCache(data) {
 }
 
 
-export function updateWelcomeMessage(client, action, member) {
+export function updateWelcomeMessage(action, member) {
+    // New Student needs to be welcomed
     if (action === "append") {
-        client.channels.cache.get("498225252195762192").message.fetch("889583657596108810")
+        client.channels.cache.get("870287403946999849").messages.fetch("890916475379023873")
             .then( (message) => {
-                if (message.content === 'Nothing yet') {
-                    message.edit(`${member}`)
-                        .catch(console.log);
+                if (message.content === 'Nothing yet.') {
+                    var edit = `${member}`;
                 }
                 else {
-                    message.edit(message.content + ` ${member}`)
-                        .catch(console.log);
+                    var edit = message.content + ` ${member}`;
                 }
+
+                message.edit(edit)
+                    .catch(console.log);
             })
     }
 
+    // Not welcomed Student left the server
     else if (action === "remove") {
-        client.channels.cache.get("498225252195762192").message.fetch("889583657596108810")
+        client.channels.cache.get("870287403946999849").messages.fetch("890916475379023873")
             .then( (message) => {
-                message.edit(message.content.replaceAll(`${member}`, ''));
+                message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
             })
             .catch(console.log);
     }
 
+    // All Students are welcomed, reset the queue
     else if (action === "reset") {
-        client.channels.cache.get("498225252195762192").message.fetch("889583657596108810")
+        client.channels.cache.get("870287403946999849").messages.fetch("890916475379023873")
             .then( (message) => {
                 message.edit('Nothing yet.');
             })
@@ -62,4 +68,7 @@ export function updateWelcomeMessage(client, action, member) {
 }
 
 
+export function hasStudentRole(member) {
+    return member.roles.cache.has("872267559423053825");
+}
 
