@@ -10,7 +10,9 @@ import { help } from './commands/help.js';
 
 dotenv.config();
 
+
 const PREFIX = variables.prefix;
+
 
 global.client = new Discord.Client({
     intents: [

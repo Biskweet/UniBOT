@@ -23,6 +23,11 @@ export function couleur(message, hexcode) {
     }
     // =====
 
+    let oldRole = message.member.roles.cache.find((role) => role.name.startsWith("VIP "));
+    if (oldRole !== undefined) {
+        message.member.roles.remove(oldRole.id);
+    }
+
     let newRole = message.guild.roles.cache.find((role) => role.name === "VIP " + hexcode);
 
     if ( newRole !== undefined ) {
