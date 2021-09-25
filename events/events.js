@@ -30,5 +30,13 @@ export function checkMemberUpdate(oldMember, newMember) {
         utils.updateWelcomeMessage("append", newMember);
         welcomeQueue.push(newMember.id)
     }
+
+    if (!utils.hasStudentRole(newMember) && utils.hasStudentRole(oldMember)) {
+        utils.updateWelcomeMessage("remove", newMember);
+        let index = welcomeQueue.indexOf(member.id);
+        if (index > -1) {
+            welcomeQueue.splice(index, 1);
+        }
+    }
 }
 
