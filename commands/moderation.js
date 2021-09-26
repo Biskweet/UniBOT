@@ -89,10 +89,10 @@ export function ban(message, reason) {
 
 
 export function unban(message, userId) {
-    if (utils.isModo) {
-        message.guild.bans.remove(userId)
+    if (utils.isModo(message.member)) {
+
+        message.guild.members.unban(userId)
             .then( (user) => {
-                client.channels.cache.get("776802470089064510").send(`${user} a été pardonné (user was unbanned).`);
                 message.react('✅');
             })
 

@@ -98,7 +98,7 @@ client.on("messageCreate", async (message) => {
     }
 
     if (command === "unban") {
-        moderation.unban(message, words.slice(3).join(' '))
+        moderation.unban(message, words.slice(2).join(' '))
     }
     // ---------------------
 
