@@ -47,6 +47,11 @@ client.on("guildMemberRemove", (member) => {
 client.on("guildMemberUpdate", (oldMember, newMember) => {
     events.checkMemberUpdate(oldMember, newMember);
 })
+
+
+client.on("guildBanAdd", (guildBan) => {
+    events.guildBanAdd(guildBan);
+})
 // ----------------------------
 
 
@@ -92,6 +97,9 @@ client.on("messageCreate", async (message) => {
         moderation.ban(message, words.slice(3).join(' '))
     }
 
+    if (command === "unban") {
+        moderation.unban(message, words.slice(3).join(' '))
+    }
     // ---------------------
 
 
@@ -121,7 +129,7 @@ client.on("messageCreate", async (message) => {
     if (command == "test") {
         message.channel.send("Nothing yet.");
     }
-
+    
     if (command == "resetwelcome") {
         utils.updateWelcomeMessage("reset", member);
     }

@@ -5,10 +5,8 @@ import * as utils from '../utils/utils.js'
 export function destroyClient(message) {
     if (utils.isModo(message.member)) {
 
-        let embedTitle = ":smiling_face_with_tear: Au-revoir.";
-
         message.channel.send( { embeds: [{
-            title: embedTitle,
+            title: "Destruction du client.",
             color: SuHex
         }]})
             .then( (reply) => {
@@ -44,7 +42,7 @@ export function kick(message, reason) {
         }
 
         catch (error) {
-            console.log("-------------------------\nNew error: ", error.message, "\n-------------------------");
+            console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
             message.channel.send({ embeds: [{
                 title: "Il y a eu une erreur lors de l'expulsion du membre : " + error.message,
                 color: SuHex
@@ -79,7 +77,7 @@ export function ban(message, reason) {
         }
 
         catch (error) {
-            console.log("-------------------------\nNew error: ", error, "\n-------------------------");
+            console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
             message.channel.send({ embeds: [{
                 title: "Il y a eu une erreur lors du bannissement du membre : " + error.message,
                 color: SuHex
@@ -91,17 +89,18 @@ export function ban(message, reason) {
 
 
 export function unban(message, userId) {
+    if (utils.isModo) {
+        message.guild.bans.remove(userId)
+            .then( (user) => {
+                client.channels.cache.get("776802470089064510").send(`${user} a été pardonné (user was unbanned).`);
+                message.react('✅');
+            })
 
-    message.guild.bans.remove(userId)
-        .then( (user) => {
-            client.channels.cache.get("776802470089064510").send(`${user} a été pardonné (user was unbanned).`);
-            message.react('✅');
-        })
-
-        .catch( (error) => {
-            console.log("-------------------------\n", error, "\n-------------------------");
-            message.react('❌');
-        })
+            .catch( (error) => {
+                console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
+                message.react('❌');
+            })
+    }
 }
 
 
@@ -114,7 +113,7 @@ export function filterMessage(message) {
 
         message.channel.send({ embeds: [{
             title: '❌ Votre message a été supprimé.',
-            description: "Désolé ! Les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés dans le serveur.",
+            description: "Désolé ! Les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.",
             footer: "Contactez la modération pour partager un lien.",
             color: SuHex
         }]})

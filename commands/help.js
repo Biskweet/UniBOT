@@ -116,7 +116,7 @@ export function helpKickBan() {
 export function helpUnban() {
     let embedTitle = "Help :arrow_right: __unban__";
     let embedDesc  = "__**(Réservé à la modération)**__\n" +
-                     "\"Débannit\" ou \"pardonne\" un membre banni.\n\n" +
+                     "\"Débannit\" (ou \"pardonne\") un membre banni.\n\n" +
                      "Exemple d'utilisation :\n`unibot unban @Exemple#1234`\n\n" +
                      "Note : il peut être difficile/impossible de mentionner correctement " +
                      "l'utilisateur. Pour ce faire, utiliser `<@IdDuMembre>`.";

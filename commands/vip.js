@@ -4,9 +4,9 @@ import { SuHex } from '../utils/variables.js';
 
 
 export function couleur(message, hexcode) {
-    // if (!utils.isBooster(message.member)) {
-    //     return;  // Not a server booster
-    // }
+    if (!utils.isBooster(message.member)) {
+        return;  // Not a server booster
+    }
 
     if (hexcode.length != 1) {  // Incorrect input
         return help(message, "couleur");

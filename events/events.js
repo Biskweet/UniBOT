@@ -25,6 +25,26 @@ export function guildMemberRemove(member) {
 }
 
 
+export function guildBanAdd(guildBan) {
+    client.channels.cache.get("498225252195762192").send({ embeds: [{
+        author: {name: guildBan.user.tag, iconURL: guildBan.user.displayAvatarURL()},
+        description: `${guildBan.user} a été banni du serveur.`,
+        color: 16711680,
+        thumbnail: {url: guildBan.user.displayAvatarURL()}
+    }]})
+}
+
+
+export function guildBanRemove(guildBan) {
+    client.channels.cache.get("498225252195762192").send({ embeds: [{
+        author: {name: guildBan.user.tag, iconURL: guildBan.user.displayAvatarURL()},
+        description: `${guildBan.user} a été dé-banni du serveur.`,
+        color: 65280,
+        thumbnail: {url: guildBan.user.displayAvatarURL()}
+    }]})
+}
+
+
 export function checkMemberUpdate(oldMember, newMember) {
     if (utils.hasStudentRole(newMember) && !utils.hasStudentRole(oldMember)) {
         utils.updateWelcomeMessage("append", newMember);
