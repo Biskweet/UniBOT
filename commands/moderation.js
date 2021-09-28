@@ -42,12 +42,11 @@ export function kick(message, reason) {
         }
 
         catch (error) {
-            console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
+            utils.errorHandler(error, message);
             message.channel.send({ embeds: [{
                 title: "Il y a eu une erreur lors de l'expulsion du membre : " + error.message,
                 color: SuHex
             }]});
-            message.react('❌');
         }
     }
 }
@@ -77,14 +76,12 @@ export function ban(message, reason) {
         }
 
         catch (error) {
-            console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
+            utils.errorHandler(error, message);
             message.channel.send({ embeds: [{
                 title: "Il y a eu une erreur lors du bannissement du membre : " + error.message,
                 color: SuHex
             }]});
-            message.react('❌');
-        }
-    }
+        }    }
 }
 
 
@@ -96,10 +93,7 @@ export function unban(message, userId) {
                 message.react('✅');
             })
 
-            .catch( (error) => {
-                console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
-                message.react('❌');
-            })
+            .catch(utils.errorHandler, message);
     }
 }
 

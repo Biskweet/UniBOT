@@ -1,5 +1,15 @@
+import * as utils from '../utils/utils.js';
 import { boosterRoleId, modoRoleId } from './variables.js';
 import fs from 'fs';
+
+
+export function errorHandler(error, message=null) {
+    console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
+    
+    if (message !== null)
+        message.react('❌');
+}
+
 
 
 export function isBooster(member) {
@@ -45,7 +55,7 @@ export function updateWelcomeMessage(action, member) {
                 }
 
                 message.edit(edit)
-                    .catch(console.log);
+                    .catch(errorHandler);
             })
     }
 
@@ -55,7 +65,8 @@ export function updateWelcomeMessage(action, member) {
             .then( (message) => {
                 message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
             })
-            .catch(console.log);
+
+            .catch(errorHandler);
     }
 
     // All Students are welcomed, reset the queue
@@ -64,6 +75,8 @@ export function updateWelcomeMessage(action, member) {
             .then( (message) => {
                 message.edit('Nothing yet.');
             })
+
+            .catch(errorHandler);
     }
 }
 

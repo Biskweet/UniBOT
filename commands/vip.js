@@ -40,7 +40,7 @@ export function couleur(message, hexcode) {
 
     if ( newRole !== undefined ) {
         message.member.roles.add(newRole)
-            .catch(console.log);
+            .catch(utils.errorHandler, message);
 
         message.channel.send({ embeds: [{
             title: "Rôle ajouté !",
@@ -77,9 +77,9 @@ export function couleur(message, hexcode) {
                     })
 
             })
-            .catch ((error) => {
+            .catch( (error) => {
                 message.channel.send("Une erreur s'est produite lors de la création du rôle !");
-                console.log(error);
+                utils.errorHandler(error, message);
             });
     }
 }

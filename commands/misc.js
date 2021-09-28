@@ -1,12 +1,18 @@
-import { SuHex, eightBallAnswers, WikiIcon, WikiLocales } from '../utils/variables.js';
+import { MessageEmbed } from 'discord.js';
 import { help } from './help.js';
 import axios from 'axios';
+import WolframAlphaAPI from 'wolfram-alpha-api';
+import * as variables from '../utils/variables.js';
+import * as utils from '../utils/utils.js';
+
+
+const waAPI = WolframAlphaAPI('AQLPTV-R88TU6G8PX');
 
 
 export async function ping(message) {
     message.channel.send(
         {embeds: [{
-           color: SuHex,
+           color: variables.SuHex,
            title: `Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`}]
         })
 }
@@ -17,7 +23,7 @@ export async function sendInfo(message) {
                     "\n**server:** " + message.guild.name +
                     "\n**user:** " + message.author.tag
     message.channel.send( {embeds: [{
-        color: SuHex,
+        color: variables.SuHex,
         description: embedDesc
     }]})
 }
@@ -35,11 +41,11 @@ export async function eightBall(message, question) {
 
     else {
         embedAuthor = "Question : " + question;
-        embedDesc = eightBallAnswers[Math.floor(Math.random() * eightBallAnswers.length)];
+        embedDesc = variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)];
     }
 
     message.channel.send({ embeds: [{
-        color: SuHex,
+        color: variables.SuHex,
         author: {name: embedAuthor},
         description: embedDesc
     }]})
@@ -52,7 +58,7 @@ export async function wiki(message, article) {
     if (!article.length)
         return message.channel.send({ embeds : [{
                                     author: {name: "Vous avez oublié de préciser la langue !"},
-                                    color: SuHex
+                                    color: variables.SuHex
                                 }]}
         );
 
@@ -60,16 +66,16 @@ export async function wiki(message, article) {
     if (locale == "listelangues")
         return message.channel.send({ embeds : [{
                                     title: "Liste des préfixes de langues disponibles :",
-                                    description: "```" + WikiLocales.join(' ') + "```",
-                                    color: SuHex
+                                    description: "```" + variables.WikiLocales.join(' ') + "```",
+                                    color: variables.SuHex
                                 }]}
         );
 
-    if (!WikiLocales.includes(locale)) {
+    if (!variables.WikiLocales.includes(locale)) {
         message.channel.send({ embeds: [{
             title: ":grey_question: Langue incorrecte",
             description: "Pour obtenir la liste des langues, lancez la commande `unibot wiki listelangues` ou mieux, [cliquez ici](https://en.wikipedia.org/wiki/List_of_Wikipedias#Editions_overview).",
-            color: SuHex
+            color: variables.SuHex
         }]})
         help(message, "wiki");
         return;
@@ -89,7 +95,7 @@ export async function wiki(message, article) {
 
             pageId = Object.keys(data)[0];
 
-            embedAuthor = {name: data[pageId].title, iconURL: WikiIcon};
+            embedAuthor = {name: data[pageId].title, iconURL: variables.WikiIcon};
             pageText = data[pageId].extract;
 
             if (pageText.length > 2000) {
@@ -105,9 +111,7 @@ export async function wiki(message, article) {
             }]});
         })
 
-        .catch( (error) => {
-            console.log(error)
-        })
+        .catch(utils.errorHandler, message)
     }
 
     // Precise article
@@ -139,7 +143,7 @@ export async function wiki(message, article) {
 
                     pageText += `\n\n[Ouvrir](${links[0]})`;
 
-                    embedAuthor = {name: data[pageId].title, iconURL: WikiIcon};
+                    embedAuthor = {name: data[pageId].title, iconURL: variables.WikiIcon};
                     message.channel.send({ embeds: [{
                         author: embedAuthor,
                         description: pageText,
@@ -147,9 +151,7 @@ export async function wiki(message, article) {
                     }]})
                 })
 
-                .catch( (error) => {
-                    console.log(error)
-                })
+                .catch(errorHandler, message);
             }
 
             else {
@@ -159,9 +161,7 @@ export async function wiki(message, article) {
             }
             })
 
-        .catch( (error) => {
-            console.log(error)
-        });
+        .catch(errorHandler, message);
     }
 }
 
@@ -180,6 +180,32 @@ export async function couleur(message, color) {
     color = color[0];
 
     message.channel.send(`Oui tu as le rôle <@&${role.id}> et tu demandes la couleur ${color.toUpperCase()}`);
+}
+
+
+export function calcule(message, question) {
+    if (question === []) return;
+
+
+
+    waAPI.getFull(question.join(' '))
+        .then( (result) => {
+            let embed = new MessageEmbed();
+
+            embed.setAuthor({
+                    name: message.author.tag + " : " + result.inputstring,
+                    iconURL: variables.WolframAlphaIcon,
+                })
+            
+            if (result.pods[0].title === "Input") {
+                embed.setTitle(result.pods[0].subpods[0].plaintext)
+                embed.addField({
+                    name: result.pods[0].title,
+                })
+            }
+        })
+
+        .catch(utils.errorHandler, message)
 }
 
 
