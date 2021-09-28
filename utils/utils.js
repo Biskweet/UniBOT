@@ -55,7 +55,7 @@ export function updateWelcomeMessage(action, member) {
                 }
 
                 message.edit(edit)
-                    .catch(errorHandler);
+                    .catch(errorHandler, {content: "<error while updating welcome message>"});
             })
     }
 

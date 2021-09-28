@@ -57,6 +57,10 @@ client.on("guildBanAdd", (guildBan) => {
 
 // -------- On message --------
 client.on("messageCreate", async (message) => {
+    if (message.toUpperCase().startsWith(PREFIX)) {
+        return moderation.filterMessage(message);
+    }
+
     if (message.author.bot)
         return;  // Do not react to self or other bots
 

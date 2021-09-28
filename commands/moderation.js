@@ -1,4 +1,5 @@
 import { SuHex } from '../utils/variables.js';
+import { MessageEmbed } from 'discord.js';
 import * as utils from '../utils/utils.js'
 
 
@@ -44,7 +45,8 @@ export function kick(message, reason) {
         catch (error) {
             utils.errorHandler(error, message);
             message.channel.send({ embeds: [{
-                title: "Il y a eu une erreur lors de l'expulsion du membre : " + error.message,
+                title: "Il y a eu une erreur lors de l'expulsion du membre : ",
+                description: error.message,
                 color: SuHex
             }]});
         }
@@ -77,11 +79,15 @@ export function ban(message, reason) {
 
         catch (error) {
             utils.errorHandler(error, message);
-            message.channel.send({ embeds: [{
-                title: "Il y a eu une erreur lors du bannissement du membre : " + error.message,
-                color: SuHex
-            }]});
-        }    }
+
+            let embed = new MessageEmbed()
+                .setTitle("Il y a eu une erreur lors du bannissement du membre : ")
+                .setDescription(error.message)
+                .setColor(SuHex)
+
+            message.channel.send({ embeds: [embed]});
+        }
+    }
 }
 
 
@@ -105,12 +111,13 @@ export function filterMessage(message) {
        
         message.delete();
 
-        message.channel.send({ embeds: [{
-            title: '❌ Votre message a été supprimé.',
-            description: "Désolé ! Les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.",
-            footer: "Contactez la modération pour partager un lien.",
-            color: SuHex
-        }]})
+        let embed = new MessageEmbed()
+            .setTitle("❌ Votre message a été supprimé.")
+            .setDescription("Désolé ! Les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.")
+            .setFooter("Contactez la modération pour partager un lien.")
+            .setColor(SuHex)
+
+        message.channel.send({ embeds: [embed]})
     }
 }
 
