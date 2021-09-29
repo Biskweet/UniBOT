@@ -10,22 +10,22 @@ const waAPI = WolframAlphaAPI('AQLPTV-R88TU6G8PX');
 
 
 export async function ping(message) {
-    message.channel.send(
-        {embeds: [{
-           color: variables.SuHex,
-           title: `Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`}]
-        })
+    let embed = new MessageEmbed()
+        .setTitle(`Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`)
+        .addColor(SuHex);
+
+    message.channel.send({embeds: [embed]});
 }
 
 
 export async function sendInfo(message) {
-    let embedDesc = "**channel:** " + message.channel +
-                    "\n**server:** " + message.guild.name +
-                    "\n**user:** " + message.author.tag
-    message.channel.send( {embeds: [{
-        color: variables.SuHex,
-        description: embedDesc
-    }]})
+    let embed = new MessageEmbed()
+        .setDescription("**channel:** " + message.channel +
+                        "\n**server:** " + message.guild.name +
+                        "\n**user:** " + message.author.tag)
+        .addColor(SuHex);
+
+    message.channel.send( {embeds: [embed]})
 }
 
 
