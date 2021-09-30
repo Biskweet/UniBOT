@@ -57,7 +57,7 @@ client.on("guildBanAdd", (guildBan) => {
 
 // -------- On message --------
 client.on("messageCreate", async (message) => {
-    if (message.toUpperCase().startsWith(PREFIX)) {
+    if (! message.content.toUpperCase().startsWith(PREFIX)) {
         return moderation.filterMessage(message);
     }
 

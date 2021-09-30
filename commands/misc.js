@@ -12,7 +12,7 @@ const waAPI = WolframAlphaAPI('AQLPTV-R88TU6G8PX');
 export async function ping(message) {
     let embed = new MessageEmbed()
         .setTitle(`Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`)
-        .addColor(SuHex);
+        .setColor(variables.SuHex);
 
     message.channel.send({embeds: [embed]});
 }
@@ -20,12 +20,12 @@ export async function ping(message) {
 
 export async function sendInfo(message) {
     let embed = new MessageEmbed()
+        .addColor(SuHex)
         .setDescription("**channel:** " + message.channel +
                         "\n**server:** " + message.guild.name +
                         "\n**user:** " + message.author.tag)
-        .addColor(SuHex);
 
-    message.channel.send( {embeds: [embed]})
+    message.channel.send({embeds: [embed]})
 }
 
 
@@ -34,84 +34,76 @@ export async function eightBall(message, question) {
 
     question = question.join(" ");
 
+    let embed = new MessageEmbed();
+
     if (question === '') {
-        embedAuthor = "Pose la question qui te brûle.";
-        embedDesc = '';
+        embed.setTitle("Pose la question qui te brûle.");
     }
 
     else {
-        embedAuthor = "Question : " + question;
-        embedDesc = variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)];
+        embed.setDescription(variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)])
+             .setAuthor({name: "Question : " + question,
+                         iconURL: message.author.displayAvatarURL()});
     }
 
-    message.channel.send({ embeds: [{
-        color: variables.SuHex,
-        author: {name: embedAuthor},
-        description: embedDesc
-    }]})
+    message.channel.send({embeds: [embed]});
 }
 
 
 export async function wiki(message, article) {
     let locale, wikiTitle, data;
 
-    if (!article.length)
-        return message.channel.send({ embeds : [{
-                                    author: {name: "Vous avez oublié de préciser la langue !"},
-                                    color: variables.SuHex
-                                }]}
-        );
+    let embed = new MessageEmbed();
 
-    locale = article[0];
-    if (locale == "listelangues")
-        return message.channel.send({ embeds : [{
-                                    title: "Liste des préfixes de langues disponibles :",
-                                    description: "```" + variables.WikiLocales.join(' ') + "```",
-                                    color: variables.SuHex
-                                }]}
-        );
-
-    if (!variables.WikiLocales.includes(locale)) {
-        message.channel.send({ embeds: [{
-            title: ":grey_question: Langue incorrecte",
-            description: "Pour obtenir la liste des langues, lancez la commande `unibot wiki listelangues` ou mieux, [cliquez ici](https://en.wikipedia.org/wiki/List_of_Wikipedias#Editions_overview).",
-            color: variables.SuHex
-        }]})
-        help(message, "wiki");
-        return;
+    if (article.length === 0) {
+        embed.setAuthor({name: "Vous avez oublié de préciser la langue !"})
+        embed.setColor(variables.SuHex);
+        return message.channel.send({embeds: [embed]});
     }
 
-    wikiTitle = encodeURI(article.slice(1).join('_'));
+    locale = article[0];
+    if (locale === "listelangues") {
+        embed.setTitle("Liste des préfixes de langues disponibles :")
+        embed.setDescription("```" + variables.WikiLocales.join(' ') + "```")
+        embed.setColor(variables.SuHex);
+        return message.channel.send({embeds: [embed]});
+    }
+
+    if (!variables.WikiLocales.includes(locale)) {
+        locale = "fr";
+        embed.setFooter({name: "En défaut de langue précisée, la langue par défaut est le français."});
+        wikiTitle = encodeURI(article.slice(0).join('_'));
+    }
+    
+    else {
+        wikiTitle = encodeURI(article.slice(1).join('_'));
+    }
 
     // Random article
     if (wikiTitle === '') {
-        let pageId, embedAuthor, pageText;
+        let pageId, pageText;
 
         axios.get(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
                   `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`)
         
-        .then( (response) => {
-            data = response.data.query.pages;
+            .then( (response) => {
 
-            pageId = Object.keys(data)[0];
+                data = response.data.query.pages;
+                pageId = Object.keys(data)[0];
+                pageText = data[pageId].extract;
 
-            embedAuthor = {name: data[pageId].title, iconURL: variables.WikiIcon};
-            pageText = data[pageId].extract;
+                if (pageText.length > 2000) {
+                    pageText = description.slice(1, 2000) + "...";
+                }
 
-            if (pageText.length > 2000) {
-                pageText = description.slice(1, 2000) + "...";
-            }
+                pageText += `\n\n[Ouvrir](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
 
-            pageText += `\n\n[Ouvrir](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
+                embed.setDescription(pageText)
+                     .setColor(16777215)
+                     .setAuthor({name: data[pageId].title, iconURL: variables.WikiIcon})
+            })
 
-            message.channel.send({ embeds: [{
-                color: 0xFFFFFF,
-                author: embedAuthor,
-                description: pageText
-            }]});
-        })
-
-        .catch(utils.errorHandler, message)
+            .catch(utils.errorHandler, message);
     }
 
     // Precise article
@@ -124,45 +116,41 @@ export async function wiki(message, article) {
             [, results, , links] = response.data;
 
 
-            if (results.length) {  // If matching articles are found, then use the first result
-                let embedAuthor, pageId, pageText;
+            if (results.length !== 0) {  // If matching articles are found, then use the first result
+                let pageId, pageText;
 
                 axios.get(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
-                                `prop=extracts&exintro=1&explaintext=1&titles=${encodeURI(results[0].replaceAll(' ', '_'))}`)
+                          `prop=extracts&exintro=1&explaintext=1&titles=${encodeURI(results[0].replaceAll(' ', '_'))}`)
 
-                .then( (response) => {
+                    .then( (response) => {
 
-                    data = response.data.query.pages;
+                        data = response.data.query.pages;
+                        pageId = Object.keys(data)[0];
+                        pageText = data[pageId].extract;
 
-                    pageId = Object.keys(data)[0];
+                        if (pageText.length > 2000) {
+                            pageText = pageText.slice(0, 2000) + "...";
+                        }
 
-                    pageText = data[pageId].extract;
-                    if (pageText.length > 2000) {
-                        pageText = pageText.slice(0, 2000) + "...";
-                    }
+                        pageText += `\n\n[Ouvrir](${links[0]})`;
 
-                    pageText += `\n\n[Ouvrir](${links[0]})`;
+                        embed.setAuthor({name: data[pageId].title, iconURL: variables.WikiIcon})
+                        embed.setDescription(pageText)
+                        embed.setColor(16777215);
+                    })
 
-                    embedAuthor = {name: data[pageId].title, iconURL: variables.WikiIcon};
-                    message.channel.send({ embeds: [{
-                        author: embedAuthor,
-                        description: pageText,
-                        color: 0xFFFFFF
-                    }]})
-                })
-
-                .catch(errorHandler, message);
+                    .catch(utils.errorHandler, message);
             }
 
             else {
-                message.channel.send({ embeds: [{
-                    author: {name: "Article introuvable"}
-                }]})
+                embed.setAuthor({name: "Article introuvable"});
             }
-            })
+        })
 
-        .catch(errorHandler, message);
+        .catch(utils.errorHandler, message);
     }
+
+    message.channel.send({embeds: [embed]});
 }
 
 
@@ -190,23 +178,15 @@ export function calcule(message, question) {
 
     waAPI.getFull(question.join(' '))
         .then( (result) => {
-            let embed = new MessageEmbed();
-
-            embed.setAuthor({
+            let embed = new MessageEmbed()
+                .setTitle(question.join(' '))
+                .setColor(variables.SuHex)
+                .setImage()
+                .setAuthor({
                     name: message.author.tag + " : " + result.inputstring,
                     iconURL: variables.WolframAlphaIcon,
                 })
-            
-            if (result.pods[0].title === "Input") {
-                embed.setTitle(result.pods[0].subpods[0].plaintext)
-                embed.addField({
-                    name: result.pods[0].title,
-                })
-            }
         })
 
         .catch(utils.errorHandler, message)
 }
-
-
-
