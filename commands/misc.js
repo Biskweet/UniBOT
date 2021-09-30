@@ -51,27 +51,25 @@ export async function eightBall(message, question) {
 
 
 export async function wiki(message, article) {
-    let locale, wikiTitle, data;
+    var locale, wikiTitle, data, pageId, pageText;
 
     let embed = new MessageEmbed();
 
     if (article.length === 0) {
-        embed.setAuthor({name: "Vous avez oublié de préciser la langue !"})
-        embed.setColor(variables.SuHex);
-        return message.channel.send({embeds: [embed]});
+        article = ["fr"];
     }
 
     locale = article[0];
     if (locale === "listelangues") {
         embed.setTitle("Liste des préfixes de langues disponibles :")
-        embed.setDescription("```" + variables.WikiLocales.join(' ') + "```")
-        embed.setColor(variables.SuHex);
+             .setDescription("```" + variables.WikiLocales.join(' ') + "```")
+             .setColor(variables.SuHex);
         return message.channel.send({embeds: [embed]});
-    }
+    }   
 
     if (!variables.WikiLocales.includes(locale)) {
+        embed.setFooter("Langue non précisée, par défaut en français.")
         locale = "fr";
-        embed.setFooter({name: "En défaut de langue précisée, la langue par défaut est le français."});
         wikiTitle = encodeURI(article.slice(0).join('_'));
     }
     
@@ -81,7 +79,6 @@ export async function wiki(message, article) {
 
     // Random article
     if (wikiTitle === '') {
-        let pageId, pageText;
 
         axios.get(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
                   `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`)
@@ -100,7 +97,9 @@ export async function wiki(message, article) {
 
                 embed.setDescription(pageText)
                      .setColor(16777215)
-                     .setAuthor({name: data[pageId].title, iconURL: variables.WikiIcon})
+                     .setAuthor(data[pageId].title, variables.WikiIcon);
+
+                message.channel.send({embeds: [embed]});
             })
 
             .catch(utils.errorHandler, message);
@@ -134,40 +133,27 @@ export async function wiki(message, article) {
 
                         pageText += `\n\n[Ouvrir](${links[0]})`;
 
-                        embed.setAuthor({name: data[pageId].title, iconURL: variables.WikiIcon})
-                        embed.setDescription(pageText)
-                        embed.setColor(16777215);
+                        embed.setAuthor(data[pageId].title, variables.WikiIcon)
+                             .setDescription(pageText)
+                             .setColor(16777215);
+
+                        message.channel.send({ embeds: [embed]});
                     })
 
                     .catch(utils.errorHandler, message);
             }
 
             else {
-                embed.setAuthor({name: "Article introuvable"});
+                embed.setAuthor("Article introuvable.")
+                     .setColor(variables.SuHex);
+                message.channel.send({ embeds: [embed]});
             }
         })
 
         .catch(utils.errorHandler, message);
     }
 
-    message.channel.send({embeds: [embed]});
-}
 
-
-export async function couleur(message, color) {
-    let role = message.member.roles.cache.get("872267637177069609");
-    if (role == null) {
-        return message.channel.send(`Tu n'as pas le rôle requis (<@&872267637177069609>)`);
-    }
-
-
-    if (color.length > 1 || color[0].length > 7 || color[0].length < 6) {
-        return help(message, "couleur");
-    }
-
-    color = color[0];
-
-    message.channel.send(`Oui tu as le rôle <@&${role.id}> et tu demandes la couleur ${color.toUpperCase()}`);
 }
 
 
@@ -182,10 +168,8 @@ export function calcule(message, question) {
                 .setTitle(question.join(' '))
                 .setColor(variables.SuHex)
                 .setImage()
-                .setAuthor({
-                    name: message.author.tag + " : " + result.inputstring,
-                    iconURL: variables.WolframAlphaIcon,
-                })
+                .setAuthor(message.author.tag + " : " + result.inputstring,
+                          variables.WolframAlphaIcon);
         })
 
         .catch(utils.errorHandler, message)
