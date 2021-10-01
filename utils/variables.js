@@ -2,6 +2,8 @@ export const SuHex = 0x1d2769;
 
 export const WikiIcon = "https://wikipedia.org/static/apple-touch/wikipedia.png";
 
+export const WolframAlphaIcon = "https://icon-library.com/images/wolfram-alpha-icon/wolfram-alpha-icon-17.jpg"
+
 export const prefix = "UNIB ";
 
 export const boosterRoleId = "852891262659067924";

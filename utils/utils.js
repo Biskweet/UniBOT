@@ -11,6 +11,10 @@ export function errorHandler(error, message=null) {
 }
 
 
+export function capitalize(string) {
+    return string.slice(0, 1).toUpperCase() + string.slice(1)
+}
+
 
 export function isBooster(member) {
     return member.roles.cache.has(boosterRoleId);

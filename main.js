@@ -70,7 +70,7 @@ client.on("messageCreate", async (message) => {
 
     // ------- Help --------
     if (command === "help") {
-        await help(message, words.slice(2).join());
+        help(message, words.slice(2).join());
     }
     // ---------------------
 
@@ -137,6 +137,10 @@ client.on("messageCreate", async (message) => {
     if (command == "resetwelcome") {
         utils.updateWelcomeMessage("reset", member);
     }
+
+    if (command === "answer") {
+        misc.answer(message,words.slice(2));
+    }   
     // ---------------------
 
     moderation.filterMessage(message);

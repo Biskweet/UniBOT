@@ -34,7 +34,8 @@ export async function eightBall(message, question) {
 
     question = question.join(" ");
 
-    let embed = new MessageEmbed();
+    let embed = new MessageEmbed()
+        .setColor(variables.SuHex);
 
     if (question === '') {
         embed.setTitle("Pose la question qui te brûle.");
@@ -42,8 +43,7 @@ export async function eightBall(message, question) {
 
     else {
         embed.setDescription(variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)])
-             .setAuthor({name: "Question : " + question,
-                         iconURL: message.author.displayAvatarURL()});
+             .setAuthor("Question : " + question, message.author.displayAvatarURL(), message.url);
     }
 
     message.channel.send({embeds: [embed]});
@@ -93,7 +93,7 @@ export async function wiki(message, article) {
                     pageText = description.slice(1, 2000) + "...";
                 }
 
-                pageText += `\n\n[Ouvrir](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
+                pageText += `\n\n[__Ouvrir__](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
 
                 embed.setDescription(pageText)
                      .setColor(16777215)
@@ -131,7 +131,7 @@ export async function wiki(message, article) {
                             pageText = pageText.slice(0, 2000) + "...";
                         }
 
-                        pageText += `\n\n[Ouvrir](${links[0]})`;
+                        pageText += `\n\n[__Ouvrir__](${links[0]})`;
 
                         embed.setAuthor(data[pageId].title, variables.WikiIcon)
                              .setDescription(pageText)
@@ -157,20 +157,27 @@ export async function wiki(message, article) {
 }
 
 
-export function calcule(message, question) {
-    if (question === []) return;
+export function answer(message, question) {
 
+    let embed = new MessageEmbed().setColor(variables.SuHex);   
 
+    if (question === []) {
+        embed.setTitle("Aucune requête effectuée.");
+        return message.channel.send({embeds: [embed]});
+    }
 
-    waAPI.getFull(question.join(' '))
+    waAPI.getShort(question.join(' '))
         .then( (result) => {
             let embed = new MessageEmbed()
-                .setTitle(question.join(' '))
                 .setColor(variables.SuHex)
-                .setImage()
-                .setAuthor(message.author.tag + " : " + result.inputstring,
-                          variables.WolframAlphaIcon);
+                .setAuthor(utils.capitalize(question.join(' ')), message.author.displayAvatarURL())
+                .setDescription(result)
+                .setFooter("Powered by WolframAlpha", variables.WolframAlphaIcon)
+
+            message.channel.send({embeds: [embed]});
         })
 
-        .catch(utils.errorHandler, message)
+        .catch( (error) => {
+            utils.errorHandler(error, message);
+        });
 }
