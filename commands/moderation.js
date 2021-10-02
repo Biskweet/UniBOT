@@ -115,11 +115,8 @@ export function filterMessage(message) {
             .setTitle("❌ Votre message a été supprimé.")
             .setDescription("Désolé ! Les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.")
             .setFooter("Contactez la modération pour partager un lien.")
-            .setColor(SuHex)
+            .setColor(SuHex);
 
         message.channel.send({ embeds: [embed]})
     }
 }
-
-
-

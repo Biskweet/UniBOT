@@ -169,7 +169,7 @@ export function answer(message, question) {
     waAPI.getShort(question.join(' '))
         .then( (result) => {
             let embed = new MessageEmbed()
-                .setColor(variables.SuHex)
+                .setColor(16345394)
                 .setAuthor(utils.capitalize(question.join(' ')), message.author.displayAvatarURL())
                 .setDescription(result)
                 .setFooter("Powered by WolframAlpha", variables.WolframAlphaIcon)

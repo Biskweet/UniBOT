@@ -12,7 +12,7 @@ export function errorHandler(error, message=null) {
 
 
 export function capitalize(string) {
-    return string.slice(0, 1).toUpperCase() + string.slice(1)
+    return string.slice(0, 1).toUpperCase() + string.slice(1);
 }
 
 

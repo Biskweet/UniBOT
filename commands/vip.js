@@ -1,20 +1,28 @@
-import * as utils from '../utils/utils.js';
 import { help } from './help.js';
-import { SuHex } from '../utils/variables.js';
+import { MessageEmbed } from 'discord.js';
+import * as variables from '../utils/variables.js';
+import * as utils from '../utils/utils.js';
 
 
 export function couleur(message, hexcode) {
-    if (!utils.isBooster(message.member)) {
-        return;  // Not a server booster
-    }
+    // if (!utils.isBooster(message.member)) {
+    //     return;  // Not a server booster
+    // }
 
     if (hexcode.length != 1) {  // Incorrect input
         return help(message, "couleur");
     }
 
+    let embed = new MessageEmbed().setColor(variables.SuHex)
+
     hexcode = hexcode[0].toUpperCase();
     if (hexcode[0] === "#") hexcode = hexcode.slice(1);
     // Removing `#` from the hexcode
+
+    if (hexcode.length != 6) {
+        embed.setDescription("Votre code hexadécimal doit faire 6 caractères (exemples : `#F0230F`, `8A012E`, etc.)")
+        return message.channel.send({ embeds: [embed]});
+    }
 
     let re = /[0-9A-F]{6}/g;
 
@@ -22,12 +30,6 @@ export function couleur(message, hexcode) {
         return help(message, "couleur");  // Not a valid hex code
     }
 
-    if (hexcode.length != 6) {
-        return message.channel.send({ embeds: [{
-            description: "Votre code hexadécimal doit faire 6 caractères (exemples : `#F0230F`, `8A012E`, etc.)",
-            color: SuHex
-        }]});
-    }
 
     // =====
 
@@ -42,19 +44,18 @@ export function couleur(message, hexcode) {
         message.member.roles.add(newRole)
             .catch(utils.errorHandler, message);
 
-        message.channel.send({ embeds: [{
-            title: "Rôle ajouté !",
-            thumbnail: {url: `https://singlecolorimage.com/get/${hexcode}/100x75`},
-            description: `${message.author}, je viens de vous assigner le rôle ${newRole} !`,
-            footer: {text: "Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !"},
-            color: SuHex
-        }]})
+        embed.setTitle("Rôle ajouté !")
+             .setThumbnail(`https://singlecolorimage.com/get/${hexcode}/100x75`)
+             .setDescription(`${message.author}, je viens de vous assigner le rôle ${newRole} !`)
+             .setFooter("Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !")
+
+        message.channel.send({ embeds: [embed]});
     }
 
     else {
         message.channel.send({embeds: [{
             title: "Création du rôle, veuillez patienter... <a:discordloading:891354025302315059>",
-            color: SuHex
+            color: variables.SuHex
             }]
         })
             .then( (loadingMsg) => {        
@@ -63,22 +64,24 @@ export function couleur(message, hexcode) {
                     color: hexcode,
                     position: Array.from(message.guild.roles.cache).length - 4
                 })
+
                     .then( (newRole) => {
                         message.member.roles.add(newRole);
                         loadingMsg.delete();
-                        message.channel.send({ embeds: [{
-                            title: "Rôle ajouté !",
-                            thumbnail: {url: `https://singlecolorimage.com/get/${hexcode}/100x75`},
-                            description: `${message.author}, je viens de vous assigner le rôle ${newRole} !`,
-                            footer: {text: "Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !"},
-                            color: SuHex
-                        }]})
 
+                        embed.setTitle("Rôle ajouté !")
+                             .setThumbnail(`https://singlecolorimage.com/get/${hexcode}/100x75`)
+                             .setDescription(`${message.author}, je viens de vous assigner le rôle ${newRole} !`)
+                             .setFooter("Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !")
+
+                        message.channel.send({ embeds: [embed]});
                     })
 
             })
             .catch( (error) => {
-                message.channel.send("Une erreur s'est produite lors de la création du rôle !");
+                embed.setTitle("Une erreur s'est produite lors de la création du rôle !");
+                message.channel.send({embeds: [{embed}]});
+                
                 utils.errorHandler(error, message);
             });
     }

@@ -111,6 +111,7 @@ client.on("messageCreate", async (message) => {
     if (command === "couleur") {
         vip.couleur(message, words.slice(2));
     }
+    // --------------------
 
 
     // --- Miscellaneous ---
