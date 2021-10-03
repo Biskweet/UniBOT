@@ -118,10 +118,6 @@ client.on("messageCreate", async (message) => {
         misc.sendInfo(message);
     }
 
-    if (command == "test") {
-        message.channel.send("Nothing yet.");
-    }
-
     if (command == "resetwelcome") {
         utils.updateWelcomeMessage("reset", member);
     }
