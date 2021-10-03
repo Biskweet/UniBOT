@@ -1,10 +1,13 @@
+import { MessageEmbed } from 'discord.js';
 import { SuHex } from '../utils/variables.js';
 
 
 export function help(message, command='') {
     let embedTitle, embedDesc, embedFooter, embedIcon;
 
-    embedFooter = {text: "Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]"};
+    let embed = new MessageEmbed()
+        .setFooter("Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]")
+
 
     if (command === '') {
         embedTitle = "Liste des commandes";
@@ -48,19 +51,18 @@ export function help(message, command='') {
     }
 
     else {
-        return
+        return;
     };
 
-    message.channel.send({ embeds: [{
-        title: embedTitle,
-        description: embedDesc,
-        footer: embedFooter,
-        color: SuHex
-    }]})
+    embed.setTitle(embedTitle)
+         .setDescription(embedDesc)
+         .setColor(variables.SuHex);
+
+    message.channel.send({embeds: [embed]});
 }
 
 
-export function helpPing() {
+function helpPing() {
     let embedTitle = "Help :arrow_right: __ping__";
     let embedDesc  = "Renvoie la latence en millisecondes du bot " +
                      "(souvent utilisé pour vérifier sa présence en ligne)."
@@ -69,7 +71,7 @@ export function helpPing() {
 }
 
 
-export function help8ball() {
+function help8ball() {
     let embedTitle = "Help :arrow_right: __8ball__";
     let embedDesc  = "Envoie une réponse ~~tirée au hasard~~ à la question passée en paramètre.\n\n" +
                      "Syntaxe de la commande : `unibot 8ball [question]`\n" +
@@ -79,7 +81,7 @@ export function help8ball() {
 }
 
 
-export function helpCouleur() {
+function helpCouleur() {
     let embedTitle = "Help :arrow_right: __couleur__";
     let embedDesc  = "__**(Réservé aux membres boosters)**__\n" +
                      "Crée un rôle de couleur et l'assigne au membre selon la couleur passée en paramètre.\n\n" +
@@ -90,7 +92,7 @@ export function helpCouleur() {
 }
 
 
-export function helpClear() {
+function helpClear() {
     let embedTitle = "Help :arrow_right: __clear__";
     let embedDesc  = "__**(Réservé à la modération)**__\n" +
                      "Argument optionnel. Supprime les N derniers messages (sans compter celui de la commande). " +
@@ -101,7 +103,7 @@ export function helpClear() {
 }
 
 
-export function helpKickBan() {
+function helpKickBan() {
     let embedTitle = "Help :arrow_right: __kick__/__ban__";
     let embedDesc  = "__**(Réservé à la modération)**__\n" +
                      "Exclut/bannit le membre passé en paramètre. Motif optionnel.\n\n" +
@@ -113,7 +115,7 @@ export function helpKickBan() {
 }
 
 
-export function helpUnban() {
+function helpUnban() {
     let embedTitle = "Help :arrow_right: __unban__";
     let embedDesc  = "__**(Réservé à la modération)**__\n" +
                      "\"Débannit\" (ou \"pardonne\") un membre banni.\n\n" +
@@ -125,7 +127,7 @@ export function helpUnban() {
 }
 
 
-export function helpWiki() {
+function helpWiki() {
     let embedTitle = "Help :arrow_right: __wiki__";
     let embedDesc  = "Effectue une requête et renvoie l'introduction d'un article Wikipédia.\n" +
                      "Prend en paramètre la langue (requis, selon le formattage ICU, par exemple `en`, `fr`, `de`, etc.), et le titre de l'article (optionnel), cherche la correspondance la plus proche et renvoie " +

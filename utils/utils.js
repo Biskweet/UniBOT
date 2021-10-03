@@ -48,9 +48,9 @@ export function saveCache(data) {
 
 export function updateWelcomeMessage(action, member) {
     // New Student needs to be welcomed
-    if (action === "append") {
-        client.channels.cache.get("870287403946999849").messages.fetch("890916475379023873")
-            .then( (message) => {
+    client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
+        .then( (message) => {
+            if (action === "append") {
                 if (message.content === 'Nothing yet.') {
                     var edit = `${member}`;
                 }
@@ -60,32 +60,25 @@ export function updateWelcomeMessage(action, member) {
 
                 message.edit(edit)
                     .catch(errorHandler, {content: "<error while updating welcome message>"});
-            })
-    }
+            }
+    
 
-    // Not welcomed Student left the server
-    else if (action === "remove") {
-        client.channels.cache.get("870287403946999849").messages.fetch("890916475379023873")
-            .then( (message) => {
+            // Not welcomed Student left the server
+            else if (action === "remove") {
                 message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
-            })
+            }
 
-            .catch(errorHandler);
-    }
-
-    // All Students are welcomed, reset the queue
-    else if (action === "reset") {
-        client.channels.cache.get("870287403946999849").messages.fetch("890916475379023873")
-            .then( (message) => {
+            // All Students are welcomed, reset the queue
+            else if (action === "reset") {
                 message.edit('Nothing yet.');
-            })
+            }
+        })
 
-            .catch(errorHandler);
-    }
+        .catch(errorHandler, {content: "<error while updating welcome message>"});
 }
 
 
 export function hasStudentRole(member) {
-    return member.roles.cache.has("872267559423053825");
+    return member.roles.cache.has("779741939447627798");
 }
 

@@ -74,19 +74,6 @@ client.on("messageCreate", async (message) => {
     }
     // ---------------------
 
-    // if (command === "temp") {
-    //     let row = new MessageActionRow()
-    //         .addComponents(
-    //             new MessageButton()
-    //                 .setCustomId("roleSelectEtudiant")
-    //                 .setEmoji("<:logosu:889983398788079617>")
-    //                 .setLabel("Étudiant")
-    //                 .setStyle(3908957)
-    //         );
-
-    //     message.channel.send({ content: "OwO", components: [row] });
-    // }
-
 
     // ---- Moderation -----
     if (command === "destroy") {
@@ -134,14 +121,14 @@ client.on("messageCreate", async (message) => {
     if (command == "test") {
         message.channel.send("Nothing yet.");
     }
-    
+
     if (command == "resetwelcome") {
         utils.updateWelcomeMessage("reset", member);
     }
 
     if (command === "answer") {
         misc.answer(message,words.slice(2));
-    }   
+    }
     // ---------------------
 
     moderation.filterMessage(message);

@@ -7,12 +7,12 @@ export function onReady() {
 
 
 export function guildMemberAdd(member) {
-    client.channels.cache.get("498225252195762192").send(`${member} a rejoint le serveur.`);
+    client.channels.cache.get("752891071553601638").send(`${member} a rejoint le serveur.`);
 }
 
 
 export function guildMemberRemove(member) {
-    client.channels.cache.get("498225252195762192").send(`${member} a quitté le serveur.`);
+    client.channels.cache.get("777521246950129674").send(`${member} a quitté le serveur.`);
     if (welcomeQueue.includes(member.id)) {
         updateWelcomeMsg("remove", member);
         
@@ -26,22 +26,24 @@ export function guildMemberRemove(member) {
 
 
 export function guildBanAdd(guildBan) {
-    client.channels.cache.get("498225252195762192").send({ embeds: [{
-        author: {name: guildBan.user.tag, iconURL: guildBan.user.displayAvatarURL()},
-        description: `${guildBan.user} a été banni du serveur.`,
-        color: 16711680,
-        thumbnail: {url: guildBan.user.displayAvatarURL()}
-    }]})
+    let embed = new MessageEmbed()
+        .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
+        .setDescription(`${guildBan.user} a été banni du serveur.`)
+        .setColor(16711680)
+        .setThumbnail(guildBan.user.displayAvatarURL());
+
+    client.channels.cache.get("776802470089064510").send({embeds: [embed]})
 }
 
 
 export function guildBanRemove(guildBan) {
-    client.channels.cache.get("498225252195762192").send({ embeds: [{
-        author: {name: guildBan.user.tag, iconURL: guildBan.user.displayAvatarURL()},
-        description: `${guildBan.user} a été dé-banni du serveur.`,
-        color: 65280,
-        thumbnail: {url: guildBan.user.displayAvatarURL()}
-    }]})
+    let embed = new MessageEmbed()
+        .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
+        .setDescription(`${guildBan.user} a été dé-banni du serveur.`)
+        .setColor(65280)
+        .setThumbnail(guildBan.user.displayAvatarURL());
+
+    client.channels.cache.get("776802470089064510").send({embeds: [embed]});
 }
 
 

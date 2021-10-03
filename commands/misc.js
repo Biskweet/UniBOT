@@ -152,8 +152,6 @@ export async function wiki(message, article) {
 
         .catch(utils.errorHandler, message);
     }
-
-
 }
 
 

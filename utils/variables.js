@@ -8,7 +8,7 @@ export const prefix = "UNIB ";
 
 export const boosterRoleId = "852891262659067924";
 
-export const modoRoleId = "872267559423053825";
+export const modoRoleId = "749971084228558969";
 
 export const eightBallAnswers = ["C'est certain", 
                                  "Décidément, oui",
