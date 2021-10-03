@@ -1,6 +1,7 @@
+import fs from 'fs';
+import axios from 'axios';
 import * as utils from '../utils/utils.js';
 import { boosterRoleId, modoRoleId } from './variables.js';
-import fs from 'fs';
 
 
 export function errorHandler(error, message=null) {
@@ -81,4 +82,15 @@ export function updateWelcomeMessage(action, member) {
 export function hasStudentRole(member) {
     return member.roles.cache.has("779741939447627798");
 }
+
+
+export async function checkSocialMedias() {
+
+}
+
+
+async function retrieve_tweets(account, channel) {
+    axios.get(`https://api.twitter.com/2/users/${"/tweets"}`)
+}
+
 
