@@ -1,12 +1,16 @@
 import { MessageEmbed } from 'discord.js';
-import { help } from './help.js';
-import axios from 'axios';
 import WolframAlphaAPI from 'wolfram-alpha-api';
+import dotenv from 'dotenv';
+import axios from 'axios';
 import * as variables from '../utils/variables.js';
 import * as utils from '../utils/utils.js';
+import { help } from './help.js';
 
 
-const waAPI = WolframAlphaAPI('AQLPTV-R88TU6G8PX');
+dotenv.config()
+
+
+const waAPI = WolframAlphaAPI(process.env.WOLFRAMALPHA_TOKEN);
 
 
 export async function ping(message) {
@@ -77,39 +81,34 @@ export async function wiki(message, article) {
         wikiTitle = encodeURI(article.slice(1).join('_'));
     }
 
-    // Random article
-    if (wikiTitle === '') {
+    try {
+        // Random article
+        if (wikiTitle === '') {
 
-        axios.get(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
-                  `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`)
-        
-            .then( (response) => {
+            let response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
+                                           `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`)
+            
+            data = response.data.query.pages;
+            pageId = Object.keys(data)[0];
+            pageText = data[pageId].extract;
 
-                data = response.data.query.pages;
-                pageId = Object.keys(data)[0];
-                pageText = data[pageId].extract;
+            if (pageText.length > 2000) {
+                pageText = description.slice(1, 2000) + "...";
+            }
 
-                if (pageText.length > 2000) {
-                    pageText = description.slice(1, 2000) + "...";
-                }
+            pageText += `\n\n[__Ouvrir__](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
 
-                pageText += `\n\n[__Ouvrir__](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
+            embed.setDescription(pageText)
+                 .setColor(16777215)
+                 .setAuthor(data[pageId].title, variables.WikiIcon);
 
-                embed.setDescription(pageText)
-                     .setColor(16777215)
-                     .setAuthor(data[pageId].title, variables.WikiIcon);
+            message.channel.send({embeds: [embed]});
+        }
 
-                message.channel.send({embeds: [embed]});
-            })
-
-            .catch(utils.errorHandler, message);
-    }
-
-    // Precise article
-    else {
-        axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`)
-        
-        .then( (response) => {
+        // Precise article
+        else {
+            let response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`)
+            
             let results, links;
 
             [, results, , links] = response.data;
@@ -118,29 +117,25 @@ export async function wiki(message, article) {
             if (results.length !== 0) {  // If matching articles are found, then use the first result
                 let pageId, pageText;
 
-                axios.get(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
+                response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?format=json&action=query&` +
                           `prop=extracts&exintro=1&explaintext=1&titles=${encodeURI(results[0].replaceAll(' ', '_'))}`)
 
-                    .then( (response) => {
 
-                        data = response.data.query.pages;
-                        pageId = Object.keys(data)[0];
-                        pageText = data[pageId].extract;
+                data = response.data.query.pages;
+                pageId = Object.keys(data)[0];
+                pageText = data[pageId].extract;
 
-                        if (pageText.length > 2000) {
-                            pageText = pageText.slice(0, 2000) + "...";
-                        }
+                if (pageText.length > 2000) {
+                    pageText = pageText.slice(0, 2000) + "...";
+                }
 
-                        pageText += `\n\n[__Ouvrir__](${links[0]})`;
+                pageText += `\n\n[__Ouvrir__](${links[0]})`;
 
-                        embed.setAuthor(data[pageId].title, variables.WikiIcon)
-                             .setDescription(pageText)
-                             .setColor(16777215);
+                embed.setAuthor(data[pageId].title, variables.WikiIcon)
+                     .setDescription(pageText)
+                     .setColor(16777215);
 
-                        message.channel.send({ embeds: [embed]});
-                    })
-
-                    .catch(utils.errorHandler, message);
+                message.channel.send({ embeds: [embed]});
             }
 
             else {
@@ -148,9 +143,11 @@ export async function wiki(message, article) {
                      .setColor(variables.SuHex);
                 message.channel.send({ embeds: [embed]});
             }
-        })
+        }
+    }
 
-        .catch(utils.errorHandler, message);
+    catch (error) {
+        utils.errorHandler(error, message);
     }
 }
 
@@ -159,12 +156,13 @@ export function answer(message, question) {
 
     let embed = new MessageEmbed().setColor(variables.SuHex);   
 
-    if (question === []) {
-        embed.setTitle("Aucune requête effectuée.");
+    if (question.length === 0) {
+        message.react('❌');
+        embed.setTitle("Aucune question posée.");
         return message.channel.send({embeds: [embed]});
     }
 
-    waAPI.getShort(question.join(' '))
+    waAPI.getShort(question.join(' ').replaceAll('?', ''))
         .then( (result) => {
             let embed = new MessageEmbed()
                 .setColor(16345394)
@@ -176,6 +174,16 @@ export function answer(message, question) {
         })
 
         .catch( (error) => {
-            utils.errorHandler(error, message);
+            if (error.message === "Wolfram|Alpha did not understand your input") {
+
+                message.react('❌');
+                embed.setTitle("Wolfram Alpha did not understand your input.")
+                     .setFooter("😕 Maybe it can't answer that.");
+                message.channel.send({embeds: [embed]});
+            }
+            
+            else {
+                utils.errorHandler(error, message);
+            }
         });
 }

@@ -1,13 +1,13 @@
 import { Intents, MessageEmbed, MessageActionRow, MessageButton } from 'discord.js';
 import Discord from 'discord.js';
 import dotenv from 'dotenv';
-import * as events from './events/events.js';
 import * as moderation from './commands/moderation.js';
 import * as variables from './utils/variables.js';
+import * as events from './events/events.js';
 import * as misc from './commands/misc.js';
 import * as vip from './commands/vip.js'
 import { help } from './commands/help.js';
-
+    
 dotenv.config();
 
 
