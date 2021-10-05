@@ -90,7 +90,8 @@ export async function checkSocialMedias() {
 
 
 async function retrieve_tweets(account, channel) {
-    axios.get(`https://api.twitter.com/2/users/${"/tweets"}`)
+    let response = await axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`)
+
 }
 
 

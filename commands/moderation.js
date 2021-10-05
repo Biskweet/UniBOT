@@ -6,15 +6,13 @@ import * as utils from '../utils/utils.js'
 export function destroyClient(message) {
     if (utils.isModo(message.member)) {
 
-        message.channel.send( { embeds: [{
+        await message.channel.send({ embeds: [{
             title: "Destruction du client.",
             color: SuHex
-        }]})
-            .then( (reply) => {
-                console.log("Shutting down.");
+        }]});
 
-                client.destroy();
-             });
+        console.log("Shutting down.");
+        client.destroy();
     }
 }
 
@@ -22,33 +20,35 @@ export function destroyClient(message) {
 export function kick(message, reason) {
     if (utils.isModo(message.member)) {
 
-        let member = message.mentions.members.first();
+        let target = message.mentions.members.first();
 
         try {
-            if (!member.kickable) {  // Client does not have permission
+            if (!target.kickable) {  // Client does not have permission
                     throw new Error("Permissions insuffisantes.");
             }
         
             let alert = "Vous avez été expulsé du serveur Discord Étudiant Sorbonne Université.";
-            if (reason.length) {
+            if (reason.length !== 0) {
                 alert += "\n\nMotif : " + reason;
             }
 
-            member.kick();
+            target.kick();
             message.react('✅');
 
-            member.send(alert)
+            target.send(alert)
                 .catch((err) => {console.log(`Could not send kick alert to ${member.user.tag}`)})
 
         }
 
         catch (error) {
             utils.errorHandler(error, message);
-            message.channel.send({ embeds: [{
-                title: "Il y a eu une erreur lors de l'expulsion du membre : ",
-                description: error.message,
-                color: SuHex
-            }]});
+
+            let embed = new MessageEmbed()
+                .setTitle("Il y a eu une erreur lors de l'expulsion du membre : ")
+                .setDescription(error.message)
+                .setColor(SuHex);
+
+            message.channel.send({ embeds: [embed]});
         }
     }
 }
@@ -57,10 +57,10 @@ export function kick(message, reason) {
 export function ban(message, reason) {
     if (utils.isModo(message.member)) {
 
-        let member = message.mentions.members.first();
+        let target = message.mentions.members.first();
 
         try {
-            if (!member.bannable) {  // Client does not have permission
+            if (!target.bannable) {  // Client does not have permission
                     throw new Error("Permissions insuffisantes.");
             }
         
@@ -69,10 +69,10 @@ export function ban(message, reason) {
                 alert += "\n\nMotif : " + reason;
             }
 
-            member.ban();
+            target.ban();
             message.react('✅');
 
-            member.send(alert)
+            target.send(alert)
                 .catch((err) => {console.log(`Could not send kick alert to ${member.user.tag}`)})
 
         }

@@ -7,8 +7,18 @@ import * as events from './events/events.js';
 import * as misc from './commands/misc.js';
 import * as vip from './commands/vip.js'
 import { help } from './commands/help.js';
-    
+
+
 dotenv.config();
+
+
+global.DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+global.WOLFRAMALPHA_TOKEN = process.env.WOLFRAMALPHA_TOKEN;
+global.TWITTER_TOKEN = process.env.TWITTER_TOKEN;
+global.YOUTUBE_TOKEN = process.env.YOUTUBE_TOKEN;
+
+global.cache = utils.loadCache();
+global.welcomeQueue = [];
 
 
 const PREFIX = variables.prefix;
@@ -25,7 +35,6 @@ global.client = new Discord.Client({
 }); 
 
 
-global.welcomeQueue = [];
 
 
 // ---------- Events ----------
