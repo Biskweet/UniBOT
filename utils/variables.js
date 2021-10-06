@@ -12,6 +12,12 @@ export const boosterRoleId = "852891262659067924";
 
 export const modoRoleId = "749971084228558969";
 
+export const months = ["janvier","février", "mars",
+                       "avril", "mai", "juin",
+                       "juillet", "août", "septembre",
+                       "octobre", "novembre", "décembre"];
+
+
 export const eightBallAnswers = ["C'est certain", 
                                  "Décidément, oui",
                                  "Sans l'ombre d'un doute",

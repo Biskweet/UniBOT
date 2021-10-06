@@ -106,18 +106,18 @@ async function retrieve_tweets(account, channel) {
     newTweetId = newTweets.data[0].id;
 
     if (newTweetId != cache.twitter[account].lastTweetId) {
-        let tweetData, media, date;
+        let tweetData, media, date, user, text;
 
         response = await axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
                               "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers});
         tweetData = response.data;
 
-        if (tweetData.data[0].includes("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
-                                                                tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
+        if (tweetData.data[0].hasOwnProperty("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
+                                                                      tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
             return; // Do not share if the tweet is a reply/RT
         }
 
-        if tweetData.includes("includes") {
+        if (tweetData.hasOwnProperty("includes")) {
             if (tweetData.includes.media[0].type == "photo") {
                 media = tweetData.includes.media[0].url    
             }
@@ -126,9 +126,22 @@ async function retrieve_tweets(account, channel) {
             }
         }
 
-        date = new Date(tweetData.data[0].created_at;
+        date = new Date(tweetData.data[0].created_at);
+ 
+        response = await axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitter_account, {headers: headers});
+        user = response.data.data[0];
 
+        text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${new_tweet_id})`;
 
+        embed = new MessageEmbed()
+            .setDescription(text)
+            .setColor(1942002)
+            .setAuthor(`${user.name} (@${user.username}) a tweeté :`, cache.twitter[account].iconUrl)
+            .setImage(media)
+            .setFooter(`Le ${date.toLocaleDateString("fr-FR", {day:"numeric", month:"long", year: "numeric", hour:"numeric", minute:"numeric"})}`,
+                       "https://abs.twimg.com/icons/apple-touch-icon-192x192.png");
+
+        channel.send({embeds = [embed]});
     }
 }
 
