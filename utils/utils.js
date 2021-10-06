@@ -95,19 +95,21 @@ export function hasStudentRole(member) {
 
 
 export async function checkSocialMedias() {
-
+    
 }
 
 
 async function retrieve_tweets(account, channel) {
-    let response;
+    let response, newTweets, newTweetId;
     response = await axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers});
     newTweets = response.data;
     newTweetId = newTweets.data[0].id;
 
     if (newTweetId != cache.twitter[account].lastTweetId) {
+        let tweetData, media, date;
+
         response = await axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
-                              "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers})
+                              "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers});
         tweetData = response.data;
 
         if (tweetData.data[0].includes("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
@@ -115,11 +117,16 @@ async function retrieve_tweets(account, channel) {
             return; // Do not share if the tweet is a reply/RT
         }
 
-        let medias;
         if tweetData.includes("includes") {
-            medias = 
+            if (tweetData.includes.media[0].type == "photo") {
+                media = tweetData.includes.media[0].url    
+            }
+            else if (tweetData.includes.media[0].type == "video") {
+                tweetData.includes.media[0].preview_image_url;
+            }
         }
 
+        date = tweetData.data[0].created_at
 
 
 
