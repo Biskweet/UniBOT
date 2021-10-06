@@ -1,7 +1,10 @@
 import fs from 'fs';
 import axios from 'axios';
-import * as utils from '../utils/utils.js';
+import * as variables from '../variables.js';
 import { boosterRoleId, modoRoleId } from './variables.js';
+
+
+const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
 
 
 export function errorHandler(error, message=null) {
@@ -20,6 +23,13 @@ export function capitalize(string) {
 export function isBooster(member) {
     return member.roles.cache.has(boosterRoleId);
 }
+
+
+export function isCommand(msg) {
+    return (message.content.toUpperCase().startsWith(variables.prefix1) ||
+            message.content.toUpperCase().startsWith(variables.prefix2));
+}
+
 
 
 export function isModo(member) {
@@ -90,7 +100,33 @@ export async function checkSocialMedias() {
 
 
 async function retrieve_tweets(account, channel) {
-    let response = await axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`)
+    let response;
+    response = await axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers});
+    newTweets = response.data;
+    newTweetId = newTweets.data[0].id;
+
+    if (newTweetId != cache.twitter[account].lastTweetId) {
+        response = await axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
+                              "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers})
+        tweetData = response.data;
+
+        if (tweetData.data[0].includes("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
+                                                                tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
+            return; // Do not share if the tweet is a reply/RT
+        }
+
+        let medias;
+        if tweetData.includes("includes") {
+            medias = 
+        }
+
+
+
+
+
+
+    }
+
 
 }
 

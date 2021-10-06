@@ -4,7 +4,9 @@ export const WikiIcon = "https://wikipedia.org/static/apple-touch/wikipedia.png"
 
 export const WolframAlphaIcon = "https://icon-library.com/images/wolfram-alpha-icon/wolfram-alpha-icon-17.jpg"
 
-export const prefix = "UNIB ";
+export const prefix1 = "UNIB ";
+
+export const prefix2 = ">"
 
 export const boosterRoleId = "852891262659067924";
 

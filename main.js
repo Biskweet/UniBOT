@@ -21,9 +21,6 @@ global.cache = utils.loadCache();
 global.welcomeQueue = [];
 
 
-const PREFIX = variables.prefix;
-
-
 global.client = new Discord.Client({
     intents: [
         Intents.FLAGS.GUILDS,
@@ -66,7 +63,7 @@ client.on("guildBanAdd", (guildBan) => {
 
 // -------- On message --------
 client.on("messageCreate", async (message) => {
-    if (! message.content.toUpperCase().startsWith(PREFIX)) {
+    if (! utils.isCommand(message.content)) {
         return moderation.filterMessage(message);
     }
 
