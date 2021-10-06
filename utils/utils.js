@@ -126,15 +126,10 @@ async function retrieve_tweets(account, channel) {
             }
         }
 
-        date = tweetData.data[0].created_at
-
-
-
+        date = new Date(tweetData.data[0].created_at;
 
 
     }
-
-
 }
 
 
