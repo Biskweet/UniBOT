@@ -33,7 +33,6 @@ global.client = new Discord.Client({
 
 
 
-
 // ---------- Events ----------
 client.on("ready", () => {
     events.onReady();

@@ -3,6 +3,7 @@ import * as utils from "../utils/utils.js";
 
 export function onReady() {
     console.log(client.user.tag, "is ready.");
+    setInterval(utils.checkSocialMedias, 3000000)
 }
 
 

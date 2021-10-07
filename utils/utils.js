@@ -95,11 +95,37 @@ export function hasStudentRole(member) {
 
 
 export async function checkSocialMedias() {
-    
+    for (twitterAccount of variables.twitterAccounts) {
+        await retrieveTweets(twitterAccount)
+    }
+
+    await retrieveVideos();
 }
 
 
-async function retrieve_tweets(account, channel) {
+async function retrieveVideos() {
+    let response, newVideoId;
+
+    response = await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_TOKEN}` +
+                               `&channelId=${cache.youtube.account}&part=snippet,id&order=date&maxResults=1`)
+
+    response = response.data;
+    if (!response.hasOwnProperty("items")) {
+        return;
+    }
+
+    newVideoId = response.items[0].id.videoId;
+
+    if (newVideoId != cache.youtube.lastVideoId) {
+        // let channel = client.channels.cache.get("749770030954053632");
+        let channel = client.channels.cache.get("870287403946999849");
+        channel.send("Nouvelle vidéo de Sorbonne Université !\n" +
+                     "https://www.youtube.com/watch?v=" + newVideoId);
+    }
+}
+
+
+async function retrieveTweets(account) {
     let response, newTweets, newTweetId;
     response = await axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers});
     newTweets = response.data;
@@ -128,11 +154,13 @@ async function retrieve_tweets(account, channel) {
 
         date = new Date(tweetData.data[0].created_at);
  
-        response = await axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitter_account, {headers: headers});
+        response = await axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, {headers: headers});
         user = response.data.data[0];
 
         text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${new_tweet_id})`;
 
+        // let channel = client.channels.cache.get("777304594195677225");
+        let channel = client.channels.cache.get("870287403946999849");
         embed = new MessageEmbed()
             .setDescription(text)
             .setColor(1942002)
@@ -144,5 +172,8 @@ async function retrieve_tweets(account, channel) {
         channel.send({embeds = [embed]});
     }
 }
+
+
+
 
 
