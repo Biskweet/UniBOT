@@ -6,18 +6,20 @@ import * as utils from '../utils/utils.js'
 export function destroyClient(message) {
     if (utils.isModo(message.member)) {
 
-        await message.channel.send({ embeds: [{
-            title: "Destruction du client.",
+        message.channel.send({ embeds: [{
+            title: ":firecracker: Destruction du client.",
             color: SuHex
-        }]});
+        }]})
 
-        console.log("Shutting down.");
-        client.destroy();
+            .then((msg) => {
+                console.log("Shutting down.");
+                client.destroy();
+            })
     }
 }
 
 
-export function kick(message, reason) {
+export async function kick(message, reason) {
     if (utils.isModo(message.member)) {
 
         let target = message.mentions.members.first();
@@ -36,7 +38,7 @@ export function kick(message, reason) {
             message.react('✅');
 
             target.send(alert)
-                .catch((err) => {console.log(`Could not send kick alert to ${member.user.tag}`)})
+                .catch((err) => {console.log(`Could not send kick alert to ${message.member.user.tag}`)})
 
         }
 
@@ -54,7 +56,7 @@ export function kick(message, reason) {
 }
 
 
-export function ban(message, reason) {
+export async function ban(message, reason) {
     if (utils.isModo(message.member)) {
 
         let target = message.mentions.members.first();
@@ -91,21 +93,19 @@ export function ban(message, reason) {
 }
 
 
-export function unban(message, userId) {
+export async function unban(message, userId) {
     if (utils.isModo(message.member)) {
 
         message.guild.members.unban(userId)
             .then( (user) => {
                 message.react('✅');
             })
-
             .catch(utils.errorHandler, message);
     }
 }
 
 
-export function filterMessage(message) {
-
+export async function filterMessage(message) {
     if (message.channel.id != "754653542178095195" && !utils.isModo(message.member) &&
        (message.content.includes("discord.gg/") || message.content.includes("https://chat.whatsapp.com/"))) {
        

@@ -152,7 +152,7 @@ export async function wiki(message, article) {
 }
 
 
-export function answer(message, question) {
+export async function answer(message, question) {
 
     let embed = new MessageEmbed().setColor(variables.SuHex);   
 

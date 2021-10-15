@@ -2,7 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import { SuHex } from '../utils/variables.js';
 
 
-export function help(message, command='') {
+export async function help(message, command='') {
     let embedTitle, embedDesc, embedFooter, embedIcon;
 
     let embed = new MessageEmbed()

@@ -1,18 +1,35 @@
 import fs from 'fs';
 import axios from 'axios';
-import * as variables from '../variables.js';
+import * as variables from './variables.js';
 import { boosterRoleId, modoRoleId } from './variables.js';
+import dotenv from 'dotenv';
 
+
+dotenv.config();
+
+export const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+export const WOLFRAMALPHA_TOKEN = process.env.WOLFRAMALPHA_TOKEN;
+export const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
+export const YOUTUBE_TOKEN = process.env.YOUTUBE_TOKEN;
 
 const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
 
 
-export function errorHandler(error, message=null) {
+
+export async function errorHandler(error, message=null) {
     console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
     
-    if (message !== null)
+    if (message !== null) {
         message.react('❌');
+    }
 }
+
+
+export async function updateClientActivity() {
+    let serverMembersCount = client.guilds.cache.get("749364640147832863").memberCount;
+    client.user.setActivity(`${serverMembersCount} membres 👀 !`, {type: "WATCHING"});
+}
+
 
 
 export function capitalize(string) {
@@ -26,21 +43,29 @@ export function isBooster(member) {
 
 
 export function isCommand(msg) {
-    return (message.content.toUpperCase().startsWith(variables.prefix1) ||
-            message.content.toUpperCase().startsWith(variables.prefix2));
+    return (msg.toUpperCase().startsWith(variables.prefix1) ||
+            msg.toUpperCase().startsWith(variables.prefix2));
 }
 
 
 
 export function isModo(member) {
-    return member.roles.cache.has(modoRoleId);
+    return (member.roles.cache.has(modoRoleId) || (member.id == "329718763698257931"));
 }
 
 
 export function loadCache(path="cache.json") {
-    return JSON.parse(
-        fs.readFileSync("cache.json")
-    );
+    try {
+        let fileContent = JSON.parse(
+            fs.readFileSync(path)
+        );
+        console.log("Successfully loaded the cache file.");
+        return fileContent;
+    }
+
+    catch (err) {
+        throw new Error("Error while loading the cache file (incorrect file path?).");
+    }
 }
 
 
@@ -51,13 +76,13 @@ export function saveCache(data) {
             console.log("ERROR WHILE DUMPING CACHE!");
         }
         else {
-            console.log("Cache updated.")
+            console.log("Cache updated.");
         };
     });
 }
 
 
-export function updateWelcomeMessage(action, member) {
+export async function updateWelcomeMessage(action, member) {
     // New Student needs to be welcomed
     client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
         .then( (message) => {
@@ -95,11 +120,14 @@ export function hasStudentRole(member) {
 
 
 export async function checkSocialMedias() {
+    console.log("checking social medias");
+    let twitterAccount;
     for (twitterAccount of variables.twitterAccounts) {
-        await retrieveTweets(twitterAccount)
+        retrieveTweets(twitterAccount)
+            .catch((err) => {console.log, "Error while fetching tweets for account:" + twitterAccount});
     }
 
-    await retrieveVideos();
+    retrieveVideos().catch((err) => {"Error while fetching videos."});
 }
 
 
@@ -169,7 +197,7 @@ async function retrieveTweets(account) {
             .setFooter(`Le ${date.toLocaleDateString("fr-FR", {day:"numeric", month:"long", year: "numeric", hour:"numeric", minute:"numeric"})}`,
                        "https://abs.twimg.com/icons/apple-touch-icon-192x192.png");
 
-        channel.send({embeds = [embed]});
+        channel.send({embeds: [embed]});
     }
 }
 

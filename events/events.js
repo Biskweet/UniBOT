@@ -3,17 +3,20 @@ import * as utils from "../utils/utils.js";
 
 export function onReady() {
     console.log(client.user.tag, "is ready.");
-    setInterval(utils.checkSocialMedias, 3000000)
+    utils.updateClientActivity();
+    setInterval(utils.checkSocialMedias, 300000);
 }
 
 
-export function guildMemberAdd(member) {
+export async function guildMemberAdd(member) {
     client.channels.cache.get("752891071553601638").send(`${member} a rejoint le serveur.`);
+    utils.updateClientActivity();
 }
 
 
-export function guildMemberRemove(member) {
+export async function guildMemberRemove(member) {
     client.channels.cache.get("777521246950129674").send(`${member} a quitté le serveur.`);
+    utils.updateClientActivity();
     if (welcomeQueue.includes(member.id)) {
         updateWelcomeMsg("remove", member);
         
@@ -26,7 +29,7 @@ export function guildMemberRemove(member) {
 }
 
 
-export function guildBanAdd(guildBan) {
+export async function guildBanAdd(guildBan) {
     let embed = new MessageEmbed()
         .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
         .setDescription(`${guildBan.user} a été banni du serveur.`)
@@ -37,7 +40,7 @@ export function guildBanAdd(guildBan) {
 }
 
 
-export function guildBanRemove(guildBan) {
+export async function guildBanRemove(guildBan) {
     let embed = new MessageEmbed()
         .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
         .setDescription(`${guildBan.user} a été dé-banni du serveur.`)
@@ -48,7 +51,7 @@ export function guildBanRemove(guildBan) {
 }
 
 
-export function checkMemberUpdate(oldMember, newMember) {
+export async function checkMemberUpdate(oldMember, newMember) {
     if (utils.hasStudentRole(newMember) && !utils.hasStudentRole(oldMember)) {
         utils.updateWelcomeMessage("append", newMember);
         welcomeQueue.push(newMember.id)

@@ -4,7 +4,7 @@ import * as variables from '../utils/variables.js';
 import * as utils from '../utils/utils.js';
 
 
-export function couleur(message, hexcode) {
+export async function couleur(message, hexcode) {
     // if (!utils.isBooster(message.member)) {
     //     return;  // Not a server booster
     // }

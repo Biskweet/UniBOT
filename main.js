@@ -4,20 +4,18 @@ import dotenv from 'dotenv';
 import * as moderation from './commands/moderation.js';
 import * as variables from './utils/variables.js';
 import * as events from './events/events.js';
+import * as utils from './utils/utils.js'
 import * as misc from './commands/misc.js';
 import * as vip from './commands/vip.js'
 import { help } from './commands/help.js';
 
+console.log("Launching...");
 
 dotenv.config();
 
 
-global.DISCORD_TOKEN = process.env.DISCORD_TOKEN;
-global.WOLFRAMALPHA_TOKEN = process.env.WOLFRAMALPHA_TOKEN;
-global.TWITTER_TOKEN = process.env.TWITTER_TOKEN;
-global.YOUTUBE_TOKEN = process.env.YOUTUBE_TOKEN;
-
 global.cache = utils.loadCache();
+
 global.welcomeQueue = [];
 
 
@@ -29,32 +27,32 @@ global.client = new Discord.Client({
         Intents.FLAGS.DIRECT_MESSAGES,
         Intents.FLAGS.GUILD_BANS
     ]
-}); 
+});
 
 
 
 // ---------- Events ----------
-client.on("ready", () => {
+client.on("ready", async () => {
     events.onReady();
 });
 
 
-client.on("guildMemberAdd", (member) => {
-    events.guildMemberAdd(member);
+client.on("guildMemberAdd", async (member) => {
+    await events.guildMemberAdd(member);
 })
 
 
-client.on("guildMemberRemove", (member) => {
-    events.guildMemberRemove(member);
+client.on("guildMemberRemove", async (member) => {
+    await events.guildMemberRemove(member);
 })
 
 
-client.on("guildMemberUpdate", (oldMember, newMember) => {
-    events.checkMemberUpdate(oldMember, newMember);
+client.on("guildMemberUpdate", async (oldMember, newMember) => {
+    await events.checkMemberUpdate(oldMember, newMember);
 })
 
 
-client.on("guildBanAdd", (guildBan) => {
+client.on("guildBanAdd", async (guildBan) => {
     events.guildBanAdd(guildBan);
 })
 // ----------------------------
@@ -62,77 +60,84 @@ client.on("guildBanAdd", (guildBan) => {
 
 // -------- On message --------
 client.on("messageCreate", async (message) => {
-    if (! utils.isCommand(message.content)) {
-        return moderation.filterMessage(message);
+    try {
+        if (utils.isCommand(message.content) === false) {
+            return moderation.filterMessage(message);  // Msg isn't a command, just filter it
+        }
+
+        if (message.author.bot === true) {
+            return;  // Do not react to self or other bots
+        }
+
+        const words = message.content.split(' ');
+        const command = words[1];
+
+
+        // ------- Help --------
+        if (command === "help") {
+            await help(message, words.slice(2).join());
+        }
+        // ---------------------
+
+
+        // ---- Moderation -----
+        if (command === "destroy") {
+            moderation.destroyClient(message);
+        }
+
+        if (command === "kick") {
+            await moderation.kick(message, words.slice(3).join(' '))
+        }
+
+        if (command === "ban") {
+            await moderation.ban(message, words.slice(3).join(' '))
+        }
+
+        if (command === "unban") {
+            await moderation.unban(message, words.slice(2).join(' '))
+        }
+        // ---------------------
+
+
+        // ------- VIP --------
+        if (command === "couleur") {
+            await vip.couleur(message, words.slice(2));
+        }
+        // --------------------
+
+
+        // --- Miscellaneous ---
+        if (command === "ping") {
+            await misc.ping(message);
+        }
+
+        if (command === "8ball") {
+            await misc.eightBall(message, words.slice(2));
+        }
+
+        if (command === "wiki") {
+            await misc.wiki(message, words.slice(2));
+        }
+
+        if (command === "sendinfo" || command === "send_info") {
+            await misc.sendInfo(message);
+        }
+
+        if (command == "resetwelcome") {
+            await utils.updateWelcomeMessage("reset", member);
+        }
+
+        if (command === "answer") {
+            await misc.answer(message,words.slice(2));
+        }
+        // ---------------------
+
+        await moderation.filterMessage(message);
     }
 
-    if (message.author.bot)
-        return;  // Do not react to self or other bots
-
-    const words = message.content.split(' ');
-    const command = words[1];
-
-
-    // ------- Help --------
-    if (command === "help") {
-        help(message, words.slice(2).join());
+    catch (error) {
+        await utils.errorHandler(error, message);
     }
-    // ---------------------
-
-
-    // ---- Moderation -----
-    if (command === "destroy") {
-        moderation.destroyClient(message);
-    }
-
-    if (command === "kick") {
-        moderation.kick(message, words.slice(3).join(' '))
-    }
-
-    if (command === "ban") {
-        moderation.ban(message, words.slice(3).join(' '))
-    }
-
-    if (command === "unban") {
-        moderation.unban(message, words.slice(2).join(' '))
-    }
-    // ---------------------
-
-
-    // ------- VIP --------
-    if (command === "couleur") {
-        vip.couleur(message, words.slice(2));
-    }
-    // --------------------
-
-
-    // --- Miscellaneous ---
-    if (command === "ping") {
-        misc.ping(message);
-    }
-
-    if (command === "8ball") {
-        misc.eightBall(message, words.slice(2));
-    }
-
-    if (command === "wiki") {
-        misc.wiki(message, words.slice(2));
-    }
-
-    if (command === "sendinfo" || command === "send_info") {
-        misc.sendInfo(message);
-    }
-
-    if (command == "resetwelcome") {
-        utils.updateWelcomeMessage("reset", member);
-    }
-
-    if (command === "answer") {
-        misc.answer(message,words.slice(2));
-    }
-    // ---------------------
-
-    moderation.filterMessage(message);
 });
 // ---------------------------
 
