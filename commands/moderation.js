@@ -6,7 +6,7 @@ import * as utils from '../utils/utils.js'
 export function destroyClient(message) {
     if (utils.isModo(message.member)) {
         message.channel.send({ embeds: [{
-            title: ":firecracker: Destruction du client.",
+            title: ":headstone: Destruction du client.",
             color: SuHex
         }]})
 
@@ -19,9 +19,31 @@ export function destroyClient(message) {
 }
 
 
-export async function clear(message) {
+export async function clear(message, args) {
     if (utils.isModo(message.member)) {
-        // message.channel.
+
+        if (args.length != 1 || isNaN(args[0])) {
+            return; // Incorrect input but I'm too lazy for debug
+        }
+
+        let amount = parseInt(args[0]);
+
+        if (amount > 75) {
+            message.react('❌');
+            message.channel.send("Impossible de supprimer plus de 75 messages à la fois.")
+                .then( (errMsg) => {
+                    setTimeout(() => {
+                        errMsg.delete();
+                    }, 5000);
+                });
+            return;
+        }
+
+        message.channel.messages.fetch({ limit: (amount+1) })
+            .then((messages) => {
+                message.channel.bulkDelete(messages);
+            })
+            .catch( (error) => {utils.errorHandler(error, message);} );
     }
 }
 
@@ -42,13 +64,12 @@ export async function kick(message, reason) {
             if (reason.length !== 0) {
                 alert += "\n\nMotif : " + reason;
             }
+            
+            target.send(alert)
+                .catch((err) => {console.log(`Could not send kick alert to ${target.user.tag}`);})
 
             target.kick();
             message.react('✅');
-
-            target.send(alert)
-                .catch((err) => {console.log(`Could not send kick alert to ${message.member.user.tag}`);})
-
         }
 
         catch (error) {
@@ -59,7 +80,7 @@ export async function kick(message, reason) {
                 .setDescription(error.message)
                 .setColor(SuHex);
 
-            message.channel.send({ embeds: [embed]});
+            message.channel.send({ embeds: [embed] });
         }
     }
 }
@@ -84,8 +105,7 @@ export async function ban(message, reason) {
             message.react('✅');
 
             target.send(alert)
-                .catch((err) => {console.log(`Could not send kick alert to ${member.user.tag}`)})
-
+                .catch((err) => {console.log(`Could not send kick alert to ${target.user.tag}`)});
         }
 
         catch (error) {
@@ -96,7 +116,7 @@ export async function ban(message, reason) {
                 .setDescription(error.message)
                 .setColor(SuHex)
 
-            message.channel.send({ embeds: [embed]});
+            message.channel.send({ embeds: [embed] });
         }
     }
 }
@@ -106,10 +126,8 @@ export async function unban(message, userId) {
     if (utils.isModo(message.member)) {
 
         message.guild.members.unban(userId)
-            .then( (user) => {
-                message.react('✅');
-            })
-            .catch(utils.errorHandler, message);
+            .then( (user) => {message.react('✅');})
+            .catch( (error) => {utils.errorHandler(error, message);} );
     }
 }
 
@@ -126,7 +144,7 @@ export async function filterMessage(message) {
             .setFooter("Contactez la modération pour partager un lien.")
             .setColor(SuHex);
 
-        message.channel.send({ embeds: [embed]})
+        message.channel.send({ embeds: [embed]});
     }
 }
 

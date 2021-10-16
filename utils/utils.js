@@ -17,7 +17,7 @@ const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
 
 
 
-export async function errorHandler(error, message=null) {
+export async function errorHandler(error, message) {
     console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
     
     if (message !== null) {
@@ -32,7 +32,6 @@ export async function updateClientActivity() {
 }
 
 
-
 export function capitalize(string) {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
 }
@@ -43,15 +42,24 @@ export function isBooster(member) {
 }
 
 
-export function isCommand(msg) {
-    return (msg.toUpperCase().startsWith(variables.prefix1) ||
-            msg.toUpperCase().startsWith(variables.prefix2));
+export function hasStudentRole(member) {
+    return member.roles.cache.has("779741939447627798");
 }
-
 
 
 export function isModo(member) {
     return (member.roles.cache.has(modoRoleId) || (member.id == "329718763698257931"));
+}
+
+
+export function hasSensitiveRole(member) {
+    return (member.roles.cache.has("777533078763208724") || member.roles.cache.has("754463571345276969"));
+}
+
+
+export function isCommand(msg) {
+    return (msg.toUpperCase().startsWith(variables.prefix1) ||
+            msg.toUpperCase().startsWith(variables.prefix2));
 }
 
 
@@ -85,7 +93,7 @@ export function saveCache(data) {
 
 export async function updateWelcomeMessage(action, member) {
     // New Student needs to be welcomed
-    client.channels.cache.get("498225252195762192").messages.fetch("894011083029889034")
+    client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
         .then( (message) => {
             if (action === "append") {
                 if (message.content === 'Nothing yet.') {
@@ -96,7 +104,7 @@ export async function updateWelcomeMessage(action, member) {
                 }
 
                 message.edit(edit)
-                    .catch(errorHandler, {content: "<error while updating welcome message>"});
+                    .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
             }
     
 
@@ -111,12 +119,7 @@ export async function updateWelcomeMessage(action, member) {
             }
         })
 
-        .catch(errorHandler, {content: "<error while updating welcome message>"});
-}
-
-
-export function hasStudentRole(member) {
-    return member.roles.cache.has("779741939447627798");
+        .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
 }
 
 
@@ -127,7 +130,7 @@ export async function checkSocialMedias() {
             .catch((err) => {console.log, "Error while fetching tweets for account:" + twitterAccount});
     }
 
-    retrieveVideos().catch((err) => {"Error while fetching videos."});
+    retrieveVideos().catch( (err) => {console.log("Error while fetching videos.");} );
 }
 
 
@@ -145,8 +148,7 @@ async function retrieveVideos() {
     newVideoId = response.items[0].id.videoId;
 
     if (newVideoId != cache.youtube.lastVideoId) {
-        // let channel = client.channels.cache.get("749770030954053632");
-        let channel = client.channels.cache.get("498225252195762192");
+        let channel = client.channels.cache.get(vars.youtubeChannelId);
         channel.send("Nouvelle vidéo de Sorbonne Université !\n" +
                      "https://www.youtube.com/watch?v=" + newVideoId);
 
@@ -195,8 +197,7 @@ async function retrieveTweets(account) {
 
                                 text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${newTweetId})`;
 
-                                // let channel = client.channels.cache.get("777304594195677225");
-                                channel = client.channels.cache.get("498225252195762192");
+                                channel = client.channels.cache.get(vars.twitterChannelId);
                                 
                                 let embed = new MessageEmbed()
                                     .setDescription(text)

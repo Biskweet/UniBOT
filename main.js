@@ -54,6 +54,11 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
 client.on("guildBanAdd", async (guildBan) => {
     events.guildBanAdd(guildBan);
 })
+
+
+client.on("guildBanRemove", async (guildBan) => {
+    events.guildBanRemove(guildBan);
+})
 // ----------------------------
 
 
@@ -84,6 +89,10 @@ client.on("messageCreate", async (message) => {
             moderation.destroyClient(message);
         }
 
+        if (command === "clear") {
+            await moderation.clear(message, words.slice(2))
+        }
+
         if (command === "kick") {
             await moderation.kick(message, words.slice(3).join(' '))
         }
@@ -94,6 +103,12 @@ client.on("messageCreate", async (message) => {
 
         if (command === "unban") {
             await moderation.unban(message, words.slice(2).join(' '))
+        }
+
+        if (command == "resetwelcome") {
+            if (utils.isModo(message.member)) {
+                await utils.updateWelcomeMessage("reset", member);
+            }
         }
         // ---------------------
 
@@ -120,10 +135,6 @@ client.on("messageCreate", async (message) => {
 
         if (command === "sendinfo" || command === "send_info") {
             await misc.sendInfo(message);
-        }
-
-        if (command == "resetwelcome") {
-            await utils.updateWelcomeMessage("reset", member);
         }
 
         if (command === "answer") {

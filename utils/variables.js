@@ -10,9 +10,23 @@ export const prefix1 = "UNIB ";
 
 export const prefix2 = ">";
 
+export const logsChannelId = "776802470089064510";
+
+export const modosChannelId = "749982348187271299";
+
 export const boosterRoleId = "852891262659067924";
 
+export const twitterChannelId = "777304594195677225";
+
+export const youtubeChannelId = "749770030954053632";
+
 export const modoRoleId = "749971084228558969";
+
+export const newMembersChannelId = "752891071553601638";
+
+export const leavingMembersChannelId = "777521246950129674";
+
+export const welcomeChannelId = "859573235015614485"
 
 export const months = ["janvier","février", "mars",
                        "avril", "mai", "juin",

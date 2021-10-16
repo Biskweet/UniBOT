@@ -42,7 +42,7 @@ export async function couleur(message, hexcode) {
 
     if ( newRole !== undefined ) {
         message.member.roles.add(newRole)
-            .catch(utils.errorHandler, message);
+            .catch( (error) => {utils.errorHandler(error, message);} );
 
         embed.setTitle("Rôle ajouté !")
              .setThumbnail(`https://singlecolorimage.com/get/${hexcode}/100x75`)

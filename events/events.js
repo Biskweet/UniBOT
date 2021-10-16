@@ -1,29 +1,31 @@
 import * as utils from "../utils/utils.js";
+import { MessageEmbed } from 'discord.js';
+import * as vars from '../utils/variables.js';
 
 
 export async function onReady() {
     console.log(client.user.tag, "is ready.");
     await utils.updateClientActivity();
-    utils.checkSocialMedias();
-    setInterval(utils.checkSocialMedias, 30000);
+    // utils.checkSocialMedias();
+    // setInterval(utils.checkSocialMedias, 300000);
 }
 
 
 export async function guildMemberAdd(member) {
-    client.channels.cache.get("498225252195762192").send(`${member} a rejoint le serveur.`);
+    client.channels.cache.get(vars.newMembersChannelId).send(`${member} a rejoint le serveur.`);
     await utils.updateClientActivity();
 
-    let ping = client.channels.cache.get("498225252195762192").send(`${member} choisissez pour accéder au serveur !`);
-
-    setTimeout(() => {
-        ping.delete()
-    }, 300);
-
+    client.channels.cache.get(vars.WelcomeChannelId).send(`${member} choisissez pour accéder au serveur !`)
+        .then( (ping) => {
+            setTimeout(() => {
+                ping.delete()
+            }, 300);
+        });
 }
 
 
 export async function guildMemberRemove(member) {
-    client.channels.cache.get("498225252195762192").send(`${member} a quitté le serveur.`);
+    client.channels.cache.get(vars.leavingMembersChannelId).send(`${member} a quitté le serveur.`);
     await utils.updateClientActivity();
     if (welcomeQueue.includes(member.id)) {
         await updateWelcomeMsg("remove", member);
@@ -44,7 +46,7 @@ export async function guildBanAdd(guildBan) {
         .setColor(16711680)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get("498225252195762192").send({embeds: [embed]})
+    client.channels.cache.get(vars.logsChannelId).send({embeds: [embed]});
 }
 
 
@@ -55,12 +57,12 @@ export async function guildBanRemove(guildBan) {
         .setColor(65280)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get("498225252195762192").send({embeds: [embed]});
+    client.channels.cache.get(vars.logsChannelId).send({embeds: [embed]});
 }
 
 
 export async function checkMemberUpdate(oldMember, newMember) {
-    if (utils.hasStudentRole(newMember) && !utils.hasStudentRole(oldMember)) {
+    if (!utils.hasStudentRole(oldMember) && utils.hasStudentRole(newMember)) {
         await utils.updateWelcomeMessage("append", newMember);
         welcomeQueue.push(newMember.id)
     }
@@ -71,6 +73,10 @@ export async function checkMemberUpdate(oldMember, newMember) {
         if (index > -1) {
             welcomeQueue.splice(index, 1);
         }
+    }
+
+    if (utils.hasSensitiveRole(oldMember) && !utils.hasSensitiveRole(newMember)) {
+        client.channels.cache.get(vars.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
     }
 }
 
