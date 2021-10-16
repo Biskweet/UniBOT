@@ -5,18 +5,27 @@ import * as utils from '../utils/utils.js'
 
 export function destroyClient(message) {
     if (utils.isModo(message.member)) {
-
         message.channel.send({ embeds: [{
             title: ":firecracker: Destruction du client.",
             color: SuHex
         }]})
 
             .then((msg) => {
-                console.log("Shutting down.");
+                console.log(`====================\nShutting down (online for ${(Date.now() - client.readyTimestamp)/1000} sec).`);
                 client.destroy();
+                process.exit();
             })
     }
 }
+
+
+export async function clear(message) {
+    if (utils.isModo(message.member)) {
+        // message.channel.
+    }
+}
+
+
 
 
 export async function kick(message, reason) {
@@ -38,7 +47,7 @@ export async function kick(message, reason) {
             message.react('✅');
 
             target.send(alert)
-                .catch((err) => {console.log(`Could not send kick alert to ${message.member.user.tag}`)})
+                .catch((err) => {console.log(`Could not send kick alert to ${message.member.user.tag}`);})
 
         }
 
@@ -120,3 +129,6 @@ export async function filterMessage(message) {
         message.channel.send({ embeds: [embed]})
     }
 }
+
+
+

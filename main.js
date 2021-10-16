@@ -15,7 +15,6 @@ dotenv.config();
 
 
 global.cache = utils.loadCache();
-
 global.welcomeQueue = [];
 
 
