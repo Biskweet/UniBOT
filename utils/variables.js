@@ -6,7 +6,7 @@ export const WolframAlphaIcon = "https://icon-library.com/images/wolfram-alpha-i
 
 export const twitterAccounts = ["SU", "SULettres", "SUScience", "SUMédecine", "SUPolytech", "test"];
 
-export const prefix1 = "UNIB ";
+export const prefix1 = "UNIBOT ";
 
 export const prefix2 = ">";
 
