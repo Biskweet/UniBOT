@@ -91,38 +91,6 @@ export function saveCache(data) {
 }
 
 
-export async function updateWelcomeMessage(action, member) {
-    // New Student needs to be welcomed
-    client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
-        .then( (message) => {
-            if (action === "append") {
-                if (message.content === 'Nothing yet.') {
-                    var edit = `${member}`;
-                }
-                else {
-                    var edit = message.content + ` ${member}`;
-                }
-
-                message.edit(edit)
-                    .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
-            }
-    
-
-            // Not welcomed Student left the server
-            else if (action === "remove") {
-                message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
-            }
-
-            // All Students are welcomed, reset the queue
-            else if (action === "reset") {
-                message.edit('Nothing yet.');
-            }
-        })
-
-        .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
-}
-
-
 export async function checkSocialMedias() {
     let twitterAccount;
     for (twitterAccount of variables.twitterAccounts) {

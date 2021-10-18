@@ -106,9 +106,7 @@ client.on("messageCreate", async (message) => {
         }
 
         if (command == "resetwelcome") {
-            if (utils.isModo(message.member)) {
-                await utils.updateWelcomeMessage("reset", member);
-            }
+            await moderation.updateWelcomeMessage("reset", message.member);
         }
         // ---------------------
 
