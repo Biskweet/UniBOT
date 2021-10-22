@@ -15,6 +15,12 @@ export async function guildMemberAdd(member) {
     client.channels.cache.get(vars.newMembersChannelId).send(`${member} a rejoint le serveur.`);
     await utils.updateClientActivity();
 
+    let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
+                        `\n${member} joined the server.` +
+                        "\n---------------------------------------------------\n";
+
+    utils.saveLogs(memberJoinLog);
+
     client.channels.cache.get(vars.WelcomeChannelId).send(`${member} choisissez pour accéder au serveur !`)
         .then( (ping) => {
             setTimeout(() => {
@@ -27,6 +33,13 @@ export async function guildMemberAdd(member) {
 export async function guildMemberRemove(member) {
     client.channels.cache.get(vars.leavingMembersChannelId).send(`${member} a quitté le serveur.`);
     await utils.updateClientActivity();
+
+    let memberLeaveLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
+                        `\n${member} left the server.` +
+                        "\n---------------------------------------------------\n";
+
+    utils.saveLogs(memberLeaveLog);
+
     if (welcomeQueue.includes(member.id)) {
         await updateWelcomeMsg("remove", member);
         

@@ -16,9 +16,24 @@ export const YOUTUBE_TOKEN = process.env.YOUTUBE_TOKEN;
 const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
 
 
+export function saveLogs(content) {
+    fs.appendFile("logs.json", content, (error) => {
+        if (error) {
+            console.log("ERROR WHILE SAVING LOGS");
+        }
+    });
+}
+
+
 
 export async function errorHandler(error, message) {
-    console.log("-------------------------\nNew error:", message.content, '\n=>', error.message, "\n-------------------------");
+    let errorMessage = "\n------------ " + (new Date()).toJSON() + " -------------" +
+                       "\nNew error: " + message.content +
+                       "\n=> " + error.message +
+                       "\n---------------------------------------------------\n";
+
+    console.log(errorMessage);
+    saveLogs(errorMessage);
     
     if (message !== null) {
         message.react('❌');
@@ -86,7 +101,7 @@ export function saveCache(data) {
 
         } else {
             console.log("Cache updated.");
-        };
+        }
     });
 }
 
