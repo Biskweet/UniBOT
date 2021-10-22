@@ -42,7 +42,7 @@ export async function errorHandler(error, message) {
 
 
 export async function updateClientActivity() {
-    let serverMembersCount = client.guilds.cache.get("498225252195762186").memberCount;
+    let serverMembersCount = client.guilds.cache.get("749364640147832863").memberCount;
     client.user.setActivity(`${serverMembersCount} membres 👀 !`, {type: "WATCHING"});
 }
 
@@ -113,7 +113,7 @@ export async function checkSocialMedias() {
             .catch((err) => {console.log, "Error while fetching tweets for account:" + twitterAccount});
     }
 
-    retrieveVideos().catch( (err) => {console.log("Error while fetching videos.");} );
+    retrieveVideos().catch( (err) => {console.log("Error while fetching videos. (" + err.message + ")");} );
 }
 
 
@@ -131,7 +131,7 @@ async function retrieveVideos() {
     newVideoId = response.items[0].id.videoId;
 
     if (newVideoId != cache.youtube.lastVideoId) {
-        let channel = client.channels.cache.get(vars.youtubeChannelId);
+        let channel = client.channels.cache.get(variables.youtubeChannelId);
         channel.send("Nouvelle vidéo de Sorbonne Université !\n" +
                      "https://www.youtube.com/watch?v=" + newVideoId);
 
@@ -180,7 +180,7 @@ async function retrieveTweets(account) {
 
                                 text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${newTweetId})`;
 
-                                channel = client.channels.cache.get(vars.twitterChannelId);
+                                channel = client.channels.cache.get(variables.twitterChannelId);
                                 
                                 let embed = new MessageEmbed()
                                     .setDescription(text)

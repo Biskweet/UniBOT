@@ -26,7 +26,7 @@ export const newMembersChannelId = "752891071553601638";
 
 export const leavingMembersChannelId = "777521246950129674";
 
-export const welcomeChannelId = "859573235015614485"
+export const startHereChannelId = "859573235015614485"
 
 export const months = ["janvier","février", "mars",
                        "avril", "mai", "juin",

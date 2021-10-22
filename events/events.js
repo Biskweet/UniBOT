@@ -1,18 +1,18 @@
 import * as utils from "../utils/utils.js";
 import { MessageEmbed } from 'discord.js';
-import * as vars from '../utils/variables.js';
+import * as variables from '../utils/variables.js';
 
 
 export async function onReady() {
     console.log(client.user.tag, "is ready.");
     await utils.updateClientActivity();
-    // utils.checkSocialMedias();
-    // setInterval(utils.checkSocialMedias, 300000);
+    utils.checkSocialMedias();
+    setInterval(utils.checkSocialMedias, 300000);
 }
 
 
 export async function guildMemberAdd(member) {
-    client.channels.cache.get(vars.newMembersChannelId).send(`${member} a rejoint le serveur.`);
+    client.guilds.cache.get("749364640147832863").channels.cache.get(variables.newMembersChannelId).send(`${member} a rejoint le serveur.`);
     await utils.updateClientActivity();
 
     let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
@@ -21,17 +21,17 @@ export async function guildMemberAdd(member) {
 
     utils.saveLogs(memberJoinLog);
 
-    client.channels.cache.get(vars.WelcomeChannelId).send(`${member} choisissez pour accéder au serveur !`)
+    client.channels.cache.get(variables.startHereChannelId).send(`${member} choisissez pour accéder au serveur !`)
         .then( (ping) => {
             setTimeout(() => {
-                ping.delete()
-            }, 300);
+                ping.delete();
+            }, 500);
         });
 }
 
 
 export async function guildMemberRemove(member) {
-    client.channels.cache.get(vars.leavingMembersChannelId).send(`${member} a quitté le serveur.`);
+    client.channels.cache.get(variables.leavingMembersChannelId).send(`${member} a quitté le serveur.`);
     await utils.updateClientActivity();
 
     let memberLeaveLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
@@ -59,7 +59,7 @@ export async function guildBanAdd(guildBan) {
         .setColor(16711680)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get(vars.logsChannelId).send({embeds: [embed]});
+    client.channels.cache.get(variables.logsChannelId).send({embeds: [embed]});
 }
 
 
@@ -70,7 +70,7 @@ export async function guildBanRemove(guildBan) {
         .setColor(65280)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get(vars.logsChannelId).send({embeds: [embed]});
+    client.channels.cache.get(variables.logsChannelId).send({embeds: [embed]});
 }
 
 
@@ -89,7 +89,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
     }
 
     if (utils.hasSensitiveRole(oldMember) && !utils.hasSensitiveRole(newMember)) {
-        client.channels.cache.get(vars.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
+        client.channels.cache.get(variables.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
     }
 }
 
