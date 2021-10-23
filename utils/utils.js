@@ -17,7 +17,7 @@ const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
 
 
 export function saveLogs(content) {
-    fs.appendFile("logs.json", content, (error) => {
+    fs.appendFile("logs.txt", content, (error) => {
         if (error) {
             console.log("ERROR WHILE SAVING LOGS");
         }
