@@ -1,6 +1,7 @@
 import * as utils from "../utils/utils.js";
-import { MessageEmbed } from 'discord.js';
 import * as variables from '../utils/variables.js';
+import * as moderation from '../commands/moderation.js';
+import { MessageEmbed } from 'discord.js';
 
 
 export async function onReady() {
@@ -16,7 +17,7 @@ export async function guildMemberAdd(member) {
     await utils.updateClientActivity();
 
     let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
-                        `\n${member} joined the server.` +
+                        `\n${member.user.tag} joined the server.` +
                         "\n---------------------------------------------------\n";
 
     utils.saveLogs(memberJoinLog);
@@ -35,13 +36,13 @@ export async function guildMemberRemove(member) {
     await utils.updateClientActivity();
 
     let memberLeaveLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
-                        `\n${member} left the server.` +
+                        `\n${member.user.tag} left the server.` +
                         "\n---------------------------------------------------\n";
 
     utils.saveLogs(memberLeaveLog);
 
     if (welcomeQueue.includes(member.id)) {
-        await updateWelcomeMsg("remove", member);
+        await moderation.updateWelcomeMessage("remove", member);
         
         // Removing member from the welcome queue
         let index = welcomeQueue.indexOf(member.id);
@@ -76,12 +77,12 @@ export async function guildBanRemove(guildBan) {
 
 export async function checkMemberUpdate(oldMember, newMember) {
     if (!utils.hasStudentRole(oldMember) && utils.hasStudentRole(newMember)) {
-        await utils.updateWelcomeMessage("append", newMember);
+        await moderation.updateWelcomeMessage("append", newMember);
         welcomeQueue.push(newMember.id)
     }
 
     if (!utils.hasStudentRole(newMember) && utils.hasStudentRole(oldMember)) {
-        await utils.updateWelcomeMessage("remove", newMember);
+        await moderation.updateWelcomeMessage("remove", newMember);
         let index = welcomeQueue.indexOf(member.id);
         if (index > -1) {
             welcomeQueue.splice(index, 1);

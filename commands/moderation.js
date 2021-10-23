@@ -38,7 +38,10 @@ export async function updateWelcomeMessage(action, member) {
 
             // Not welcomed Student left the server
             else if (action === "remove") {
-                message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
+                if ((message.content.split("<").length - 1) > 1)
+                    message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
+                else
+                    message.edit("Nothing yet.");
             }
 
             // All Students are welcomed, reset the queue
