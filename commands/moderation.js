@@ -38,7 +38,7 @@ export async function updateWelcomeMessage(action, member) {
 
             // Not welcomed Student left the server
             else if (action === "remove") {
-                if ((message.content.split("<").length - 1) > 1)
+                if ((message.content.split("@").length - 1) > 1)
                     message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
                 else
                     message.edit("Nothing yet.");
