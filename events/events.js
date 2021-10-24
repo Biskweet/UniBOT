@@ -32,7 +32,7 @@ export async function guildMemberAdd(member) {
 
 
 export async function guildMemberRemove(member) {
-    client.channels.cache.get(variables.leavingMembersChannelId).send(`${member} a quitté le serveur.`);
+    client.channels.cache.get(variables.leavingMembersChannelId).send(`${member.user.tag} a quitté le serveur.`);
     await utils.updateClientActivity();
 
     let memberLeaveLog = "\n------------ " + (new Date()).toJSON() + " -------------" +

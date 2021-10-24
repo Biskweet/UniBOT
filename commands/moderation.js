@@ -177,7 +177,7 @@ export async function filterMessage(message) {
 
         let embed = new MessageEmbed()
             .setTitle("❌ Votre message a été supprimé.")
-            .setDescription("Désolé ! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.")
+            .setDescription(`Désolé ${message.member}! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
             .setFooter("Contactez la modération pour partager un lien.")
             .setColor(SuHex);
 
