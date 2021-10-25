@@ -96,7 +96,7 @@ export async function wiki(message, article) {
                 pageText = description.slice(1, 2000) + "...";
             }
 
-            pageText += `\n\n[__Ouvrir__](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})`;
+            pageText += `\n\n__[Ouvrir](https://${locale}.wikipedia.org/wiki/${data[pageId].title.replaceAll(' ', '_')})__`;
 
             embed.setDescription(pageText)
                  .setColor(16777215)
@@ -129,7 +129,7 @@ export async function wiki(message, article) {
                     pageText = pageText.slice(0, 2000) + "...";
                 }
 
-                pageText += `\n\n[__Ouvrir__](${links[0]})`;
+                pageText += `\n\n__[Ouvrir](${links[0]})__`;
 
                 embed.setAuthor(data[pageId].title, variables.WikiIcon)
                      .setDescription(pageText)

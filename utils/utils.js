@@ -109,11 +109,16 @@ export function saveCache(data) {
 export async function checkSocialMedias() {
     let twitterAccount;
     for (twitterAccount of variables.twitterAccounts) {
-        retrieveTweets(twitterAccount)
-            .catch((err) => {console.log, "Error while fetching tweets for account:" + twitterAccount});
+        retrieveTweets(twitterAccount).catch( (err) => {console.log("Error while fetching tweets for account:" + twitterAccount)} );
     }
 
-    retrieveVideos().catch( (err) => {console.log("Error while fetching videos. (" + err.message + ")");} );
+    retrieveVideos().catch( (err) => {console.log("Error while fetching videos (" + err.message + ").")} );
+    checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
+}
+
+
+export async function checkLeaderboard() {
+    axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863")
 }
 
 
