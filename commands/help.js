@@ -1,5 +1,5 @@
 import { MessageEmbed } from 'discord.js';
-import { SuHex } from '../utils/variables.js';
+import * as variables from '../utils/variables.js';
 
 
 export async function help(message, command='') {

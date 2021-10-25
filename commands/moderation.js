@@ -1,4 +1,4 @@
-import { SuHex } from '../utils/variables.js';
+import * as variables from '../utils/variables.js';
 import { MessageEmbed } from 'discord.js';
 import * as utils from '../utils/utils.js'
 
@@ -7,7 +7,7 @@ export function destroyClient(message) {
     if (utils.isModo(message.member)) {
         message.channel.send({ embeds: [{
             title: ":headstone: Destruction du client.",
-            color: SuHex
+            color: variables.SuHex
         }]})
 
             .then((msg) => {
@@ -115,7 +115,7 @@ export async function kick(message, reason) {
             let embed = new MessageEmbed()
                 .setTitle("Il y a eu une erreur lors de l'expulsion du membre : ")
                 .setDescription(error.message)
-                .setColor(SuHex);
+                .setColor(variables.SuHex);
 
             message.channel.send({ embeds: [embed] });
         }
@@ -151,7 +151,7 @@ export async function ban(message, reason) {
             let embed = new MessageEmbed()
                 .setTitle("Il y a eu une erreur lors du bannissement du membre : ")
                 .setDescription(error.message)
-                .setColor(SuHex)
+                .setColor(variables.SuHex)
 
             message.channel.send({ embeds: [embed] });
         }
@@ -179,7 +179,7 @@ export async function filterMessage(message) {
             .setTitle("❌ Votre message a été supprimé.")
             .setDescription(`Désolé ${message.member}! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
             .setFooter("Contactez la modération pour partager un lien.")
-            .setColor(SuHex);
+            .setColor(variables.SuHex);
 
         message.channel.send({ embeds: [embed]});
     }
