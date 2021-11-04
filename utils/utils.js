@@ -125,8 +125,8 @@ export async function checkLeaderboard() {
 async function retrieveVideos() {
     let response, newVideoId;
 
-    response = await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_TOKEN}` +
-                               `&channelId=${cache.youtube.account}&part=snippet,id&order=date&maxResults=1`)
+    axios.get(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_TOKEN}` +
+              `&channelId=${cache.youtube.account}&part=snippet,id&order=date&maxResults=1`)
 
     response = response.data;
     if (!response.hasOwnProperty("items")) {

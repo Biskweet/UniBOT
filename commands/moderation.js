@@ -33,6 +33,13 @@ export async function updateWelcomeMessage(action, member) {
 
                 message.edit(edit)
                     .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
+
+                client.channels.cache.get("893995887758540810").send("New member to be welcomed.")
+                    .then( (alert) => {
+                        setTimeout(() => {
+                            alert.delete();
+                        }, 500);
+                });
             }
     
 
