@@ -92,8 +92,6 @@ export async function clear(message, args) {
 }
 
 
-
-
 export async function kick(message, reason) {
     if (utils.isModo(message.member)) {
 
@@ -191,6 +189,3 @@ export async function filterMessage(message) {
         message.channel.send({ embeds: [embed]});
     }
 }
-
-
-

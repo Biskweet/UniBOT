@@ -204,8 +204,3 @@ async function retrieveTweets(account) {
         }
     })
 }
-
-
-
-
-
