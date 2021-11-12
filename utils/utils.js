@@ -63,7 +63,13 @@ export function hasStudentRole(member) {
 
 
 export function isModo(member) {
-    return (member.roles.cache.has(modoRoleId) || (member.id == "329718763698257931"));
+    try {
+        return (member.roles.cache.has(modoRoleId) || (member.id == "329718763698257931"));
+    }
+
+    catch (err) {
+        return false;
+    }
 }
 
 
