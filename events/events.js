@@ -76,12 +76,12 @@ export async function guildBanRemove(guildBan) {
 
 
 export async function checkMemberUpdate(oldMember, newMember) {
-    if (!utils.hasStudentRole(oldMember) && utils.hasStudentRole(newMember)) {
+    if (!utils.hasAccessRole(oldMember) && utils.hasAccessRole(newMember)) {
         await moderation.updateWelcomeMessage("append", newMember);
         welcomeQueue.push(newMember.id)
     }
 
-    if (!utils.hasStudentRole(newMember) && utils.hasStudentRole(oldMember)) {
+    if (!utils.hasAccessRole(newMember) && utils.hasAccessRole(oldMember)) {
         await moderation.updateWelcomeMessage("remove", newMember);
         let index = welcomeQueue.indexOf(member.id);
         if (index > -1) {

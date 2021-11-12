@@ -70,7 +70,7 @@ export function isModo(member) {
         return (member.roles.cache.has(modoRoleId) || (member.id == "329718763698257931"));
     }
 
-    catch (err) {
+    catch (error) {
         return false;
     }
 }
