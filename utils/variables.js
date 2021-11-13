@@ -4,7 +4,7 @@ export const WikiIcon = "https://wikipedia.org/static/apple-touch/wikipedia.png"
 
 export const WolframAlphaIcon = "https://icon-library.com/images/wolfram-alpha-icon/wolfram-alpha-icon-17.jpg"
 
-export const twitterAccounts = ["SU", "SULettres", "SUScience", "SUMédecine", "SUPolytech", "test"];
+export const twitterAccounts = ["SU", "SULettres", "SUScience", "SUMédecine", "SUPolytech"];
 
 export const prefix1 = "UNIBOT ";
 

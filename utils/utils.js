@@ -123,12 +123,12 @@ export async function checkSocialMedias() {
     }
 
     retrieveVideos().catch( (err) => {console.log("Error while fetching videos (" + err.message + ").")} );
-    checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
+    // checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
 }
 
 
 export async function checkLeaderboard() {
-    axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863")
+    axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863");
 }
 
 

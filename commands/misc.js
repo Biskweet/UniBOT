@@ -86,7 +86,7 @@ export async function wiki(message, article) {
         if (wikiTitle === '') {
 
             let response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=query&generator=random&prop=extracts` +
-                                           `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`)
+                                           `&grnlimit=1&grnnamespace=0&prop=extracts&explaintext=1&exintro=1&format=json`);
             
             data = response.data.query.pages;
             pageId = Object.keys(data)[0];
