@@ -109,8 +109,8 @@ export async function wiki(message, article) {
         else {
             let response, results, links;
 
-            response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`)
-            [, results, , links] = response.data;
+            response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`);
+            [_, results, _, links] = response.data;
 
             if (results.length !== 0) {  // If matching articles are found, then use the first result
                 let pageId, pageText;
