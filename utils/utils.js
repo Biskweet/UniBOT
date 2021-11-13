@@ -133,33 +133,35 @@ export async function checkLeaderboard() {
 
 
 async function retrieveVideos() {
-    let response, newVideoId;
+    let newVideoId;
 
     axios.get(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_TOKEN}` +
               `&channelId=${cache.youtube.account}&part=snippet,id&order=date&maxResults=1`)
 
-    response = response.data;
-    if (!response.hasOwnProperty("items")) {
-        return;
-    }
+        .then( (response) => {
+            response = response.data;
+            if (!response.hasOwnProperty("items")) {
+                return;
+            }
 
-    newVideoId = response.items[0].id.videoId;
+            newVideoId = response.items[0].id.videoId;
 
-    if (newVideoId != cache.youtube.lastVideoId) {
-        let channel = client.channels.cache.get(variables.youtubeChannelId);
-        channel.send("Nouvelle vidéo de Sorbonne Université !\n" +
-                     "https://www.youtube.com/watch?v=" + newVideoId);
+            if (newVideoId != cache.youtube.lastVideoId) {
+                let channel = client.channels.cache.get(variables.youtubeChannelId);
+                channel.send("Nouvelle vidéo de Sorbonne Université !\n" +
+                             "https://www.youtube.com/watch?v=" + newVideoId);
 
-        cache.youtube.lastVideoId = newVideoId;
-        saveCache(cache);
-    }
+                cache.youtube.lastVideoId = newVideoId;
+                saveCache(cache);
+            }
+        })
 }
 
 
 async function retrieveTweets(account) {
     let newTweets, newTweetId;
     axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers})
-        .then((response) => {
+        .then( (response) => {
             newTweets = response.data;
             newTweetId = newTweets.data[0].id;
 
