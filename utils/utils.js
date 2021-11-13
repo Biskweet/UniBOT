@@ -119,7 +119,7 @@ export function saveCache(data) {
 export async function checkSocialMedias() {
     let twitterAccount;
     for (twitterAccount of variables.twitterAccounts) {
-        retrieveTweets(twitterAccount).catch( (err) => {console.log("Error while fetching tweets for account:" + twitterAccount + "(" + err.message + ")"} );
+        retrieveTweets(twitterAccount).catch( (err) => {console.log("Error while fetching tweets for account:" + twitterAccount + "(" + err.message + ")")} );
     }
 
     retrieveVideos().catch( (err) => {console.log("Error while fetching videos (" + err.message + ").")} );
