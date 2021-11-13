@@ -151,7 +151,6 @@ export async function wiki(message, article) {
 
 
 export async function answer(message, question) {
-
     let embed = new MessageEmbed().setColor(variables.SuHex);   
 
     if (question.length === 0) {
@@ -172,16 +171,18 @@ export async function answer(message, question) {
         })
 
         .catch( (error) => {
-            if (error.message === "Wolfram|Alpha did not understand your input") {
+            message.react('❌');
 
+            if (error.message === "Wolfram|Alpha did not understand your input") {
                 message.react('❌');
                 embed.setTitle("Wolfram Alpha did not understand your input.")
                      .setFooter("😕 Maybe it can't answer that.");
-                message.channel.send({embeds: [embed]});
             }
             
             else {
-                utils.errorHandler(error, message);
+                embed.setTitle(error.message.replaceAll("|", "") + ".");
             }
+            
+            message.channel.send({embeds: [embed]});
         });
 }
