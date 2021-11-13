@@ -155,6 +155,10 @@ async function retrieveVideos() {
                 saveCache(cache);
             }
         })
+
+        .catch( (error) => {
+            console.log("Error while fetching videos (" + error.message + ").")
+        });
 }
 
 
