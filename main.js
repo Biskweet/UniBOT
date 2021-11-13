@@ -93,6 +93,10 @@ client.on("messageCreate", async (message) => {
             await moderation.clear(message, words.slice(2))
         }
 
+        if (command === "mute") {
+            moderation.mute(message, words.slice(3));
+        }
+
         if (command === "kick") {
             await moderation.kick(message, words.slice(3).join(' '))
         }

@@ -92,9 +92,46 @@ export async function clear(message, args) {
 }
 
 
+export async function mute(message, args) {
+    if (utils.isModo(message.member)) {
+        let target, mutedRole;
+
+        target = message.mentions.members.first();
+        mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
+
+        target.roles.add(mutedRole);
+
+        if (args.length > 0 && !isNaN(args[0])) {
+            let duration = parseInt(args[0]) * 1000;
+
+            setTimeout( () => {
+                target.roles.remove(mutedRole);
+            }, duration).catch( (error) => {utils.errorHandler(message, error)} );
+        }
+    }
+}
+
+
+export async function unmute(message) {
+    if (utils.isModo(message.member)) {
+        let target, mutedRole;
+
+        target = message.mentions.members.first();
+        mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
+
+        try {
+            target.roles.remove(mutedRole);
+        }
+
+        catch (error) {
+            await utils.errorHandler(message, error);
+        }
+    }
+}
+
+
 export async function kick(message, reason) {
     if (utils.isModo(message.member)) {
-
         let target = message.mentions.members.first();
 
         try {
@@ -130,7 +167,6 @@ export async function kick(message, reason) {
 
 export async function ban(message, reason) {
     if (utils.isModo(message.member)) {
-
         let target = message.mentions.members.first();
 
         try {
