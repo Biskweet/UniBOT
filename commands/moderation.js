@@ -105,8 +105,8 @@ export async function mute(message, args) {
             let duration = parseInt(args[0]) * 1000;
 
             setTimeout( () => {
-                target.roles.remove(mutedRole);
-            }, duration).catch( (error) => {utils.errorHandler(message, error)} );
+                target.roles.remove(mutedRole).catch( (error) => {utils.errorHandler(message, error)} );
+            }, duration);
         }
     }
 }
@@ -119,13 +119,7 @@ export async function unmute(message) {
         target = message.mentions.members.first();
         mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
 
-        try {
-            target.roles.remove(mutedRole);
-        }
-
-        catch (error) {
-            await utils.errorHandler(message, error);
-        }
+        target.roles.remove(mutedRole).catch( (error) => {utils.errorHandler(message, error)} );
     }
 }
 
