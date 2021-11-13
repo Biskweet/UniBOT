@@ -11,15 +11,18 @@ export async function help(message, command='') {
 
     if (command === '') {
         embedTitle = "Liste des commandes";
-        embedDesc  = "send_info\n" +
-                     "ping\n" +
-                     "8ball\n" +
-                     "wiki\n" +
-                     "couleur (VIP)\n" +
-                     "clear (modération)\n" +
-                     "kick (modération)\n" +
-                     "ban/unban (modération)\n"+
-                     "create_embed/edit_embed (modération)";
+        embedDesc  = "```" +
+                     " - send_info\n" +
+                     " - ping\n" +
+                     " - 8ball\n" +
+                     " - answer" +
+                     " - wiki\n" +
+                     " - couleur (VIP)\n" +
+                     " - clear (modération)\n" +
+                     " - kick (modération)\n" +
+                     " - ban/unban (modération)\n"+
+                     " - create_embed/edit_embed (modération)" +
+                     "```";
     }
 
     else if (command === "ping") {
@@ -44,6 +47,10 @@ export async function help(message, command='') {
 
     else if (command === "unban") {
         [embedTitle, embedDesc] = helpUnban();
+    }
+
+    else if (command === "anwer") {
+        [embedTitle, embedDesc] = helpAnswer();
     }
 
     else if (command === "wiki") {
@@ -121,9 +128,19 @@ function helpUnban() {
                      "\"Débannit\" (ou \"pardonne\") un membre banni.\n\n" +
                      "Exemple d'utilisation :\n`unibot unban @Exemple#1234`\n\n" +
                      "Note : il peut être difficile/impossible de mentionner correctement " +
-                     "l'utilisateur. Pour ce faire, utiliser `<@IdDuMembre>`.";
+                     "l'utilisateur. Pour ce faire, utilisez `<@IdDuMembre>`.";
 
     return [embedTitle, embedDesc];
+}
+
+
+function helpAnswer() {
+    let embedTitle = "Help :arrow_right: __answer__";
+    let embedDesc  = "Effectue une requête à Wolfram Alpha et renvoie la réponse s'il y en a.\n" +
+                     "La requête doit être formulée en anglais.\n\n" +
+                     "Exemple d'utilisation :\n`unibot answer area of France`\n`unibot answer solution of 3x^2 + 4 = ln(x)`";
+    
+    return [embedTitle, embedDesc]
 }
 
 
