@@ -94,7 +94,11 @@ client.on("messageCreate", async (message) => {
         }
 
         if (command === "mute") {
-            moderation.mute(message, words.slice(3));
+            await moderation.mute(message, words.slice(3));
+        }
+
+        if (command === "unmute") {
+            await moderation.unmute(message);
         }
 
         if (command === "kick") {
