@@ -46,8 +46,8 @@ export async function eightBall(message, question) {
     }
 
     else {
-        embed.setAuthor("Question : " + question, message.author.displayAvatarURL(), message.url);
-             .setDescription(variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)])
+        embed.setAuthor("Question : " + question, message.author.displayAvatarURL(), message.url)
+             .setDescription(variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)]);
     }
 
     message.channel.send({embeds: [embed]});
