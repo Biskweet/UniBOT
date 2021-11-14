@@ -94,3 +94,22 @@ export async function checkMemberUpdate(oldMember, newMember) {
     }
 }
 
+
+export async function messageReactionAdd(messageReaction, user) {
+    if (messageReaction.me) {
+        return;  // Do not react to self
+    }
+
+    if (messageReaction.message.id == "894011083029889034" && messageReaction.emoji.name == "repeat") {
+        await moderation.updateWelcomeMessage("reset", user);
+
+        client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
+
+            .then( (message) => {
+                await message.reactions.removeAll();
+                await message.react('🔁');
+            })
+
+            .catch( (error) => {console.log("Error while trying to reset the message through reaction.\n" + error);});
+    }
+}

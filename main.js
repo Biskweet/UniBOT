@@ -51,6 +51,11 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
 })
 
 
+client.on("messageReactionAdd", async (messageReaction, user) => {
+    await events.messageReactionAdd(messageReaction, user);
+})
+
+
 client.on("guildBanAdd", async (guildBan) => {
     events.guildBanAdd(guildBan);
 })
@@ -145,6 +150,13 @@ client.on("messageCreate", async (message) => {
 
         if (command === "answer") {
             await misc.answer(message,words.slice(2));
+        }
+
+        if (command === "temporary") {
+            client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
+                .then( (message) => {
+                    await message.react('🔁');
+                });
         }
         // ---------------------
 
