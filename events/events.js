@@ -107,7 +107,7 @@ export async function messageReactionAdd(messageReaction, user) {
 
             .then( (message) => {
                 await message.reactions.removeAll();
-                await message.react('🔁');
+                message.react('🔁');
             })
 
             .catch( (error) => {console.log("Error while trying to reset the message through reaction.\n" + error);});

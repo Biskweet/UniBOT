@@ -155,7 +155,7 @@ client.on("messageCreate", async (message) => {
         if (command === "temporary") {
             client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
                 .then( (message) => {
-                    await message.react('🔁');
+                    message.react('🔁');
                 });
         }
         // ---------------------
