@@ -106,8 +106,9 @@ export async function messageReactionAdd(messageReaction, user) {
         client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
 
             .then( (message) => {
-                await message.reactions.removeAll();
-                message.react('🔁');
+                message.reactions.removeAll().then( (msg) => {
+                    message.react('🔁');
+                })
             })
 
             .catch( (error) => {console.log("Error while trying to reset the message through reaction.\n" + error);});
