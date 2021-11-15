@@ -107,7 +107,7 @@ export async function wiki(message, article) {
 
         // Precise article
         else {
-            let response, results, links;
+            let _, response, results, links;
 
             response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`);
             [_, results, _, links] = response.data;
