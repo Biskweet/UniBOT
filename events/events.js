@@ -7,6 +7,7 @@ import { MessageEmbed } from 'discord.js';
 export async function onReady() {
     console.log(client.user.tag, "is ready.");
     await utils.updateClientActivity();
+    client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034");
     utils.checkSocialMedias();
     setInterval(utils.checkSocialMedias, 300000);
 }
@@ -89,7 +90,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
         }
     }
 
-    if (utils.hasSensitiveRole(oldMember) && !utils.hasSensitiveRole(newMember)) {
+    if (!utils.hasSensitiveRole(oldMember) && utils.hasSensitiveRole(newMember)) {
         client.channels.cache.get(variables.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
     }
 }
@@ -97,10 +98,13 @@ export async function checkMemberUpdate(oldMember, newMember) {
 
 export async function messageReactionAdd(messageReaction, user) {
     if (messageReaction.me) {
+        console.log("Fell here");
         return;  // Do not react to self
     }
 
+    console.log("Got here");
     if (messageReaction.message.id == "894011083029889034" && messageReaction.emoji.name == "repeat") {
+        console.log("Got here 2");
         await moderation.updateWelcomeMessage("reset", user);
 
         client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
