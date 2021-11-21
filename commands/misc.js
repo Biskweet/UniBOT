@@ -38,8 +38,7 @@ export async function eightBall(message, question) {
 
     question = question.join(" ");
 
-    let embed = new MessageEmbed()
-        .setColor(variables.SuHex);
+    let embed = new MessageEmbed().setColor(variables.SuHex);
 
     if (question === '') {
         embed.setTitle("Pose la question qui te brûle.");
