@@ -122,7 +122,7 @@ export async function checkSocialMedias() {
         retrieveTweets(twitterAccount).catch( (err) => {console.log("Error while fetching tweets for account:" + twitterAccount + " (" + err.message + ")")} );
     }
 
-    retrieveVideos().catch( (err) => {console.log("Error while fetching videos (" + err.message + ").")} );
+    retrieveVideos().catch( (err) => {} );
     // checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
 }
 
