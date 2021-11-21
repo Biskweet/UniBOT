@@ -156,9 +156,7 @@ async function retrieveVideos() {
             }
         })
 
-        .catch( (error) => {
-            console.log("Error while fetching videos (" + error.message + ").")
-        });
+        .catch( (err) => {});
 }
 
 
