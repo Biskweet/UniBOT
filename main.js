@@ -25,6 +25,11 @@ global.client = new Discord.Client({
         Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.DIRECT_MESSAGES,
         Intents.FLAGS.GUILD_BANS
+    ],
+    partials: [
+        'MESSAGE',
+        'CHANNEL',
+        'REACTION'
     ]
 });
 
@@ -63,6 +68,11 @@ client.on("guildBanAdd", async (guildBan) => {
 
 client.on("guildBanRemove", async (guildBan) => {
     events.guildBanRemove(guildBan);
+})
+
+
+client.on("messageDelete", async (message) => {
+    await events.messageDelete(message);
 })
 // ----------------------------
 
@@ -150,13 +160,6 @@ client.on("messageCreate", async (message) => {
 
         if (command === "answer") {
             await misc.answer(message,words.slice(2));
-        }
-
-        if (command === "temporary") {
-            client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
-                .then( (message) => {
-                    message.react('🔁');
-                });
         }
         // ---------------------
 

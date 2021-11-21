@@ -118,3 +118,30 @@ export async function messageReactionAdd(messageReaction, user) {
             .catch( (error) => {console.log("Error while trying to reset the message through reaction.\n" + error);});
     }
 }
+
+
+export async function messageDelete(message) {
+    if (message.author == null || message.author.bot || utils.isModo(message.member)) {
+        return;  // Do not log moderators' messages
+    }
+
+    let logsChannel, embed;
+    logsChannel = client.channels.cache.get("844334847659999252");
+    embed = new MessageEmbed()
+                    .setColor(variables.SuHex)
+                    .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
+                    .setAuthor(message.author.tag, message.author.displayAvatarURL())
+                    .setFooter(`Author ID : ${message.author.id} • ${(new Date()).toLocaleString("fr-FR")}`);
+
+    logsChannel.send( {embeds: [embed]} );
+
+    // Add all attachments of the message
+    if (message.attachments.size > 0) {
+        for (let attachment of message.attachments) {
+            logsChannel.send(attachment[1].url);
+        }
+
+        embed = new MessageEmbed().setColor(variables.SuHex).setAuthor("(fin des pièces-jointes)");
+        logsChannel.send( {embeds: [embed]} );
+    }
+}
