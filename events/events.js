@@ -126,7 +126,7 @@ export async function messageDelete(message) {
     }
 
     let logsChannel, embed;
-    logsChannel = client.channels.cache.get("844334847659999252");
+    logsChannel = client.channels.cache.get("776802470089064510");
     embed = new MessageEmbed()
                     .setColor(variables.SuHex)
                     .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
@@ -137,7 +137,7 @@ export async function messageDelete(message) {
 
     // Add all attachments of the message
     if (message.attachments.size > 0) {
-        for (let attachment of message.attachments) {
+        for (let attachment of message.attachments) {   
             logsChannel.send(attachment[1].url);
         }
 
