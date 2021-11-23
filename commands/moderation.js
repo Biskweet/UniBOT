@@ -153,7 +153,7 @@ export async function kick(message, reason) {
                 .setDescription(error.message)
                 .setColor(variables.SuHex);
 
-            message.channel.send({ embeds: [embed] });
+            message.channel.send( { embeds: [embed] } );
         }
     }
 }
@@ -188,7 +188,7 @@ export async function ban(message, reason) {
                 .setDescription(error.message)
                 .setColor(variables.SuHex)
 
-            message.channel.send({ embeds: [embed] });
+            message.channel.send( { embeds: [embed] } );
         }
     }
 }
@@ -211,11 +211,21 @@ export async function filterMessage(message) {
         message.delete();
 
         let embed = new MessageEmbed()
+            .setColor(variables.SuHex);
             .setTitle("❌ Votre message a été supprimé.")
             .setDescription(`Désolé ${message.member} ! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
             .setFooter("Contactez la modération pour partager un lien.")
-            .setColor(variables.SuHex);
 
-        message.channel.send({ embeds: [embed]});
+        message.channel.send( { embeds: [embed] } );
+    }
+
+    // If the message mentions UniBOT or its dedicated role, send a message
+    if (message.mentions.has("485490695604273153") || message.mentions.has("869605212078350347")) {
+        let embed = new MessageEmbed()
+                            .setColor(variables.SuHex)
+                            .setAuthor("C'est moi !")
+                            .setFooter("Tapez `unibot help` pour obtenir la liste des commandes.");
+
+        message.channel.send( { embeds: [embed] } );
     }
 }
