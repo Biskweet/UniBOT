@@ -98,13 +98,10 @@ export async function checkMemberUpdate(oldMember, newMember) {
 
 export async function messageReactionAdd(messageReaction, user) {
     if (messageReaction.me) {
-        console.log("Fell here");
         return;  // Do not react to self
     }
 
-    console.log("Got here");
     if (messageReaction.message.id == "894011083029889034" && messageReaction.emoji.name == "repeat") {
-        console.log("Got here 2");
         await moderation.updateWelcomeMessage("reset", user);
 
         client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
