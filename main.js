@@ -26,6 +26,7 @@ global.client = new Discord.Client({
         Intents.FLAGS.DIRECT_MESSAGES,
         Intents.FLAGS.GUILD_BANS
     ],
+
     partials: [
         'MESSAGE',
         'CHANNEL',
