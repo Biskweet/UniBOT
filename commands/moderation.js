@@ -211,10 +211,10 @@ export async function filterMessage(message) {
         message.delete();
 
         let embed = new MessageEmbed()
-            .setColor(variables.SuHex);
+            .setColor(variables.SuHex)
             .setTitle("❌ Votre message a été supprimé.")
             .setDescription(`Désolé ${message.member} ! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
-            .setFooter("Contactez la modération pour partager un lien.")
+            .setFooter("Contactez la modération pour partager un lien.");
 
         message.channel.send( { embeds: [embed] } );
     }
