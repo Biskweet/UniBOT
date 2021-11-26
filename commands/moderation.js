@@ -99,13 +99,21 @@ export async function mute(message, args) {
         target = message.mentions.members.first();
         mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
 
-        target.roles.add(mutedRole);
+        if (target == undefined) utils.errorHandler({message: "Could not find target."}, message);
+        if (mutedRole == undefined) utils.errorHandler({message: "No such role."}, message);
+
+        target.roles.add(mutedRole).then( (memb) => {message.react('✅');} ) ;
 
         if (args.length > 0 && !isNaN(args[0])) {
             let duration = parseInt(args[0]) * 1000;
 
+            if (duration > 500000) {
+                utils.errorHandler({message: "Cannot mute for longer than 500'000 seconds (muted indefinitely)."}, message);
+                return;
+            }
+
             setTimeout( () => {
-                target.roles.remove(mutedRole).catch( (error) => {utils.errorHandler(message, error)} );
+                unmute(message).catch( (error) => {utils.errorHandler(message, error);} );
             }, duration);
         }
     }
@@ -119,7 +127,10 @@ export async function unmute(message) {
         target = message.mentions.members.first();
         mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
 
-        target.roles.remove(mutedRole).catch( (error) => {utils.errorHandler(message, error)} );
+        if (target == undefined) utils.errorHandler({message: "Could not find target."}, message);
+        if (mutedRole == undefined) utils.errorHandler({message: "No such role."}, message);
+
+        target.roles.remove(mutedRole).then( (memb) => {message.react('✅');} ).catch( (error) => {utils.errorHandler(error, message)} );
     }
 }
 
