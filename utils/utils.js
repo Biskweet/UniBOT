@@ -2,7 +2,6 @@ import { MessageEmbed } from 'discord.js';
 import fs from 'fs';
 import axios from 'axios';
 import * as variables from './variables.js';
-import { boosterRoleId, modoRoleId } from './variables.js';
 import dotenv from 'dotenv'; 
 
 
@@ -53,7 +52,7 @@ export function capitalize(string) {
 
 
 export function isBooster(member) {
-    return member.roles.cache.has(boosterRoleId);
+    return member.roles.cache.has(variables.boosterRoleId);
 }
 
 
@@ -67,7 +66,7 @@ export function hasAccessRole(member) {
 
 export function isModo(member) {
     try {
-        return (member.roles.cache.has(modoRoleId) || (member.id == "329718763698257931"));
+        return (member.roles.cache.has(variables.modoRoleId) || (member.id == "329718763698257931"));
     }
 
     catch (error) {
