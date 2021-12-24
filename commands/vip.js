@@ -40,7 +40,7 @@ export async function couleur(message, hexcode) {
 
     let newRole = message.guild.roles.cache.find((role) => role.name === "VIP " + hexcode);
 
-    if ( newRole !== undefined ) {
+    if (newRole !== undefined) {
         message.member.roles.add(newRole)
             .catch( (error) => {utils.errorHandler(error, message);} );
 
@@ -49,12 +49,11 @@ export async function couleur(message, hexcode) {
              .setDescription(`${message.author}, je viens de vous assigner le rôle ${newRole} !`)
              .setFooter("Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !")
 
-        message.channel.send({ embeds: [embed]});
-    }
-
-    else {
+        message.channel.send( { embeds: [embed]} );
+    
+    } else {
         message.channel.send({embeds: [{
-            title: "Création du rôle, veuillez patienter... <a:discordloading:891354025302315059>",
+            title: "Création du rôle, veuillez patienter... <a:discordloading:873989182668800001>",
             color: variables.SuHex
             }]
         })
