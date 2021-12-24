@@ -61,7 +61,7 @@ export async function couleur(message, hexcode) {
                 message.guild.roles.create({
                     name: "VIP " + hexcode,
                     color: hexcode,
-                    position: Array.from(message.guild.roles.cache).length - 4
+                    position: Array.from(message.guild.roles.cache).length - 21
                 })
 
                     .then( (newRole) => {
