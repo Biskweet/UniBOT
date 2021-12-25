@@ -1,8 +1,8 @@
 import { MessageEmbed } from 'discord.js';
 import fs from 'fs';
 import axios from 'axios';
-import * as variables from './variables.js';
 import dotenv from 'dotenv'; 
+import * as variables from './variables.js';
 
 
 dotenv.config();
@@ -22,7 +22,6 @@ export function saveLogs(content) {
         }
     });
 }
-
 
 
 export async function errorHandler(error, message) {
@@ -51,8 +50,8 @@ export function capitalize(string) {
 }
 
 
-export function isBooster(member) {
-    return member.roles.cache.has(variables.boosterRoleId);
+export function isVIP(member) {
+    return member.roles.cache.has(variables.boosterRoleId) || member.roles.cache.has(variables.VIPRoleId);
 }
 
 
@@ -122,12 +121,36 @@ export async function checkSocialMedias() {
     }
 
     retrieveVideos().catch( (err) => {} );
-    // checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
+    checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
 }
 
 
 export async function checkLeaderboard() {
-    axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863");
+    let i = 0;
+    let topMemberId = x.players[i].id;
+    let topMember;
+
+    axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863")
+        .then( (response) => {
+            response = response.data;
+            let server = client.guilds.cache.get(749364640147832863); 
+
+            // Searching for the first available member in the list
+            while (!server.members.cache.has(topMemberId)) {
+                i++;
+            }
+            topMemberId = x.players[i].id;
+
+            topMember = server.members.cache.get(topMemberId);
+            if (topMemberId != cache.topMemberId) {
+                vipRole = server.roles.get(variables.VIPRoleId);
+                server.members.cache.get(cache.topMemberId).roles.remove(variables.VIPRoleId);
+                
+                server.members.cache.get(topMemberId).roles.add(vipRole);
+                cache.topMemberId = topMemberId;
+                saveCache(cache);
+            }
+        });
 }
 
 

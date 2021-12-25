@@ -5,7 +5,7 @@ import * as utils from '../utils/utils.js';
 
 
 export async function couleur(message, hexcode) {
-    if (!utils.isBooster(message.member)) {
+    if (!utils.isVIP(message.member)) {
         return;  // Not a server booster
     }
 
