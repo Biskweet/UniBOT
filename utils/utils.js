@@ -127,7 +127,7 @@ export async function checkSocialMedias() {
 
 export async function checkLeaderboard() {
     let i = 0;
-    let topMemberId = x.players[i].id;
+    let topMemberId = cache.players[i].id;
     let topMember;
 
     axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863")
@@ -139,7 +139,7 @@ export async function checkLeaderboard() {
             while (!server.members.cache.has(topMemberId)) {
                 i++;
             }
-            topMemberId = x.players[i].id;
+            topMemberId = cache.players[i].id;
 
             topMember = server.members.cache.get(topMemberId);
             if (topMemberId != cache.topMemberId) {
