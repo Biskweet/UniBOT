@@ -136,7 +136,7 @@ client.on("messageCreate", async (message) => {
 
 
         // ------- VIP --------
-        if (command === "couleur") {
+        if (command === "couleur" || command === "color") {
             await vip.couleur(message, words.slice(2));
         }
         // --------------------
