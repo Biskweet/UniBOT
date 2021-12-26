@@ -20,6 +20,8 @@ export const twitterChannelId = "777304594195677225";
 
 export const youtubeChannelId = "749770030954053632";
 
+export const VIPRoleId = "924020284367978516";
+
 export const modoRoleId = "749971084228558969";
 
 export const newMembersChannelId = "752891071553601638";
