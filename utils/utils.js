@@ -127,29 +127,37 @@ export async function checkSocialMedias() {
 
 export async function checkLeaderboard() {
     let i = 0;
-    let topMemberId = cache.players[i].id;
-    let topMember;
+    let topMember, newTopMemberId, vipRole, oldTopMember;
 
     axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/749364640147832863")
         .then( (response) => {
             response = response.data;
-            let server = client.guilds.cache.get(749364640147832863); 
+            let server = client.guilds.cache.forEach( (server) => {
+                newTopMemberId = response.players[i].id;
 
-            // Searching for the first available member in the list
-            while (!server.members.cache.has(topMemberId)) {
-                i++;
-            }
-            topMemberId = cache.players[i].id;
+                server.members.fetch()
+                    .then( () => {
+                        do {
+                            // Searching for the first available member in the list
+                            newTopMemberId = response.players[i].id;
+                            i++;
+                        } while (!server.members.cache.has(newTopMemberId));
 
-            topMember = server.members.cache.get(topMemberId);
-            if (topMemberId != cache.topMemberId) {
-                vipRole = server.roles.get(variables.VIPRoleId);
-                server.members.cache.get(cache.topMemberId).roles.remove(variables.VIPRoleId);
-                
-                server.members.cache.get(topMemberId).roles.add(vipRole);
-                cache.topMemberId = topMemberId;
-                saveCache(cache);
-            }
+                        topMember = server.members.cache.get(newTopMemberId);
+                        if (newTopMemberId != cache.topMemberId) {
+                            vipRole = server.roles.cache.get(variables.VIPRoleId);
+                            oldTopMember = server.members.cache.get(cache.topMemberId);
+                            
+                            if (oldTopMember != undefined) {
+                                oldTopMember.roles.remove(variables.VIPRoleId);
+                            }
+                            
+                            server.members.cache.get(newTopMemberId).roles.add(vipRole);
+                            cache.topMemberId = newTopMemberId;
+                            saveCache(cache);
+                        }
+                    });
+            });
         });
 }
 
