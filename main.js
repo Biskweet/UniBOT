@@ -89,7 +89,8 @@ client.on("messageCreate", async (message) => {
             return;  // Do not react to self or other bots
         }
 
-        const words = message.content.split(' ');
+        // Split the message for words and remove the empty ones (ex: 'a  b'.split(' ') -> ['a', '', 'b'])
+        const words = message.content.split(' ').filter( (word) => { word != ''; } );
         const command = words[1];
 
 
