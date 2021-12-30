@@ -7,7 +7,7 @@ import { MessageEmbed } from 'discord.js';
 export async function onReady() {
     console.log(client.user.tag, "is ready.");
     await utils.updateClientActivity();
-    client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034");
+    
     utils.checkSocialMedias();
     setInterval(utils.checkSocialMedias, 300000);
 }
@@ -58,7 +58,7 @@ export async function guildBanAdd(guildBan) {
     let embed = new MessageEmbed()
         .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
         .setDescription(`${guildBan.user} a été banni du serveur.`)
-        .setColor(16711680)
+        .setColor(variables.colors.Red)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
     client.channels.cache.get(variables.logsChannelId).send({embeds: [embed]});
@@ -69,7 +69,7 @@ export async function guildBanRemove(guildBan) {
     let embed = new MessageEmbed()
         .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
         .setDescription(`${guildBan.user} a été dé-banni du serveur.`)
-        .setColor(65280)
+        .setColor(variables.colors.Green)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
     client.channels.cache.get(variables.logsChannelId).send({embeds: [embed]});
@@ -77,55 +77,21 @@ export async function guildBanRemove(guildBan) {
 
 
 export async function checkMemberUpdate(oldMember, newMember) {
-    if (!utils.hasAccessRole(oldMember) && utils.hasAccessRole(newMember)) {
-        await moderation.updateWelcomeMessage("append", newMember);
-        welcomeQueue.push(newMember.id)
-    }
-
-    if (!utils.hasAccessRole(newMember) && utils.hasAccessRole(oldMember)) {
-        await moderation.updateWelcomeMessage("remove", newMember);
-        let index = welcomeQueue.indexOf(member.id);
-        if (index > -1) {
-            welcomeQueue.splice(index, 1);
-        }
-    }
-
     if (!utils.hasSensitiveRole(oldMember) && utils.hasSensitiveRole(newMember)) {
         client.channels.cache.get(variables.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
     }
 }
 
 
-export async function messageReactionAdd(messageReaction, user) {
-    if (messageReaction.me) {
-        return;  // Do not react to self
-    }
-
-    if (messageReaction.message.id == "894011083029889034" && messageReaction.emoji.name == "repeat") {
-        await moderation.updateWelcomeMessage("reset", user);
-
-        client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
-
-            .then( (message) => {
-                message.reactions.removeAll().then( (msg) => {
-                    message.react('🔁');
-                });
-            })
-
-            .catch( (error) => {console.log("Error while trying to reset the message through reaction.\n" + error);});
-    }
-}
-
-
 export async function messageDelete(message) {
     if (message.author == null || message.author.bot || utils.isModo(message.member)) {
-        return;  // Do not log moderators' messages
+        return;  // Do not log moderators's or bots's messages
     }
 
     let logsChannel, embed;
     logsChannel = client.channels.cache.get("776802470089064510");
     embed = new MessageEmbed()
-                    .setColor(variables.SuHex)
+                    .setColor(variables.colors.SuHex)
                     .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
                     .setAuthor(message.author.tag, message.author.displayAvatarURL())
                     .setFooter(`Author ID : ${message.author.id} • ${(new Date()).toLocaleString("fr-FR")}`);
@@ -138,7 +104,10 @@ export async function messageDelete(message) {
             logsChannel.send(attachment[1].url);
         }
 
-        embed = new MessageEmbed().setColor(variables.SuHex).setAuthor("(fin des pièces-jointes)");
-        logsChannel.send( {embeds: [embed]} );
+        embed = new MessageEmbed()
+            .setColor(variables.colors.SuHex)
+            .setAuthor("(fin des pièces-jointes)");
+
+        logsChannel.send( { embeds: [embed] } );
     }
 }
