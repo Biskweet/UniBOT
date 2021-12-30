@@ -26,16 +26,18 @@ export function saveLogs(content) {
 
 export async function errorHandler(error, message) {
     let errorMessage = "\n------------ " + (new Date()).toJSON() + " -------------" +
-                       "\nNew error: " + message.content +
-                       "\n=> " + error.message +
-                       "\n---------------------------------------------------\n";
-
-    console.log(errorMessage);
-    saveLogs(errorMessage);
+                       "\nNew error: ";
     
     if (message !== null) {
+        errorMessage += message.content;
         message.react('❌');
     }
+    
+    errorMessage += "\n=> " + error.message + 
+                    "\n---------------------------------------------------\n";
+
+    console.error(errorMessage);
+    saveLogs(errorMessage);
 }
 
 

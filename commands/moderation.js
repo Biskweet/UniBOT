@@ -7,10 +7,10 @@ export function destroyClient(message) {
     if (utils.isModo(message.member)) {
         message.channel.send({ embeds: [{
             title: ":headstone: Destruction du client.",
-            color: variables.SuHex
+            color: variables.colors.SuHex
         }]})
 
-            .then((msg) => {
+            .then( (msg) => {
                 console.log(`====================\nShutting down (online for ${(Date.now() - client.readyTimestamp)/1000} sec).`);
                 client.destroy();
                 process.exit();
@@ -19,55 +19,11 @@ export function destroyClient(message) {
 }
 
 
-export async function updateWelcomeMessage(action, member) {
-    // New Student needs to be welcomed
-    client.channels.cache.get("893995887758540810").messages.fetch("894011083029889034")
-        .then( (message) => {
-            if (action === "append") {
-                if (message.content === 'Nothing yet.') {
-                    var edit = `${member}`;
-                }
-                else {
-                    var edit = message.content + ` ${member}`;
-                }
-
-                message.edit(edit)
-                    .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
-
-                client.channels.cache.get("893995887758540810").send("New member to be welcomed.")
-                    .then( (alert) => {
-                        setTimeout(() => {
-                            alert.delete();
-                        }, 500);
-                });
-            }
-    
-
-            // Not welcomed Student left the server
-            else if (action === "remove") {
-                if ((message.content.split("@").length - 1) > 1)
-                    message.edit(message.content.replaceAll(`${member}`, '').replaceAll('  ', ' '));
-                else
-                    message.edit("Nothing yet.");
-            }
-
-            // All Students are welcomed, reset the queue
-            else if (action === "reset") {
-                if (utils.isModo(member)) {
-                    message.edit('Nothing yet.');
-                }
-            }
-        })
-
-        .catch( (error) => {utils.errorHandler(error, {content: "<error while updating welcome message>"});} );
-}
-
-
 export async function clear(message, args) {
     if (utils.isModo(message.member)) {
 
         if (args.length != 1 || isNaN(args[0])) {
-            return; // Incorrect input but I'm too lazy for debug
+            return; // Incorrect input but I'm too lazy for better handling
         }
 
         let amount = parseInt(args[0]);
@@ -97,7 +53,7 @@ export async function mute(message, args) {
         let target, mutedRole;
 
         target = message.mentions.members.first();
-        mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
+        mutedRole = message.guild.roles.cache.find( (role) => role.id == "850707162561118229" );
 
         if (target == undefined) utils.errorHandler({message: "Could not find target."}, message);
         if (mutedRole == undefined) utils.errorHandler({message: "No such role."}, message);
@@ -108,7 +64,7 @@ export async function mute(message, args) {
             let duration = parseInt(args[0]) * 1000;
 
             if (duration > 500000) {
-                utils.errorHandler({message: "Cannot mute for longer than 500'000 seconds (muted indefinitely)."}, message);
+                utils.errorHandler({message: "Cannot mute for longer than 500'000 seconds (user was muted indefinitely)."}, message);
                 return;
             }
 
@@ -162,7 +118,7 @@ export async function kick(message, reason) {
             let embed = new MessageEmbed()
                 .setTitle("Il y a eu une erreur lors de l'expulsion du membre : ")
                 .setDescription(error.message)
-                .setColor(variables.SuHex);
+                .setColor(variables.colors.SuHex);
 
             message.channel.send( { embeds: [embed] } );
         }
@@ -172,42 +128,54 @@ export async function kick(message, reason) {
 
 export async function ban(message, reason) {
     if (utils.isModo(message.member)) {
-        let target = message.mentions.members.first();
 
-        try {
-            if (!target.bannable) {  // Client does not have permission
-                    throw new Error("Permissions insuffisantes.");
-            }
-        
-            let alert = "Vous avez été banni du serveur Discord Étudiant Sorbonne Université.";
-            if (reason.length) {
-                alert += "\n\nMotif : " + reason;
-            }
+        // Ban by user ID
+        if (message.mentions.users.size == 0) {
+            let targetId = message.content.split(' ')[2];
 
-            target.ban();
-            message.react('✅');
+            message.guild.members.ban(targetId, {reason: reason})
+                .then( (banInfo) => message.react('✅') )
+                .catch( (err) => {
+                    utils.errorHandler({message: `Could not ban user with ID ${targetId}`}, message);
 
-            target.send(alert)
-                .catch((err) => {console.log(`Could not send kick alert to ${target.user.tag}`)});
+                    let embed = new MessageEmbed()
+                        .setTitle("❌ Il y a eu une erreur lors du bannissement du membre : ")
+                        .setDescription(error.message)
+                        .setColor(variables.colors.SuHex);
+
+                    message.channel.send( { embeds: [embed] } );
+            });
+            return;
         }
 
-        catch (error) {
-            utils.errorHandler(error, message);
+        // Ban by member mention
+        let target = message.mentions.users.first();
 
-            let embed = new MessageEmbed()
-                .setTitle("Il y a eu une erreur lors du bannissement du membre : ")
-                .setDescription(error.message)
-                .setColor(variables.SuHex)
-
-            message.channel.send( { embeds: [embed] } );
+        let alert = "Vous avez été banni du serveur Discord Étudiant Sorbonne Université.";
+        if (reason.length > 0) {
+            alert += "\n\nMotif : " + reason;
         }
+
+        target.send(alert).catch( (err) => console.error(`Could not send ban alert to user ${target.user.tag}`) );
+
+        target.ban({reason: reason})
+            .then( (guildMember) => message.react('✅') )
+            .catch( (err) => {
+                utils.errorHandler({message: `Could not ban user ${target.user.tag}`}, message);
+
+                let embed = new MessageEmbed()
+                    .setTitle("❌ Il y a eu une erreur lors du bannissement du membre : ")
+                    .setDescription(error.message)
+                    .setColor(variables.colors.SuHex);
+
+                message.channel.send( { embeds: [embed] } );
+            });
     }
 }
 
 
 export async function unban(message, userId) {
     if (utils.isModo(message.member)) {
-
         message.guild.members.unban(userId)
             .then( (user) => {message.react('✅');})
             .catch( (error) => {utils.errorHandler(error, message);} );
@@ -216,13 +184,13 @@ export async function unban(message, userId) {
 
 
 export async function filterMessage(message) {
-    if (message.channel.id != "754653542178095195" && !utils.isModo(message.member) &&
-       (message.content.includes("discord.gg/") || message.content.includes("https://chat.whatsapp.com/"))) {
+    if (message.channel.id != "754653542178095195" && 
+        (message.content.includes("discord.gg/") || message.content.includes("chat.whatsapp.com/"))) {
        
         message.delete();
 
         let embed = new MessageEmbed()
-            .setColor(variables.SuHex)
+            .setColor(variables.colors.SuHex)
             .setTitle("❌ Votre message a été supprimé.")
             .setDescription(`Désolé ${message.member} ! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
             .setFooter("Contactez la modération pour partager un lien.");
@@ -233,7 +201,7 @@ export async function filterMessage(message) {
     // If the message mentions UniBOT or its dedicated role, send a message
     if (message.mentions.has("485490695604273153") || message.mentions.has("869605212078350347")) {
         let embed = new MessageEmbed()
-                            .setColor(variables.SuHex)
+                            .setColor(variables.colors.SuHex)
                             .setAuthor("C'est moi !")
                             .setFooter("Tapez `unibot help` pour obtenir la liste des commandes.");
 

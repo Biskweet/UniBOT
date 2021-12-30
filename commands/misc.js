@@ -16,7 +16,7 @@ const waAPI = WolframAlphaAPI(process.env.WOLFRAMALPHA_TOKEN);
 export async function ping(message) {
     let embed = new MessageEmbed()
         .setTitle(`Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`)
-        .setColor(variables.SuHex);
+        .setColor(variables.colors.SuHex);
 
     message.channel.send({embeds: [embed]});
 }
@@ -38,7 +38,7 @@ export async function eightBall(message, question) {
 
     question = question.join(" ");
 
-    let embed = new MessageEmbed().setColor(variables.SuHex);
+    let embed = new MessageEmbed().setColor(variables.colors.SuHex);
 
     if (question === '') {
         embed.setTitle("Pose la question qui te brûle.");
@@ -66,7 +66,7 @@ export async function wiki(message, article) {
     if (locale === "listelangues") {
         embed.setTitle("Liste des préfixes de langues disponibles :")
              .setDescription("```" + variables.WikiLocales.join(' ') + "```")
-             .setColor(variables.SuHex);
+             .setColor(variables.colors.SuHex);
         return message.channel.send({embeds: [embed]});
     }   
 
@@ -137,7 +137,7 @@ export async function wiki(message, article) {
 
             else {
                 embed.setAuthor("Article introuvable.")
-                     .setColor(variables.SuHex);
+                     .setColor(variables.colors.SuHex);
                 message.channel.send({ embeds: [embed]});
             }
         }
@@ -150,7 +150,7 @@ export async function wiki(message, article) {
 
 
 export async function answer(message, question) {
-    let embed = new MessageEmbed().setColor(variables.SuHex);   
+    let embed = new MessageEmbed().setColor(variables.colors.SuHex);   
 
     if (question.length === 0) {
         message.react('❌');

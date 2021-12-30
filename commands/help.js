@@ -63,7 +63,7 @@ export async function help(message, command='') {
 
     embed.setTitle(embedTitle)
          .setDescription(embedDesc)
-         .setColor(variables.SuHex);
+         .setColor(variables.colors.SuHex);
 
     message.channel.send({embeds: [embed]});
 }

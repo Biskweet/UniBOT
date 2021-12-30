@@ -1,4 +1,8 @@
-export const SuHex = 0x1d2769;
+export const colors = {
+    SuHex: 0x1d2769,
+    Red: 16711680,
+    Green: 65280
+}
 
 export const WikiIcon = "https://wikipedia.org/static/apple-touch/wikipedia.png";
 

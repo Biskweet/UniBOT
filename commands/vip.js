@@ -13,7 +13,7 @@ export async function couleur(message, hexcode) {
         return help(message, "couleur");
     }
 
-    let embed = new MessageEmbed().setColor(variables.SuHex)
+    let embed = new MessageEmbed().setColor(variables.colors.SuHex)
 
     hexcode = hexcode[0].toUpperCase();
     if (hexcode[0] === "#") hexcode = hexcode.slice(1);
@@ -54,7 +54,7 @@ export async function couleur(message, hexcode) {
     } else {
         message.channel.send({embeds: [{
             title: "Création du rôle, veuillez patienter... <a:discordloading:873989182668800001>",
-            color: variables.SuHex
+            color: variables.colors.SuHex
             }]
         })
             .then( (loadingMsg) => {        
