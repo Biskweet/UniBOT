@@ -90,7 +90,7 @@ client.on("messageCreate", async (message) => {
         }
 
         // Split the message for words and remove the empty ones (ex: 'a  b'.split(' ') -> ['a', '', 'b'])
-        const words = message.content.split(' ').filter( (word) => { word != ''; } );
+        const words = message.content.split(' ');
         const command = words[1];
 
 
