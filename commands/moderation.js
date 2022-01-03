@@ -135,8 +135,8 @@ export async function ban(message, reason) {
 
             message.guild.members.ban(targetId, {reason: reason})
                 .then( (banInfo) => message.react('✅') )
-                .catch( (err) => {
-                    utils.errorHandler({message: `Could not ban user with ID ${targetId}`}, message);
+                .catch( (error) => {
+                    utils.errorHandler({message: `Could not ban user with ID ${targetId} (${error.message})`}, message);
 
                     let embed = new MessageEmbed()
                         .setTitle("❌ Il y a eu une erreur lors du bannissement du membre : ")
@@ -156,7 +156,7 @@ export async function ban(message, reason) {
             alert += "\n\nMotif : " + reason;
         }
 
-        target.send(alert).catch( (err) => console.error(`Could not send ban alert to user ${target.user.tag}`) );
+        target.send(alert).catch( (error) => console.error(`Could not send ban alert to user ${target.user.tag} (${error.message})`) );
 
         target.ban({reason: reason})
             .then( (guildMember) => message.react('✅') )
