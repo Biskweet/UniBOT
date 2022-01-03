@@ -184,7 +184,7 @@ export async function unban(message, userId) {
 
 
 export async function filterMessage(message) {
-    if (message.channel.id != "754653542178095195" && 
+    if (message.channel.id != "754653542178095195" && !utils.isModo(message.member) &&
         (message.content.includes("discord.gg/") || message.content.includes("chat.whatsapp.com/"))) {
        
         message.delete();
