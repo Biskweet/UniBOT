@@ -149,19 +149,19 @@ export async function ban(message, reason) {
         }
 
         // Ban by member mention
-        let target = message.mentions.users.first();
+        let target = message.mentions.members.first();
 
         let alert = "Vous avez été banni du serveur Discord Étudiant Sorbonne Université.";
         if (reason.length > 0) {
             alert += "\n\nMotif : " + reason;
         }
 
-        target.send(alert).catch( (err) => console.error(`Could not send ban alert to user ${target.tag}`) );
+        target.send(alert).catch( (err) => console.error(`Could not send ban alert to user ${target.user.tag}`) );
 
         target.ban({reason: reason})
             .then( (guildMember) => message.react('✅') )
             .catch( (err) => {
-                utils.errorHandler({message: `Could not ban user ${target.tag}`}, message);
+                utils.errorHandler({message: `Could not ban user ${target.user.tag}`}, message);
 
                 let embed = new MessageEmbed()
                     .setTitle("❌ Il y a eu une erreur lors du bannissement du membre : ")
