@@ -158,7 +158,7 @@ export async function ban(message, reason) {
 
         target.send(alert).catch( (err) => console.error(`Could not send ban alert to user ${target.user.tag}`) );
 
-        target.ban({reason: reason})
+        target.ban({reason: alert})
             .then( (guildMember) => message.react('✅') )
             .catch( (err) => {
                 utils.errorHandler({message: `Could not ban user ${target.user.tag}`}, message);
