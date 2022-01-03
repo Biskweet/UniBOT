@@ -202,7 +202,7 @@ export async function filterMessage(message) {
     if (message.mentions.has("485490695604273153") || message.mentions.has("869605212078350347")) {
         let embed = new MessageEmbed()
                             .setColor(variables.colors.SuHex)
-                            .setAuthor("C'est moi !")
+                            .setAuthor({ name: "C'est moi !" } )
                             .setFooter("Tapez `unibot help` pour obtenir la liste des commandes.");
 
         message.channel.send( { embeds: [embed] } );
