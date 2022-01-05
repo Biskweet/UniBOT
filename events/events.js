@@ -14,8 +14,8 @@ export async function onReady() {
 
 
 export async function guildMemberAdd(member) {
-    client.guilds.cache.get(749364640147832863).channels.cache.get(variables.newMembersChannelId).send(`${member} a rejoint le serveur.`);
-    client.guilds.cache.get(749364640147832863).channels.cache.get(776599592980185119).send(`${member} a rejoint le serveur !`);
+    client.guilds.cache.get("749364640147832863").channels.cache.get(variables.newMembersChannelId).send(`${member} a rejoint le serveur.`);
+    client.guilds.cache.get("749364640147832863").channels.cache.get("776599592980185119").send(`${member} a rejoint le serveur !`);
     await utils.updateClientActivity();
 
     let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
@@ -90,14 +90,14 @@ export async function messageDelete(message) {
     }
 
     let logsChannel, embed;
-    logsChannel = client.channels.cache.get(776802470089064510);
+    logsChannel = client.channels.cache.get("776802470089064510");
     embed = new MessageEmbed()
                     .setColor(variables.colors.SuHex)
                     .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
                     .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL()})
                     .setFooter({ text: `Author ID : ${message.author.id} • ${(new Date()).toLocaleString("fr-FR")}`});
 
-    logsChannel.send({embeds: [embed]});
+    logsChannel.send({ embeds: [embed] });
 
     // Add all attachments of the message
     if (message.attachments.size > 0) {
