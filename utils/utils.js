@@ -18,7 +18,7 @@ const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
 export function saveLogs(content) {
     fs.appendFile("logs.txt", content, (error) => {
         if (error) {
-            console.log("ERROR WHILE SAVING LOGS");
+            console.log(`Error while saving logs (${error})`);
         }
     });
 }
@@ -107,7 +107,7 @@ export function saveCache(data) {
     let textData = JSON.stringify(data);
     fs.writeFile("cache.json", textData, (error) => {
         if (error) {
-            console.log("ERROR WHILE DUMPING CACHE!");
+            console.log(`Error while dumping cache (${error})`);
 
         } else {
             console.log("Cache updated.");
