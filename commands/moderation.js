@@ -120,7 +120,7 @@ export async function kick(message, reason) {
                 .setDescription(error.message)
                 .setColor(variables.colors.SuHex);
 
-            message.channel.send( { embeds: [embed] } );
+            message.channel.send({ embeds: [embed] });
         }
     }
 }
@@ -133,10 +133,10 @@ export async function ban(message, reason) {
         if (message.mentions.users.size == 0) {
             let targetId = message.content.split(' ')[2];
 
-            message.guild.members.ban(targetId, {reason: reason})
-                .then( (banInfo) => message.react('✅') )
+            message.guild.members.ban(targetId, { reason: reason })
+                .then( (banInfo) => message.react('✅'))
                 .catch( (error) => {
-                    utils.errorHandler({message: `Could not ban user with ID ${targetId} (${error.message})`}, message);
+                    utils.errorHandler({ message: `Could not ban user with ID ${targetId} (${error.message})` }, message);
 
                     let embed = new MessageEmbed()
                         .setTitle("❌ Il y a eu une erreur lors du bannissement du membre : ")
@@ -156,19 +156,19 @@ export async function ban(message, reason) {
             alert += "\n\nMotif : " + reason;
         }
 
-        target.send(alert).catch( (error) => console.error(`Could not send ban alert to user ${target.user.tag} (${error.message})`) );
+        target.send(alert).catch( (error) => console.error(`Could not send ban alert to user ${target.user.tag} (${error.message})`));
 
-        target.ban({reason: reason})
-            .then( (guildMember) => message.react('✅') )
-            .catch( (err) => {
-                utils.errorHandler({message: `Could not ban user ${target.user.tag}`}, message);
+        target.ban({ reason: reason })
+            .then( (guildMember) => message.react('✅'))
+            .catch( (error) => {
+                utils.errorHandler({ message: `Could not ban user ${target.user.tag} (${error.message})` }, message);
 
                 let embed = new MessageEmbed()
                     .setTitle("❌ Il y a eu une erreur lors du bannissement du membre : ")
                     .setDescription(error.message)
                     .setColor(variables.colors.SuHex);
 
-                message.channel.send( { embeds: [embed] } );
+                message.channel.send({ embeds: [embed] });
             });
     }
 }
@@ -177,8 +177,8 @@ export async function ban(message, reason) {
 export async function unban(message, userId) {
     if (utils.isModo(message.member)) {
         message.guild.members.unban(userId)
-            .then( (user) => {message.react('✅');})
-            .catch( (error) => {utils.errorHandler(error, message);} );
+            .then( (user) => message.react('✅'))
+            .catch( (error) => utils.errorHandler(error, message));
     }
 }
 
@@ -193,9 +193,9 @@ export async function filterMessage(message) {
             .setColor(variables.colors.SuHex)
             .setTitle("❌ Votre message a été supprimé.")
             .setDescription(`Désolé ${message.member} ! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
-            .setFooter("Contactez la modération pour partager un lien.");
+            .setFooter({ text: "Contactez la modération pour partager un lien."});
 
-        message.channel.send( { embeds: [embed] } );
+        message.channel.send({ embeds: [embed] });
     }
 
     // If the message mentions UniBOT or its dedicated role, send a message
@@ -203,8 +203,8 @@ export async function filterMessage(message) {
         let embed = new MessageEmbed()
                             .setColor(variables.colors.SuHex)
                             .setAuthor({ name: "C'est moi !" } )
-                            .setFooter("Tapez `unibot help` pour obtenir la liste des commandes.");
+                            .setFooter({ text: 'Tapez "unibot help" pour obtenir la liste des commandes.' });
 
-        message.channel.send( { embeds: [embed] } );
+        message.channel.send({ embeds: [embed] });
     }
 }

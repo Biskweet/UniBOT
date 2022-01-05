@@ -6,7 +6,7 @@ export async function help(message, command='') {
     let embedTitle, embedDesc, embedFooter, embedIcon;
 
     let embed = new MessageEmbed()
-        .setFooter("Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]")
+        .setFooter({ text: "Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]"})
 
 
     if (command === '') {
@@ -65,7 +65,7 @@ export async function help(message, command='') {
          .setDescription(embedDesc)
          .setColor(variables.colors.SuHex);
 
-    message.channel.send({embeds: [embed]});
+    message.channel.send({ embeds: [embed] });
 }
 
 

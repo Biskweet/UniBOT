@@ -57,23 +57,23 @@ export async function guildMemberRemove(member) {
 
 export async function guildBanAdd(guildBan) {
     let embed = new MessageEmbed()
-        .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
+        .setAuthor({ name: guildBan.user.tag, iconURL: guildBan.user.displayAvatarURL() })
         .setDescription(`${guildBan.user} a été banni du serveur.`)
         .setColor(variables.colors.Red)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get(variables.logsChannelId).send({embeds: [embed]});
+    client.channels.cache.get(variables.logsChannelId).send({ embeds: [embed] });
 }
 
 
 export async function guildBanRemove(guildBan) {
     let embed = new MessageEmbed()
-        .setAuthor(guildBan.user.tag, guildBan.user.displayAvatarURL())
+        .setAuthor({ name: guildBan.user.tag, iconURL: guildBan.user.displayAvatarURL() })
         .setDescription(`${guildBan.user} a été dé-banni du serveur.`)
         .setColor(variables.colors.Green)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get(variables.logsChannelId).send({embeds: [embed]});
+    client.channels.cache.get(variables.logsChannelId).send({ embeds: [embed] });
 }
 
 
@@ -94,8 +94,8 @@ export async function messageDelete(message) {
     embed = new MessageEmbed()
                     .setColor(variables.colors.SuHex)
                     .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
-                    .setAuthor(message.author.tag, message.author.displayAvatarURL())
-                    .setFooter(`Author ID : ${message.author.id} • ${(new Date()).toLocaleString("fr-FR")}`);
+                    .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL()})
+                    .setFooter({ text: `Author ID : ${message.author.id} • ${(new Date()).toLocaleString("fr-FR")}`});
 
     logsChannel.send( {embeds: [embed]} );
 
@@ -107,7 +107,7 @@ export async function messageDelete(message) {
 
         embed = new MessageEmbed()
             .setColor(variables.colors.SuHex)
-            .setAuthor("(fin des pièces-jointes)");
+            .setAuthor({ name: "(fin des pièces-jointes)"});
 
         logsChannel.send( { embeds: [embed] } );
     }

@@ -18,18 +18,18 @@ export async function ping(message) {
         .setTitle(`Pong ! :ping_pong: ${Date.now() - message.createdTimestamp} millisecondes.`)
         .setColor(variables.colors.SuHex);
 
-    message.channel.send({embeds: [embed]});
+    message.channel.send({ embeds: [embed] });
 }
 
 
 export async function sendInfo(message) {
     let embed = new MessageEmbed()
-        .addColor(SuHex)
+        .setColor(variables.colors.SuHex)
         .setDescription("**channel:** " + message.channel +
                         "\n**server:** " + message.guild.name +
                         "\n**user:** " + message.author.tag)
 
-    message.channel.send({embeds: [embed]})
+    message.channel.send({ embeds: [embed] })
 }
 
 
@@ -45,11 +45,11 @@ export async function eightBall(message, question) {
     }
 
     else {
-        embed.setAuthor("Question : " + question, message.author.displayAvatarURL(), message.url)
+        embed.setAuthor({ name: "Question : " + question, iconURL: message.author.displayAvatarURL(), url: message.url })
              .setDescription(variables.eightBallAnswers[Math.floor(Math.random() * variables.eightBallAnswers.length)]);
     }
 
-    message.channel.send({embeds: [embed]});
+    message.channel.send({ embeds: [embed] });
 }
 
 
@@ -71,7 +71,7 @@ export async function wiki(message, article) {
     }   
 
     if (!variables.WikiLocales.includes(locale)) {
-        embed.setFooter("Langue non précisée, par défaut en français.")
+        embed.setFooter({ text: "Langue non précisée, par défaut en français."})
         locale = "fr";
         wikiTitle = encodeURI(article.slice(0).join('_'));
     }
@@ -99,14 +99,14 @@ export async function wiki(message, article) {
 
             embed.setDescription(pageText)
                  .setColor(16777215)
-                 .setAuthor(data[pageId].title, variables.WikiIcon);
+                 .setAuthor({ name: data[pageId].title, iconURL: variables.WikiIcon});
 
-            message.channel.send({embeds: [embed]});
+            message.channel.send({ embeds: [embed] });
         }
 
         // Precise article
         else {
-            let _, response, results, links;
+            let response, results, links, _;
 
             response = await axios.get(`https://${locale}.wikipedia.org/w/api.php?action=opensearch&limit=1&search=${wikiTitle}`);
             [_, results, _, links] = response.data;
@@ -128,17 +128,17 @@ export async function wiki(message, article) {
 
                 pageText += `\n\n__[Ouvrir](${links[0]})__`;
 
-                embed.setAuthor(data[pageId].title, variables.WikiIcon)
+                embed.setAuthor({ name: data[pageId].title, iconURL: variables.WikiIcon})
                      .setDescription(pageText)
                      .setColor(16777215);
 
-                message.channel.send({ embeds: [embed]});
+                message.channel.send({ embeds: [embed] });
             }
 
             else {
-                embed.setAuthor("Article introuvable.")
+                embed.setAuthor({ name: "Article introuvable."})
                      .setColor(variables.colors.SuHex);
-                message.channel.send({ embeds: [embed]});
+                message.channel.send({ embeds: [embed] });
             }
         }
     }
@@ -155,18 +155,18 @@ export async function answer(message, question) {
     if (question.length === 0) {
         message.react('❌');
         embed.setTitle("Aucune question posée.");
-        return message.channel.send({embeds: [embed]});
+        return message.channel.send({ embeds: [embed] });
     }
 
     waAPI.getShort(question.join(' ').replaceAll('?', ''))
         .then( (result) => {
             let embed = new MessageEmbed()
                 .setColor(16345394)
-                .setAuthor(utils.capitalize(question.join(' ')), message.author.displayAvatarURL())
+                .setAuthor({ name: utils.capitalize(question.join(' ')), iconURL: message.author.displayAvatarURL()})
                 .setDescription(result)
-                .setFooter("Powered by WolframAlpha", variables.WolframAlphaIcon)
+                .setFooter({ text: "Powered by WolframAlpha", iconURL: variables.WolframAlphaIcon})
 
-            message.channel.send({embeds: [embed]});
+            message.channel.send({ embeds: [embed] });
         })
 
         .catch( (error) => {
@@ -175,13 +175,13 @@ export async function answer(message, question) {
             if (error.message === "Wolfram|Alpha did not understand your input") {
                 message.react('❌');
                 embed.setTitle("Wolfram Alpha did not understand your input.")
-                     .setFooter("😕 Maybe it can't answer that.");
+                     .setFooter({ text: "😕 Maybe it can't answer that."});
             }
             
             else {
                 embed.setTitle(error.message.replaceAll("|", "") + ".");
             }
             
-            message.channel.send({embeds: [embed]});
+            message.channel.send({ embeds: [embed] });
         });
 }
