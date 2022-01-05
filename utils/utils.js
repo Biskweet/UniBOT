@@ -42,7 +42,7 @@ export async function errorHandler(error, message) {
 
 
 export async function updateClientActivity() {
-    let serverMembersCount = client.guilds.cache.get(749364640147832863).memberCount;
+    let serverMembersCount = client.guilds.cache.get("749364640147832863").memberCount;
     client.user.setActivity(`${serverMembersCount} membres 👀 !`, { type: "WATCHING" });
 }
 
