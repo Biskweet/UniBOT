@@ -214,7 +214,7 @@ export async function printCache(message) {
     if (utils.isModo(message.member)) {
         let embed = new MessageEmbed()
             .setTitle("Bot cache as of " + (new Date()))
-            .setDescription("```" + cache + "```");
+            .setDescription("```" + JSON.stringify(cache, null, 4) + "```");
 
         message.channel.send({ embeds: [embed] });
     }
