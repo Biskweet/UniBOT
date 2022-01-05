@@ -42,8 +42,8 @@ export async function errorHandler(error, message) {
 
 
 export async function updateClientActivity() {
-    let serverMembersCount = client.guilds.cache.get("749364640147832863").memberCount;
-    client.user.setActivity(`${serverMembersCount} membres 👀 !`, {type: "WATCHING"});
+    let serverMembersCount = client.guilds.cache.get(749364640147832863).memberCount;
+    client.user.setActivity(`${serverMembersCount} membres 👀 !`, { type: "WATCHING" });
 }
 
 
@@ -58,16 +58,16 @@ export function isVIP(member) {
 
 
 export function hasAccessRole(member) {
-    return (member.roles.cache.has("779741939447627798") ||
-            member.roles.cache.has("862047877375328256") ||
-            member.roles.cache.has("755466223482961963") ||
-            member.roles.cache.has("862048136414363699"));
+    return (member.roles.cache.has(779741939447627798) ||
+            member.roles.cache.has(862047877375328256) ||
+            member.roles.cache.has(755466223482961963) ||
+            member.roles.cache.has(862048136414363699));
 }
 
 
 export function isModo(member) {
     try {
-        return (member.roles.cache.has(variables.modoRoleId) || (member.id == "329718763698257931"));
+        return (member.roles.cache.has(variables.modoRoleId) || (member.id == 329718763698257931));
     }
 
     catch (error) {
@@ -77,8 +77,8 @@ export function isModo(member) {
 
 
 export function hasSensitiveRole(member) {
-    return (member.roles.cache.has("777533078763208724") ||
-            member.roles.cache.has("754463571345276969"));
+    return (member.roles.cache.has(777533078763208724) ||
+            member.roles.cache.has(754463571345276969));
 }
 
 
@@ -119,11 +119,11 @@ export function saveCache(data) {
 export async function checkSocialMedias() {
     let twitterAccount;
     for (twitterAccount of variables.twitterAccounts) {
-        retrieveTweets(twitterAccount).catch( (err) => {console.log("Error while fetching tweets for account:" + twitterAccount + " (" + err.message + ")")} );
+        retrieveTweets(twitterAccount).catch( (error) => console.log("Error while fetching tweets for account:" + twitterAccount + " (" + err.message + ")"));
     }
 
     retrieveVideos().catch( (err) => {} );
-    checkLeaderboard().catch( (err) => {console.log("Error while checking leaderboard (" + err.message + ").")} );
+    checkLeaderboard().catch( (error) => console.log("Error while checking leaderboard (" + error.message + ")."));
 }
 
 
@@ -157,6 +157,8 @@ export async function checkLeaderboard() {
                             server.members.cache.get(newTopMemberId).roles.add(vipRole);
                             cache.topMemberId = newTopMemberId;
                             saveCache(cache);
+
+                            console.log("New top member (id=" + newTopMemberId + ")");
                         }
                     });
             });

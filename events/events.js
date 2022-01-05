@@ -97,7 +97,7 @@ export async function messageDelete(message) {
                     .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL()})
                     .setFooter({ text: `Author ID : ${message.author.id} • ${(new Date()).toLocaleString("fr-FR")}`});
 
-    logsChannel.send( {embeds: [embed]} );
+    logsChannel.send({embeds: [embed]});
 
     // Add all attachments of the message
     if (message.attachments.size > 0) {
@@ -109,6 +109,6 @@ export async function messageDelete(message) {
             .setColor(variables.colors.SuHex)
             .setAuthor({ name: "(fin des pièces-jointes)"});
 
-        logsChannel.send( { embeds: [embed] } );
+        logsChannel.send({ embeds: [embed] });
     }
 }

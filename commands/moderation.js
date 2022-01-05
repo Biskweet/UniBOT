@@ -208,3 +208,14 @@ export async function filterMessage(message) {
         message.channel.send({ embeds: [embed] });
     }
 }
+
+
+export async function printCache(message) {
+    if (utils.isModo(message.member)) {
+        let embed = new MessageEmbed()
+            .setTitle("Bot cache as of " + (new Date()))
+            .setDescription("```" + cache + "```");
+
+        message.channel.send({ embeds: [embed] });
+    }
+}

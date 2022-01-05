@@ -130,8 +130,8 @@ client.on("messageCreate", async (message) => {
             await moderation.unban(message, words.slice(2).join(' '))
         }
 
-        if (command == "resetwelcome") {
-            await moderation.updateWelcomeMessage("reset", message.member);
+        if (command === "printCache") {
+            await moderation.printCache(message);
         }
         // ---------------------
 
