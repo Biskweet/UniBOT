@@ -107,7 +107,7 @@ export async function messageDelete(message) {
 
         embed = new MessageEmbed()
             .setColor(variables.colors.SuHex)
-            .setAuthor({ name: "(fin des pièces-jointes)"});
+            .setAuthor({ name: "(fin des pièces-jointes)" });
 
         logsChannel.send({ embeds: [embed] });
     }
