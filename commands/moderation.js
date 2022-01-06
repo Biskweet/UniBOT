@@ -213,8 +213,9 @@ export async function filterMessage(message) {
 export async function printCache(message) {
     if (utils.isModo(message.member)) {
         let embed = new MessageEmbed()
-            .setTitle("Bot cache as of " + (new Date()))
-            .setDescription("```" + JSON.stringify(cache, null, 4) + "```");
+            .setTitle("Bot cache on " + (new Date()).toString().slice(0, 24))
+            .setDescription("```" + JSON.stringify(cache, null, 4) + "```")
+            .setColor(variables.colors.SuHex);
 
         message.channel.send({ embeds: [embed] });
     }
