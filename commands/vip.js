@@ -47,7 +47,7 @@ export async function couleur(message, hexcode) {
         embed.setTitle("Rôle ajouté !")
              .setThumbnail(`https://singlecolorimage.com/get/${hexcode}/100x75`)
              .setDescription(`${message.author}, je viens de vous assigner le rôle ${newRole} !`)
-             .setFooter({ name: "Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !"})
+             .setFooter({ text: "Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !" })
 
         message.channel.send({ embeds: [embed] });
     
@@ -71,9 +71,9 @@ export async function couleur(message, hexcode) {
                         embed.setTitle("Rôle ajouté !")
                              .setThumbnail(`https://singlecolorimage.com/get/${hexcode}/100x75`)
                              .setDescription(`${message.author}, je viens de vous assigner le rôle ${newRole} !`)
-                             .setFooter({ name: "Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !"})
+                             .setFooter({ text: "Il peut arriver que votre rôle soit mal hiérarchisé. Si tel est le cas, contactez un modérateur !"})
 
-                        message.channel.send({ embeds: [embed]});
+                        message.channel.send({ embeds: [embed] });
                     })
 
             })
