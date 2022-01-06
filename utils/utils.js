@@ -53,15 +53,17 @@ export function capitalize(string) {
 
 
 export function isVIP(member) {
-    return member.roles.cache.has(variables.boosterRoleId) || member.roles.cache.has(variables.VIPRoleId);
+    return member.roles.cache.has(variables.boosterRoleId) ||
+           member.roles.cache.has(variables.modoRoleId)    ||
+           member.roles.cache.has(variables.VIPRoleId);
 }
 
 
 export function hasAccessRole(member) {
-    return (member.roles.cache.has("779741939447627798") ||
-            member.roles.cache.has("862047877375328256") ||
-            member.roles.cache.has("755466223482961963") ||
-            member.roles.cache.has("862048136414363699"));
+    return member.roles.cache.has("779741939447627798") ||
+           member.roles.cache.has("862047877375328256") ||
+           member.roles.cache.has("755466223482961963") ||
+           member.roles.cache.has("862048136414363699");
 }
 
 
