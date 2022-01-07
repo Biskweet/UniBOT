@@ -162,7 +162,7 @@ export async function checkLeaderboard() {
 
                             console.log("New top member (id=" + newTopMemberId + ")");
                         }
-                    });
+                    }).catch( (error) => utils.errorHandler(error, null));
             });
         });
 }
@@ -192,7 +192,7 @@ async function retrieveVideos() {
             }
         })
 
-        .catch( (err) => {});
+        .catch( (error) => utils.errorHandler(error, null));
 }
 
 
