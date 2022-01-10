@@ -192,7 +192,7 @@ async function retrieveVideos() {
             }
         })
 
-        .catch( (error) => errorHandler(error, null));
+        .catch( (error) => {});
 }
 
 
