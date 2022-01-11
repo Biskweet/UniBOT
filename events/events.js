@@ -15,7 +15,6 @@ export async function onReady() {
 
 export async function guildMemberAdd(member) {
     client.guilds.cache.get("749364640147832863").channels.cache.get(variables.newMembersChannelId).send(`${member} a rejoint le serveur.`);
-    client.guilds.cache.get("749364640147832863").channels.cache.get("776599592980185119").send(`${member} a rejoint le serveur !`);
     await utils.updateClientActivity();
 
     let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
@@ -80,6 +79,10 @@ export async function guildBanRemove(guildBan) {
 export async function checkMemberUpdate(oldMember, newMember) {
     if (!utils.hasSensitiveRole(oldMember) && utils.hasSensitiveRole(newMember)) {
         client.channels.cache.get(variables.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
+    }
+
+    if (!utils.hasAccessRole(oldMember) && utils.hasAccessRole(newMember)) {
+        client.channels.cache.get("776599592980185119").send(`${member} a rejoint le serveur !`);
     }
 }
 
