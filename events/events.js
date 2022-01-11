@@ -82,7 +82,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
     }
 
     if (!utils.hasAccessRole(oldMember) && utils.hasAccessRole(newMember)) {
-        client.channels.cache.get("776599592980185119").send(`${member} a rejoint le serveur !`);
+        client.channels.cache.get("776599592980185119").send(`${newMember} a rejoint le serveur !`);
     }
 }
 
