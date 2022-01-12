@@ -14,7 +14,7 @@ export async function onReady() {
 
 
 export async function guildMemberAdd(member) {
-    client.channels.cache.get(variables.channels.newMember).send(`${member} a rejoint le serveur.`);
+    client.channels.cache.get(variables.channels.newMembers).send(`${member} a rejoint le serveur.`);
     await utils.updateClientActivity();
 
     let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
