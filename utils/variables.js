@@ -14,27 +14,30 @@ export const prefix1 = "UNIBOT ";
 
 export const prefix2 = ">";
 
-export const logsChannelId = "776802470089064510";
+export const roles = {
+    vip: "924020284367978516",
+    moderator: "749971084228558969",
+    booster: "852891262659067924",
+    student: "779741939447627798",
+    visitor: "862047877375328256",
+    certif: "755466223482961963",
+    alumni: "862048136414363699",
+    universityAdmin: "777533078763208724",
+    teacherResearcher: "754463571345276969"
+}
+
+export const channels = {
+    logs: "776802470089064510",
+    moderation: "749982348187271299",
+    twitter: "777304594195677225",
+    youtube: "749770030954053632",
+    newMembers: "752891071553601638",
+    leavingMembers: "777521246950129674",
+    startHere: "859573235015614485",
+    general1: "776599592980185119"
+}
 
 export const DSUGuildId = "749364640147832863";
-
-export const modosChannelId = "749982348187271299";
-
-export const boosterRoleId = "852891262659067924";
-
-export const twitterChannelId = "777304594195677225";
-
-export const youtubeChannelId = "749770030954053632";
-
-export const VIPRoleId = "924020284367978516";
-
-export const modoRoleId = "749971084228558969";
-
-export const newMembersChannelId = "752891071553601638";
-
-export const leavingMembersChannelId = "777521246950129674";
-
-export const startHereChannelId = "859573235015614485"
 
 export const months = ["janvier","février", "mars",
                        "avril", "mai", "juin",

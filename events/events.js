@@ -14,7 +14,7 @@ export async function onReady() {
 
 
 export async function guildMemberAdd(member) {
-    client.guilds.cache.get("749364640147832863").channels.cache.get(variables.newMembersChannelId).send(`${member} a rejoint le serveur.`);
+    client.channels.cache.get(variables.channels.newMember).send(`${member} a rejoint le serveur.`);
     await utils.updateClientActivity();
 
     let memberJoinLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
@@ -23,7 +23,7 @@ export async function guildMemberAdd(member) {
 
     utils.saveLogs(memberJoinLog);
 
-    client.channels.cache.get(variables.startHereChannelId).send(`${member} choisissez pour accéder au serveur !`)
+    client.channels.cache.get(variables.channels.startHere).send(`${member} choisissez pour accéder au serveur !`)
         .then( (ping) => {
             setTimeout(() => {
                 ping.delete();
@@ -33,7 +33,7 @@ export async function guildMemberAdd(member) {
 
 
 export async function guildMemberRemove(member) {
-    client.channels.cache.get(variables.leavingMembersChannelId).send(`${member.user.tag} a quitté le serveur.`);
+    client.channels.cache.get(variables.channels.leavingMembers).send(`${member.user.tag} a quitté le serveur.`);
     await utils.updateClientActivity();
 
     let memberLeaveLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
@@ -61,7 +61,7 @@ export async function guildBanAdd(guildBan) {
         .setColor(variables.colors.Red)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get(variables.logsChannelId).send({ embeds: [embed] });
+    client.channels.cache.get(variables.channels.logs).send({ embeds: [embed] });
 }
 
 
@@ -72,17 +72,17 @@ export async function guildBanRemove(guildBan) {
         .setColor(variables.colors.Green)
         .setThumbnail(guildBan.user.displayAvatarURL());
 
-    client.channels.cache.get(variables.logsChannelId).send({ embeds: [embed] });
+    client.channels.cache.get(variables.channels.logs).send({ embeds: [embed] });
 }
 
 
 export async function checkMemberUpdate(oldMember, newMember) {
     if (!utils.hasSensitiveRole(oldMember) && utils.hasSensitiveRole(newMember)) {
-        client.channels.cache.get(variables.modosChannelId).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
+        client.channels.cache.get(variables.channels.moderation).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
     }
 
     if (!utils.hasAccessRole(oldMember) && utils.hasAccessRole(newMember)) {
-        client.channels.cache.get("776599592980185119").send(`${newMember} a rejoint le serveur !`);
+        client.channels.cache.get(variables.channels.general1).send(`${newMember} a rejoint le serveur !`);
     }
 }
 
@@ -93,7 +93,7 @@ export async function messageDelete(message) {
     }
 
     let logsChannel, embed;
-    logsChannel = client.channels.cache.get("776802470089064510");
+    logsChannel = client.channels.cache.get(variables.channels.logs);
     embed = new MessageEmbed()
                     .setColor(variables.colors.SuHex)
                     .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
