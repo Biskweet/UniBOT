@@ -16,6 +16,8 @@ export const prefix2 = ">";
 
 export const logsChannelId = "776802470089064510";
 
+export const DSUGuildId = "749364640147832863";
+
 export const modosChannelId = "749982348187271299";
 
 export const boosterRoleId = "852891262659067924";
