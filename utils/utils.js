@@ -59,7 +59,7 @@ export function isVIP(member) {
 }
 
 
-export function hasAccessRole(member) {
+export function hasNonSensitiveRole(member) {
     return member.roles.cache.has(variables.roles.student) ||
            member.roles.cache.has(variables.roles.visitor) ||
            member.roles.cache.has(variables.roles.certif)  ||

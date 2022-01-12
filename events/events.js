@@ -81,7 +81,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
         client.channels.cache.get(variables.channels.moderation).send(`${newMember} a pris un rôle sensible. Merci de vérifier sa légitimité.`);
     }
 
-    if (!utils.hasAccessRole(oldMember) && utils.hasAccessRole(newMember)) {
+    if (!utils.hasNonSensitiveRole(oldMember) && utils.hasNonSensitiveRole(newMember)) {
         client.channels.cache.get(variables.channels.general1).send(`${newMember} a rejoint le serveur !`);
     }
 }
