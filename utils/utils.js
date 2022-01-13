@@ -85,8 +85,7 @@ export function hasSensitiveRole(member) {
 
 
 export function isCommand(msg) {
-    return (msg.toUpperCase().startsWith(variables.prefix1) ||
-            msg.toUpperCase().startsWith(variables.prefix2));
+    return msg.toUpperCase().startsWith(variables.prefix1);
 }
 
 

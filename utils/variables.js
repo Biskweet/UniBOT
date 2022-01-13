@@ -12,8 +12,6 @@ export const twitterAccounts = ["SU", "SULettres", "SUMédecine", "SUPolytech"];
 
 export const prefix1 = "UNIBOT ";
 
-export const prefix2 = ">";
-
 export const roles = {
     vip: "924020284367978516",
     moderator: "749971084228558969",
