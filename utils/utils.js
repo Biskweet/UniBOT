@@ -69,7 +69,7 @@ export function hasNonSensitiveRole(member) {
 
 export function isModo(member) {
     try {
-        return (member.roles.cache.has(variables.modoRoleId) || (member.id == "329718763698257931"));
+        return (member.roles.cache.has(variables.roles.moderator) || (member.id == "329718763698257931"));
     }
 
     catch (error) {
