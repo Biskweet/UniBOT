@@ -247,8 +247,8 @@ async function retrieveTweets(account) {
 
                                 cache.twitter[account].lastTweetId = newTweetId;
                                 saveCache(cache);
-                            })
+                            }).catch( (error) => {});
                     })
         }
-    })
+    }).catch( (error) => {});
 }
