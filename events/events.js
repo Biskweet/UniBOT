@@ -24,9 +24,9 @@ export async function guildMemberAdd(member) {
     utils.saveLogs(memberJoinLog);
 
     client.channels.cache.get(variables.channels.startHere).send(`${member} choisissez pour accéder au serveur !`)
-        .then( (ping) => {
+        .then( (pingMessage) => {
             setTimeout(() => {
-                ping.delete();
+                pingMessage.delete();
             }, 500);
         });
 }
@@ -41,16 +41,6 @@ export async function guildMemberRemove(member) {
                          "\n---------------------------------------------------\n";
 
     utils.saveLogs(memberLeaveLog);
-
-    if (welcomeQueue.includes(member.id)) {
-        await moderation.updateWelcomeMessage("remove", member);
-        
-        // Removing member from the welcome queue
-        let index = welcomeQueue.indexOf(member.id);
-        if (index > -1) {
-            welcomeQueue.splice(index, 1);
-        }
-    }
 }
 
 
@@ -89,7 +79,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
 
 export async function messageDelete(message) {
     if (message.author == null || message.author.bot || utils.isModo(message.member)) {
-        return;  // Do not log moderators's or bots's messages
+        return;  // Do not log messages from bots or moderators
     }
 
     let logsChannel, embed;

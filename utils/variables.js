@@ -1,5 +1,5 @@
 export const colors = {
-    SuHex: 0x1d2769,
+    SuHex: 0x192165,
     Red: 16711680,
     Green: 65280
 }
@@ -26,7 +26,7 @@ export const roles = {
 
 export const channels = {
     logs: "776802470089064510",
-    moderation: "749982348187271299",
+    moderation: "749982348187271299",   
     twitter: "777304594195677225",
     youtube: "749770030954053632",
     newMembers: "752891071553601638",
