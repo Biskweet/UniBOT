@@ -53,23 +53,23 @@ export async function mute(message, args) {
         let target, mutedRole;
 
         target = message.mentions.members.first();
-        mutedRole = message.guild.roles.cache.find( (role) => role.id == "850707162561118229");
+        mutedRole = message.guild.roles.cache.find( (role) => role.id == variables.roles.muted);
 
         if (target == undefined) utils.errorHandler({message: "Could not find target."}, message);
         if (mutedRole == undefined) utils.errorHandler({message: "No such role."}, message);
 
-        target.roles.add(mutedRole).then( (memb) => {message.react('✅');} ) ;
+        target.roles.add(mutedRole).then( (member) => message.react('✅')) ;
 
         if (args.length > 0 && !isNaN(args[0])) {
             let duration = parseInt(args[0]) * 1000;
 
             if (duration > 500000) {
-                utils.errorHandler({message: "Cannot mute for longer than 500'000 seconds (user was muted indefinitely)."}, message);
-                return;
+                message.channel.send("Cannot mute for longer than 500'000 seconds (user was muted indefinitely).");
+                return;  // Interrupt the function here so it doesn't trigger the timeout
             }
 
             setTimeout( () => {
-                unmute(message).catch( (error) => {utils.errorHandler(message, error);} );
+                unmute(message).catch( (error) => utils.errorHandler(message, error));
             }, duration);
         }
     }
@@ -81,12 +81,14 @@ export async function unmute(message) {
         let target, mutedRole;
 
         target = message.mentions.members.first();
-        mutedRole = message.guild.roles.cache.find((role) => role.id == "850707162561118229");
+        mutedRole = message.guild.roles.cache.find((role) => role.id == variables.roles.muted);
 
-        if (target == undefined) utils.errorHandler({message: "Could not find target."}, message);
-        if (mutedRole == undefined) utils.errorHandler({message: "No such role."}, message);
+        if (target == undefined) utils.errorHandler({ message: "Could not find target." }, message);
+        if (mutedRole == undefined) utils.errorHandler({ message: "No such role." }, message);
 
-        target.roles.remove(mutedRole).then( (memb) => {message.react('✅');} ).catch( (error) => {utils.errorHandler(error, message)} );
+        target.roles.remove(mutedRole)
+            .then( (memb) => message.react('✅'))
+            .catch( (error) => utils.errorHandler(error, message));
     }
 }
 
@@ -105,8 +107,7 @@ export async function kick(message, reason) {
                 alert += "\n\nMotif : " + reason;
             }
             
-            target.send(alert)
-                .catch((err) => {console.log(`Could not send kick alert to ${target.user.tag}`);})
+            await target.send(alert).catch( (error) => console.log(`Could not send kick alert to ${target.user.tag} (${error})`))
 
             target.kick();
             message.react('✅');
@@ -184,7 +185,7 @@ export async function unban(message, userId) {
 
 
 export async function filterMessage(message) {
-    if (message.channel.id != 754653542178095195 && !utils.isModo(message.member) &&
+    if (message.channel.id != "754653542178095195" && !utils.isModo(message.member) &&
         (message.content.includes("discord.gg/") || message.content.includes("chat.whatsapp.com/"))) {
        
         message.delete();
@@ -199,7 +200,7 @@ export async function filterMessage(message) {
     }
 
     // If the message mentions UniBOT or its dedicated role, send a message
-    if (message.mentions.has(485490695604273153) || message.mentions.has("869605212078350347")) {
+    if (message.mentions.has(variables.unibotId) || message.mentions.has(variables.roles.unibot)) {
         let embed = new MessageEmbed()
                             .setColor(variables.colors.SuHex)
                             .setAuthor({ name: "C'est moi !" } )
