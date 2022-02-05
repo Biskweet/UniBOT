@@ -107,7 +107,7 @@ client.on("messageCreate", async (message) => {
         }
 
         if (command === "clear") {
-            await moderation.clear(message, words.slice(2))
+            await moderation.clear(message, words.slice(2));
         }
 
         if (command === "mute") {
@@ -119,15 +119,15 @@ client.on("messageCreate", async (message) => {
         }
 
         if (command === "kick") {
-            await moderation.kick(message, words.slice(3).join(' '))
+            await moderation.kick(message, words.slice(3).join(' '));
         }
 
         if (command === "ban") {
-            await moderation.ban(message, words.slice(3).join(' '))
+            await moderation.ban(message, words.slice(3).join(' '));
         }
 
         if (command === "unban") {
-            await moderation.unban(message, words.slice(2).join(' '))
+            await moderation.unban(message, words.slice(2).join(' '));
         }
 
         if (command === "printCache") {
