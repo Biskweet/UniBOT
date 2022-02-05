@@ -21,7 +21,9 @@ export const roles = {
     certif: "755466223482961963",
     alumni: "862048136414363699",
     universityAdmin: "777533078763208724",
-    teacherResearcher: "754463571345276969"
+    teacherResearcher: "754463571345276969",
+    muted: "850707162561118229",
+    unibot: "869605212078350347"
 }
 
 export const channels = {
