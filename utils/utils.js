@@ -252,3 +252,16 @@ async function retrieveTweets(account) {
         }
     }).catch( (error) => {});
 }
+
+
+export function generateFileName(url) {
+    if (url[url.at(-1)] === "/") {
+        url = url.slice(0, url.length - 1);
+    }
+
+    let oldFileName = url.split("/").at(-1);
+    let extension = oldFileName.split(".").at(-1);
+    let newFileName = parseInt(Math.random() * 10e10).toString();
+
+    return process.cwd() + "/temp/" + newFileName + "." + extension;
+}

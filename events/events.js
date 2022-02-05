@@ -2,6 +2,8 @@ import * as utils from "../utils/utils.js";
 import * as variables from '../utils/variables.js';
 import * as moderation from '../commands/moderation.js';
 import { MessageEmbed } from 'discord.js';
+import axios from 'axios';
+import fs from 'fs';
 
 
 export async function onReady() {
@@ -78,7 +80,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
 
 
 export async function messageDelete(message) {
-    if (message.author == null || message.author.bot || utils.isModo(message.member)) {
+    if (message.author == null || message.author.bot) {
         return;  // Do not log messages from bots or moderators
     }
 
@@ -94,14 +96,41 @@ export async function messageDelete(message) {
 
     // Add all attachments of the message
     if (message.attachments.size > 0) {
+        let attachedFiles = [], requests = [];
         for (let attachment of message.attachments) {   
-            logsChannel.send(attachment[1].url);
+            requests.push(axios({
+                method: "get",
+                url: attachment[1].url,
+                responseType: "arraybuffer"
+            }).then( (response) => {
+                let filePath = utils.generateFileName(attachment[1].url);
+
+                attachedFiles.push(filePath);
+                fs.writeFile(filePath, response.data, (error) => {
+                    if (error) {
+                        utils.errorHandler(error, null);
+                    }
+                });
+            }).catch( (error) => utils.errorHandler(error, null)));
         }
 
-        embed = new MessageEmbed()
-            .setColor(variables.colors.SuHex)
-            .setAuthor({ name: "(fin des pièces-jointes)" });
+        Promise.allSettled(requests)
+            .then( async (output) => {
+                await logsChannel.send({ content: "pièces-jointes :", files: attachedFiles })
+            
+                embed = new MessageEmbed()
+                    .setColor(variables.colors.SuHex)
+                    .setAuthor({ name: "(fin des pièces-jointes)" });
 
-        logsChannel.send({ embeds: [embed] });
+                logsChannel.send({ embeds: [embed] });
+            
+            for (let file of attachedFiles) {
+                fs.unlink(file, (error) => {
+                    if (error) {
+                        utils.errorHandler(error, null);
+                    } 
+                });
+            }
+        });
     }
 }
