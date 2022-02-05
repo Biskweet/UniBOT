@@ -39,6 +39,8 @@ export const channels = {
 
 export const DSUGuildId = "749364640147832863";
 
+export const unibotId = "485490695604273153";
+
 export const months = ["janvier","février", "mars",
                        "avril", "mai", "juin",
                        "juillet", "août", "septembre",
