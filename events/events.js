@@ -80,7 +80,7 @@ export async function checkMemberUpdate(oldMember, newMember) {
 
 
 export async function messageDelete(message) {
-    if (message.author == null || message.author.bot) {
+    if (message.author == null || message.author.bot || utils.isModo(message.member)) {
         return;  // Do not log messages from bots or moderators
     }
 
