@@ -1,6 +1,7 @@
 import { Intents, MessageEmbed, MessageActionRow, MessageButton } from 'discord.js';
 import Discord from 'discord.js';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import * as moderation from './commands/moderation.js';
 import * as variables from './utils/variables.js';
 import * as events from './events/events.js';
@@ -17,6 +18,9 @@ dotenv.config();
 global.cache = utils.loadCache();
 global.welcomeQueue = [];
 
+if (!fs.existsSync("./temp")){
+    fs.mkdirSync("./temp");
+}
 
 global.client = new Discord.Client({
     intents: [
