@@ -13,7 +13,7 @@ export async function help(message, command='') {
                      " - send_info\n" +
                      " - ping\n" +
                      " - 8ball\n" +
-                     " - answer" +
+                     " - answer\n" +
                      " - wiki\n" +
                      " - couleur (VIP)\n" +
                      " - clear (modération)\n" +
