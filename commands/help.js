@@ -19,10 +19,10 @@ export async function help(message, command='') {
                      " - clear (modération)\n" +
                      " - mute (modération)\n" +
                      " - unmute (modération)\n" +
-                     " - "
+                     " - destroy (modération)\n" +
+                     " - batchban (modération)" +
                      " - kick (modération)\n" +
                      " - ban/unban (modération)\n"+
-                     " - create_embed/edit_embed (modération)" +
                      "```";
     }
 
