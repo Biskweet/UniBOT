@@ -20,7 +20,7 @@ export async function help(message, command='') {
                      " - mute (modération)\n" +
                      " - unmute (modération)\n" +
                      " - destroy (modération)\n" +
-                     " - batchban (modération)" +
+                     " - batchban (modération)\n" +
                      " - kick (modération)\n" +
                      " - ban/unban (modération)\n"+
                      "```";
