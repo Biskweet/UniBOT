@@ -132,37 +132,39 @@ export async function checkLeaderboard() {
     let i = 0;
     let topMember, newTopMemberId, vipRole, oldTopMember;
 
-    axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/" + variables.DSUGuildId)
-        .then( (response) => {
-            response = response.data;
-            client.guilds.cache.forEach( (server) => {
-                newTopMemberId = response.players[i].id;
+    try {
+        axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/" + variables.DSUGuildId)
+            .then( (response) => {
+                response = response.data;
+                client.guilds.cache.forEach( (server) => {
+                    newTopMemberId = response.players[i].id;
 
-                server.members.fetch()
-                    .then( () => {
-                        do { // Searching for the first available member in the list
-                            newTopMemberId = response.players[i].id;
-                            i++;
-                        } while (!server.members.cache.has(newTopMemberId));
+                    server.members.fetch()
+                        .then( () => {
+                            do { // Searching for the first available member in the list
+                                newTopMemberId = response.players[i].id;
+                                i++;
+                            } while (!server.members.cache.has(newTopMemberId));
 
-                        topMember = server.members.cache.get(newTopMemberId);
-                        if (newTopMemberId != cache.topMemberId) {
-                            vipRole = server.roles.cache.get(variables.roles.vip);
-                            oldTopMember = server.members.cache.get(cache.topMemberId);
-                            
-                            if (oldTopMember != undefined) {
-                                oldTopMember.roles.remove(variables.roles.vip);
+                            topMember = server.members.cache.get(newTopMemberId);
+                            if (newTopMemberId != cache.topMemberId) {
+                                vipRole = server.roles.cache.get(variables.roles.vip);
+                                oldTopMember = server.members.cache.get(cache.topMemberId);
+                                
+                                if (oldTopMember != undefined) {
+                                    oldTopMember.roles.remove(variables.roles.vip);
+                                }
+                                
+                                server.members.cache.get(newTopMemberId).roles.add(vipRole);
+                                cache.topMemberId = newTopMemberId;
+                                saveCache(cache);
+
+                                console.log("New top member (id=" + newTopMemberId + ")");
                             }
-                            
-                            server.members.cache.get(newTopMemberId).roles.add(vipRole);
-                            cache.topMemberId = newTopMemberId;
-                            saveCache(cache);
-
-                            console.log("New top member (id=" + newTopMemberId + ")");
-                        }
-                    }).catch( (error) => errorHandler(error, null));
+                        }).catch( (error) => errorHandler(error, null));
+                });
             });
-        });
+    } catch (error) {}
 }
 
 
@@ -196,61 +198,64 @@ async function retrieveVideos() {
 
 async function retrieveTweets(account) {
     let newTweets, newTweetId;
-    axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers})
-        .then( (response) => {
-            newTweets = response.data;
-            newTweetId = newTweets.data[0].id;
 
-            if (newTweetId != cache.twitter[account].lastTweetId) {
+    try {
+        axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers})
+            .then( (response) => {
+                newTweets = response.data;
+                newTweetId = newTweets.data[0].id;
 
-                let tweetData, media, date, user, text, channel;
+                if (newTweetId != cache.twitter[account].lastTweetId) {
 
-                axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
-                                           "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers})
-                    .then( (response) => {
+                    let tweetData, media, date, user, text, channel;
 
-                        tweetData = response.data;
+                    axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
+                                               "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers})
+                        .then( (response) => {
 
-                        if (tweetData.data[0].hasOwnProperty("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
-                                                                                      tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
-                            return; // Do not share if the tweet is a reply/RT
-                        }
+                            tweetData = response.data;
 
-                        if (tweetData.hasOwnProperty("includes")) {
-                            if (tweetData.includes.media[0].type == "photo") {
-                                media = tweetData.includes.media[0].url    
+                            if (tweetData.data[0].hasOwnProperty("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
+                                                                                          tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
+                                return; // Do not share if the tweet is a reply/RT
                             }
-                            else if (tweetData.includes.media[0].type == "video") {
-                                tweetData.includes.media[0].preview_image_url;
+
+                            if (tweetData.hasOwnProperty("includes")) {
+                                if (tweetData.includes.media[0].type == "photo") {
+                                    media = tweetData.includes.media[0].url    
+                                }
+                                else if (tweetData.includes.media[0].type == "video") {
+                                    tweetData.includes.media[0].preview_image_url;
+                                }
                             }
-                        }
 
-                        date = new Date(tweetData.data[0].created_at);
+                            date = new Date(tweetData.data[0].created_at);
 
-                        axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, {headers: headers})
-                            .then( (response) => {
-                                user = response.data.data[0];
+                            axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, {headers: headers})
+                                .then( (response) => {
+                                    user = response.data.data[0];
 
-                                text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${newTweetId})`;
+                                    text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${newTweetId})`;
 
-                                channel = client.channels.cache.get(variables.channels.twitter);
-                                
-                                let embed = new MessageEmbed()
-                                    .setDescription(text)
-                                    .setColor(1942002)
-                                    .setAuthor({ name: `${user.name} (@${user.username}) a tweeté :`, iconURL: cache.twitter[account].iconUrl})
-                                    .setImage(media)
-                                    .setFooter({ text: `Le ${date.toLocaleDateString("fr-FR", { day:"numeric", month:"long", year: "numeric", hour:"numeric", minute:"numeric" })}`,
-                                                 iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png"});
+                                    channel = client.channels.cache.get(variables.channels.twitter);
+                                    
+                                    let embed = new MessageEmbed()
+                                        .setDescription(text)
+                                        .setColor(1942002)
+                                        .setAuthor({ name: `${user.name} (@${user.username}) a tweeté :`, iconURL: cache.twitter[account].iconUrl})
+                                        .setImage(media)
+                                        .setFooter({ text: `Le ${date.toLocaleDateString("fr-FR", { day:"numeric", month:"long", year: "numeric", hour:"numeric", minute:"numeric" })}`,
+                                                     iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png"});
 
-                                channel.send({ embeds: [embed] });
+                                    channel.send({ embeds: [embed] });
 
-                                cache.twitter[account].lastTweetId = newTweetId;
-                                saveCache(cache);
-                            }).catch( (error) => {});
-                    })
-        }
-    }).catch( (error) => {});
+                                    cache.twitter[account].lastTweetId = newTweetId;
+                                    saveCache(cache);
+                                }).catch( (error) => {});
+                        })
+            }
+        }).catch( (error) => {});
+    } catch (error) {}
 }
 
 
