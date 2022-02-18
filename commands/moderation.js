@@ -40,10 +40,8 @@ export async function clear(message, args) {
         }
 
         message.channel.messages.fetch({ limit: (amount+1) })
-            .then((messages) => {
-                message.channel.bulkDelete(messages);
-            })
-            .catch( (error) => {utils.errorHandler(error, message);} );
+            .then( (messages) => message.channel.bulkDelete(messages))
+            .catch( (error) => utils.errorHandler(error, message));
     }
 }
 
