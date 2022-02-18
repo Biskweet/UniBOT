@@ -28,9 +28,9 @@ export async function clear(message, args) {
 
         let amount = parseInt(args[0]);
 
-        if (amount > 75) {
+        if (amount > 150) {
             message.react('❌');
-            message.channel.send("Impossible de supprimer plus de 75 messages à la fois.")
+            message.channel.send("Impossible de supprimer plus de 150 messages à la fois.")
                 .then( (errMsg) => {
                     setTimeout(() => {
                         errMsg.delete();
