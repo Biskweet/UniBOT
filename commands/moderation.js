@@ -23,7 +23,7 @@ export async function clear(message, args) {
     if (utils.isModo(message.member)) {
 
         if (args.length != 1 || isNaN(args[0])) {
-            return; // Incorrect input but I'm too lazy for better handling
+            return message.react('❌');  // Incorrect input
         }
 
         let amount = parseInt(args[0]);
@@ -41,7 +41,10 @@ export async function clear(message, args) {
 
         message.channel.messages.fetch({ limit: (amount+1) })
             .then( (messages) => message.channel.bulkDelete(messages))
-            .catch( (error) => utils.errorHandler(error, message));
+            .catch( (error) => {
+                utils.errorHandler(error, message)
+                message.channel.send(`Erreur lors de la suppression de masse (${error.message})`)
+            });
     }
 }
 
