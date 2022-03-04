@@ -163,8 +163,8 @@ export async function checkLeaderboard() {
                             }
                         }).catch( (error) => errorHandler(error, null));
                 });
-            });
-    } catch (error) {}
+            }).catch( (error) => errorHandler(error, null));
+    }
 }
 
 
