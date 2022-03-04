@@ -59,12 +59,12 @@ export async function mute(message, args) {
         if (target == undefined) utils.errorHandler({message: "Could not find target."}, message);
         if (mutedRole == undefined) utils.errorHandler({message: "No such role."}, message);
 
-        target.roles.add(mutedRole).then( (member) => message.react('✅')) ;
+        target.roles.add(mutedRole).then( (member) => message.react('✅'));
 
         if (args.length > 0 && !isNaN(args[0])) {
             let duration = parseInt(args[0]) * 1000;
 
-            if (duration > 500000) {
+            if (duration > 500000000) {
                 message.channel.send("Cannot mute for longer than 500'000 seconds (user was muted indefinitely).");
                 return;  // Interrupt the function here so it doesn't trigger the timeout
             }
