@@ -88,11 +88,11 @@ export async function messageDelete(message) {
 
     if (message.author.id == "854382405363171379") {
         // For this specific member
-        logsChannel = client.channels.cache.get(variables.channels.general1);
-        logsChannel.send("<@854382405363171379>");
-    } else {
-        logsChannel = client.channels.cache.get(variables.channels.logs);
+        client.channels.cache.get(variables.channels.general1).send("<@854382405363171379>");
     }
+
+    logsChannel = client.channels.cache.get(variables.channels.logs);
+
     embed = new MessageEmbed()
                     .setColor(variables.colors.SuHex)
                     .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
