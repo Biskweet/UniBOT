@@ -86,11 +86,6 @@ export async function messageDelete(message) {
 
     let logsChannel, embed;
 
-    if (message.author.id == "854382405363171379") {
-        // For this specific member
-        client.channels.cache.get(variables.channels.general1).send("<@854382405363171379>");
-    }
-
     logsChannel = client.channels.cache.get(variables.channels.logs);
 
     embed = new MessageEmbed()
