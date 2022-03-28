@@ -3,14 +3,13 @@ import * as variables from '../utils/variables.js';
 
 
 export async function help(message, command='') {
-    let embedTitle, embedDesc, embedFooter, embedIcon;
+    let embedTitle, embedDesc;
 
-    let embed = new MessageEmbed()
+    let embed = new MessageEmbed();
 
     if (command === '') {
         embedTitle = "Liste des commandes";
         embedDesc  = "```" +
-                     " - send_info\n" +
                      " - ping\n" +
                      " - 8ball\n" +
                      " - answer\n" +
@@ -164,7 +163,7 @@ function help8ball() {
 
 function helpCouleur() {
     let embedTitle = "Help :arrow_right: __couleur__";
-    let embedDesc  = "__**(Réservé aux membres boosters)**__\n" +
+    let embedDesc  = "__**(Réservé aux membres VIP)**__\n" +
                      "Crée un rôle de couleur et l'assigne au membre selon la couleur passée en paramètre.\n\n" +
                      "Exemple d'utilisation :\n`unibot couleur FFABF4`\n\n" +
                      "**Vous pouvez trouver le code hexadécimal de la couleur de votre choix __[ici](https://g.co/kgs/QLJzXN)__.**";
@@ -177,7 +176,7 @@ function helpClear() {
     let embedTitle = "Help :arrow_right: __clear__";
     let embedDesc  = "__**(Réservé à la modération)**__\n" +
                      "Argument optionnel. Supprime les N derniers messages (sans compter celui de la commande). " +
-                     "Par défaut 5 (maximum 75).\n\n" +
+                     "Par défaut 5 (maximum 150).\n\n" +
                      "Exemples d'utilisation :\n`unibot clear`\n`unibot clear 10`";
 
     return [embedTitle, embedDesc];
