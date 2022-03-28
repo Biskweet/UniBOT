@@ -137,6 +137,10 @@ client.on("messageCreate", async (message) => {
         if (command === "printCache") {
             await moderation.printCache(message);
         }
+
+        if (command === "warnInactiveMembers") {
+            await moderation.warnInactiveMembers(message);
+        }
         // ---------------------
 
 
