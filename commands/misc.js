@@ -71,7 +71,7 @@ export async function wiki(message, article) {
     }   
 
     if (!variables.WikiLocales.includes(locale)) {
-        embed.setFooter({ text: "Langue non précisée, par défaut en français."})
+        embed.setFooter({ text: "Langue non précisée, par défaut en français." })
         locale = "fr";
         wikiTitle = encodeURI(article.slice(0).join('_'));
     }
