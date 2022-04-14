@@ -96,35 +96,55 @@ export async function unmute(message) {
 
 
 export async function kick(message, reason) {
-    if (utils.isModo(message.member)) {
+    if (!utils.isModo(message.member)) {
+        return;  // Not a moderator
+    }
+
+    // Kick by user ID
+    if (message.mentions.users.size == 0) {
+        let targetId = message.content.split(' ')[2];
+
+        message.guild.members.kick(targetId, { reason: reason })
+            .then( (kickInfo) => message.react('✅'))
+            .catch( (error) => {
+                utils.errorHandler({ message: `Could not kick user with ID ${targetId} (${error.message})` }, message);
+
+                let embed = new MessageEmbed();
+                embed.setTitle("❌ Il y a eu une erreur lors de l'expulsion du membre : ")
+                     .setDescription(error.message)
+                     .setColor(variables.colors.SuHex);
+
+                message.channel.send({ embeds: [embed] });
+            });
+    }
+
+    // Kick by member mention
+    else {
         let target = message.mentions.members.first();
 
+        let alert = "Vous avez été exclu du serveur Discord Étudiant Sorbonne Université.";
+        if (reason.length > 0) {
+            alert += "\n\nMotif : " + reason;
+        }
+
         try {
-            if (!target.kickable) {  // Client does not have permission
-                    throw new Error("Permissions insuffisantes.");
-            }
-        
-            let alert = "Vous avez été expulsé du serveur Discord Étudiant Sorbonne Université.";
-            if (reason.length !== 0) {
-                alert += "\n\nMotif : " + reason;
-            }
-            
-            await target.send(alert).catch( (error) => console.log(`Could not send kick alert to ${target.user.tag} (${error})`))
-
-            target.kick();
-            message.react('✅');
+            await target.send(alert);
+        } catch (error) {
+            console.error(`Could not send kick alert to user ${target.user.tag} (${error.message})`);
         }
 
-        catch (error) {
-            utils.errorHandler(error, message);
+        target.kick({ reason: reason })
+            .then( (guildMember) => message.react('✅'))
+            .catch( (error) => {
+                utils.errorHandler({ message: `Could not kick user ${target.user.tag} (${error.message})` }, message);
 
-            let embed = new MessageEmbed()
-                .setTitle("Il y a eu une erreur lors de l'expulsion du membre : ")
-                .setDescription(error.message)
-                .setColor(variables.colors.SuHex);
+                let embed = new MessageEmbed()
+                    .setTitle("❌ Il y a eu une erreur lors de l'exclusion du membre :")
+                    .setDescription(error.message)
+                    .setColor(variables.colors.SuHex);
 
-            message.channel.send({ embeds: [embed] });
-        }
+                message.channel.send({ embeds: [embed] });
+            });
     }
 }
 
