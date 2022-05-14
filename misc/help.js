@@ -3,10 +3,6 @@ const variables = require("../utils/variables.js");
 
 
 module.exports = async (message, args) => {
-
-    // unibot2 batch help ping wiki answer
-    //    0  |   1  | 2  | 3  | 4  |  5
-
     let embedTitle, embedDesc;
 
     let embed = new MessageEmbed();

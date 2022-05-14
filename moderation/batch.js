@@ -1,14 +1,17 @@
+const utils = require("../utils/utils.js");
+
+
 module.exports = async (message, args) => {
+    if (!utils.isModo(message.member)) {
+        return;  // Not a moderator
+    }
+
     // Determining what command to be executed
-
-    // unibot2 batch help ping wiki answer
-    //    0  |   1  | 2  | 3  | 4  |  5
-
-
     let commandname = args[2];
+
     let command = client.commands.find( (comm) => comm.name == commandname);
     if (command == undefined) return utils.errorHandler({ message: `Could not find command ${command}.`}, message);
-
+    
     args = args.slice(1);
     while (args.length > 2) {
         // Some functions can take more than 1 arguments, so to
