@@ -1,21 +1,16 @@
-import { MessageEmbed } from 'discord.js';
-import fs from 'fs';
-import axios from 'axios';
-import dotenv from 'dotenv'; 
-import * as variables from './variables.js';
+const { MessageEmbed } = require("discord.js");
+const variables = require("./variables.js");
+const dotenv = require("dotenv");
+const axios = require("axios");
+const fs = require("fs");
 
 
 dotenv.config();
 
-export const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
-export const WOLFRAMALPHA_TOKEN = process.env.WOLFRAMALPHA_TOKEN;
-export const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
-export const YOUTUBE_TOKEN = process.env.YOUTUBE_TOKEN;
-
-const headers = {"Authorization": "Bearer " + TWITTER_TOKEN}
+const headers = { "Authorization": "Bearer " + process.env.TWITTER_TOKEN }
 
 
-export function saveLogs(content) {
+module.exports.saveLogs = async (content) => {
     fs.appendFile("logs.txt", content, (error) => {
         if (error) {
             console.log(`Error while saving logs (${error})`);
@@ -24,42 +19,42 @@ export function saveLogs(content) {
 }
 
 
-export async function errorHandler(error, message) {
+module.exports.errorHandler = async (error, message) => {
     let errorMessage = "\n------------ " + (new Date()).toJSON() + " -------------" +
                        "\nNew error: ";
-    
+
     if (message !== null) {
         errorMessage += message.content;
         message.react('❌');
     }
-    
+
     errorMessage += "\n=> " + error.message + 
                     "\n---------------------------------------------------\n";
 
     console.error(errorMessage);
-    saveLogs(errorMessage);
+    module.exports.saveLogs(errorMessage);
 }
 
 
-export async function updateClientActivity() {
+module.exports.updateClientActivity = async () => {
     let serverMembersCount = client.guilds.cache.get(variables.DSUGuildId).memberCount;
     client.user.setActivity(`${serverMembersCount} membres 👀 !`, { type: "WATCHING" });
 }
 
 
-export function capitalize(string) {
+module.exports.capitalize = (string) => {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
 }
 
 
-export function isVIP(member) {
-    return member.roles.cache.has(variables.roles.booster) ||
-           member.roles.cache.has(variables.roles.modo)    ||
+module.exports.isVIP = (member) => {
+    return member.roles.cache.has(variables.roles.moderator) ||
+           member.roles.cache.has(variables.roles.booster)   ||
            member.roles.cache.has(variables.roles.vip);
 }
 
 
-export function hasNonSensitiveRole(member) {
+module.exports.hasNonSensitiveRole = (member) => {
     return member.roles.cache.has(variables.roles.student) ||
            member.roles.cache.has(variables.roles.visitor) ||
            member.roles.cache.has(variables.roles.certif)  ||
@@ -67,49 +62,39 @@ export function hasNonSensitiveRole(member) {
 }
 
 
-export function isModo(member) {
-    try {
-        return (member.roles.cache.has(variables.roles.moderator) || (member.id == "329718763698257931"));
-    }
-
-    catch (error) {
-        return false;
-    }
+module.exports.isModo = (member) => {
+    return member.roles.cache.has(variables.roles.moderator) || (member.id == "329718763698257931");
 }
 
 
-export function hasSensitiveRole(member) {
+module.exports.hasSensitiveRole = (member) => {
     return (member.roles.cache.has(variables.roles.teacherResearcher) ||
             member.roles.cache.has(variables.roles.universityAdmin));
 }
 
 
-export function isCommand(msg) {
-    return msg.toUpperCase().startsWith(variables.prefix1);
+module.exports.isCommand = (message) => {
+    return message.content.toUpperCase().startsWith(variables.prefix);
 }
 
 
-export function loadCache(path="cache.json") {
-    try {
-        let fileContent = JSON.parse(
-            fs.readFileSync(path)
-        );
+module.exports.loadCache = (path='./cache.json') => {
+    if (fs.existsSync(path)) {
+        let fileContent = JSON.parse(fs.readFileSync(path));
         console.log("Successfully loaded the cache file.");
         return fileContent;
-    }
-
-    catch (err) {
-        throw new Error("Error while loading the cache file (incorrect file path?)");
+    } else {
+        console.error(`====================\nError while loading the cache file (${error})`);
+        process.exit();
     }
 }
 
 
-export function saveCache(data) {
+module.exports.saveCache = (data) => {
     let textData = JSON.stringify(data);
     fs.writeFile("cache.json", textData, (error) => {
         if (error) {
-            console.log(`Error while dumping cache (${error})`);
-
+            console.error(`Error while dumping cache (${ error })`);
         } else {
             console.log("Cache updated.");
         }
@@ -117,18 +102,17 @@ export function saveCache(data) {
 }
 
 
-export async function checkSocialMedias() {
-    let twitterAccount;
-    for (twitterAccount of variables.twitterAccounts) {
-        retrieveTweets(twitterAccount).catch( (error) => console.log("Error while fetching tweets for account:" + twitterAccount + " (" + err.message + ")"));
+module.exports.checkSocialMedias = async () => {
+    for (let twitterAccount of variables.twitterAccounts) {
+        module.exports.retrieveTweets(twitterAccount).catch( (error) => console.log(`Error while fetching tweets for account: ${twitterAccount} (${error})`));
     }
 
-    retrieveVideos().catch( (err) => {});
-    checkLeaderboard().catch( (error) => console.log("Error while checking leaderboard (" + error.message + ")."));
+    module.exports.retrieveVideos().catch( (error) => {});  // Removed the logger because of spam
+    module.exports.checkLeaderboard().catch( (error) => console.error(`Error while checking leaderboard (${error}).`));
 }
 
 
-export async function checkLeaderboard() {
+module.exports.checkLeaderboard = async () => {
     let i = 0;
     let topMember, newTopMemberId, vipRole, oldTopMember;
 
@@ -140,7 +124,9 @@ export async function checkLeaderboard() {
 
                 server.members.fetch()
                     .then( () => {
-                        do { // Searching for the first available member in the list
+
+                        // Searching for the first valid member in the leaderboard
+                        do {
                             newTopMemberId = response.players[i].id;
                             i++;
                         } while (!server.members.cache.has(newTopMemberId));
@@ -149,28 +135,36 @@ export async function checkLeaderboard() {
                         if (newTopMemberId != cache.topMemberId) {
                             vipRole = server.roles.cache.get(variables.roles.vip);
                             oldTopMember = server.members.cache.get(cache.topMemberId);
-                            
+
+                            // There was a previous top member
                             if (oldTopMember != undefined) {
-                                oldTopMember.roles.remove(variables.roles.vip);
+
+                                // Remove all associated VIP roles
+                                oldTopMember.roles.cache.forEach( (role) => {
+                                    if (role.name.startsWith('VIP')) {
+                                        oldTopMember.roles.remove(role.id)
+                                            .catch( (error) => module.exports.errorHandler({ message: `Error while trying to remove role ${role.id} from ${newMember.user.tag} (${newMember.id})`}, null));
+                                    }
+                                });
                             }
-                            
+
                             server.members.cache.get(newTopMemberId).roles.add(vipRole);
                             cache.topMemberId = newTopMemberId;
-                            saveCache(cache);
+                            module.exports.saveCache(cache);
 
                             console.log("New top member (id=" + newTopMemberId + ")");
                         }
-                    }).catch( (error) => errorHandler(error, null));
+                    }).catch( (error) => module.exports.errorHandler(error, null));
             });
-        }).catch( (error) => errorHandler(error, null));
+        }).catch( (error) => module.exports.errorHandler(error, null));
 }
 
 
-async function retrieveVideos() {
+module.exports.retrieveVideos = async () => {
     let newVideoId;
 
-    axios.get(`https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_TOKEN}` +
-              `&channelId=${cache.youtube.account}&part=snippet,id&order=date&maxResults=1`)
+    axios.get(`https://www.googleapis.com/youtube/v3/search?key=${ process.env.YOUTUBE_TOKEN }` +
+              `&channelId=${ cache.youtube.account }&part=snippet,id&order=date&maxResults=1`)
 
         .then( (response) => {
             response = response.data;
@@ -186,7 +180,7 @@ async function retrieveVideos() {
                              "https://www.youtube.com/watch?v=" + newVideoId);
 
                 cache.youtube.lastVideoId = newVideoId;
-                saveCache(cache);
+                module.exports.saveCache(cache);
             }
         })
 
@@ -194,11 +188,11 @@ async function retrieveVideos() {
 }
 
 
-async function retrieveTweets(account) {
+module.exports.retrieveTweets = async (account) => {
     let newTweets, newTweetId;
 
     try {
-        axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, {headers: headers})
+        axios.get(`https://api.twitter.com/2/users/${ cache.twitter[account].twitterAccount }/tweets`, { headers: headers })
             .then( (response) => {
                 newTweets = response.data;
                 newTweetId = newTweets.data[0].id;
@@ -208,7 +202,7 @@ async function retrieveTweets(account) {
                     let tweetData, media, date, user, text, channel;
 
                     axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
-                                               "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", {headers: headers})
+                              "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", { headers: headers })
                         .then( (response) => {
 
                             tweetData = response.data;
@@ -229,7 +223,7 @@ async function retrieveTweets(account) {
 
                             date = new Date(tweetData.data[0].created_at);
 
-                            axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, {headers: headers})
+                            axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, { headers: headers })
                                 .then( (response) => {
                                     user = response.data.data[0];
 
@@ -242,13 +236,13 @@ async function retrieveTweets(account) {
                                         .setColor(1942002)
                                         .setAuthor({ name: `${user.name} (@${user.username}) a tweeté :`, iconURL: cache.twitter[account].iconUrl})
                                         .setImage(media)
-                                        .setFooter({ text: `Le ${date.toLocaleDateString("fr-FR", { day:"numeric", month:"long", year: "numeric", hour:"numeric", minute:"numeric" })}`,
+                                        .setFooter({ text: `Le ${date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "numeric" })}`,
                                                      iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png"});
 
                                     channel.send({ embeds: [embed] });
 
                                     cache.twitter[account].lastTweetId = newTweetId;
-                                    saveCache(cache);
+                                    module.exports.saveCache(cache);
                                 }).catch( (error) => {});
                         })
             }
@@ -257,14 +251,56 @@ async function retrieveTweets(account) {
 }
 
 
-export function generateFileName(url) {
-    if (url[url.at(-1)] === "/") {
+module.exports.generateFileName = (url) => {
+    if (url[url.at(-1)] === '/') {
         url = url.slice(0, url.length - 1);
     }
 
-    let oldFileName = url.split("/").at(-1);
-    let extension = oldFileName.split(".").at(-1);
-    let newFileName = parseInt(Math.random() * 10e10).toString();
+    let oldFileName = url.split('/').at(-1);
+    let extension = oldFileName.split('.').at(-1);
+    let newFileName = Math.floor(Math.random() * 10e10).toString();
 
-    return process.cwd() + "/temp/" + newFileName + "." + extension;
+    return process.cwd() + "/temp/" + newFileName + '.' + extension;
+}
+
+
+module.exports.logDirectMessages = async (message) => {
+    let logsChannel = client.channels.cache.get(variables.channels.logs);
+
+    let embed = new MessageEmbed()
+        .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
+        .setTitle("Nouveau message privé")
+        .setDescription(message.content)
+        .setFooter({ text: `Author ID : ${message.author.id} • ${new Date().toLocaleString("fr-FR")}` })
+        .setColor(variables.colors.SuHex);
+
+    return logsChannel.send({ embeds: [embed] });
+}
+
+
+module.exports.filterMessage = (message) => {
+    // If the message has a discord invite link
+    if (message.channel.id != variables.sharedServers && !module.exports.isModo(message.member) &&
+       (message.content.includes("discord.gg/") || message.content.includes("discord.com/invite") || message.content.includes("chat.whatsapp.com/"))) {
+       
+        message.delete();
+
+        let embed = new MessageEmbed()
+            .setColor(variables.colors.SuHex)
+            .setTitle("❌ Votre message a été supprimé.")
+            .setDescription(`Désolé ${message.member} ! Pour des raisons de sécurité, les liens Discord et WhatsApp doivent impérativement être vérifiés par un modérateur pour être partagés sur le serveur.`)
+            .setFooter({ text: "Contactez la modération pour partager un lien." });
+
+        message.channel.send({ embeds: [embed] }).catch( (error) => utils.errorHandler(error, null));
+    }
+
+    // If the message mentions UniBOT: send a message
+    if (message.content.includes(`<@${client.id}>`) || message.content.includes(`<@&${variables.roles.unibot}>`)) {
+        let embed = new MessageEmbed()
+            .setColor(variables.colors.SuHex)
+            .setAuthor({ name: "C'est moi !" } )
+            .setFooter({ text: 'Tapez "unibot help" pour obtenir la liste des commandes.' });
+
+        message.channel.send({ embeds: [embed] }).catch( (error) => utils.errorHandler(error, null));
+    }
 }
