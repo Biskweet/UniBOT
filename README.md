@@ -1,3 +1,3 @@
 # UniBOT
-Discord Sorbonne Université's bot repository
+DSU's bot repository. I promise I will write a readme soon.
 
