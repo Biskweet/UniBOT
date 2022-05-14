@@ -12,7 +12,7 @@ module.exports = {
 
     twitterAccounts: ["SU", "SULettres", "SUMédecine", "SUPolytech"],
 
-    prefix: "UNIBOT2 ",
+    prefix: "UNIBOT ",
 
     roles: {
         vip: "924020284367978516",
