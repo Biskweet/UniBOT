@@ -26,9 +26,9 @@ module.exports = async (message, args) => {
         .then( (result) => {
             let embed = new MessageEmbed()
                 .setColor(16345394)
-                .setAuthor({ name: utils.capitalize(question), iconURL: message.author.displayAvatarURL()})
+                .setAuthor({ name: utils.capitalize(question), iconURL: message.author.displayAvatarURL() })
                 .setDescription(result)
-                .setFooter({ text: "Powered by WolframAlpha", iconURL: variables.WolframAlphaIcon})
+                .setFooter({ text: "Powered by WolframAlpha", iconURL: variables.WolframAlphaIcon })
 
             message.channel.send({ embeds: [embed] });
         })

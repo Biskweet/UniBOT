@@ -84,7 +84,7 @@ module.exports = async (message, args) => {
 
     embed.setTitle(embedTitle)
          .setDescription(embedDesc)
-         .setFooter({ text: "Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]"})
+         .setFooter({ text: "Vous pouvez obtenir des informations sur une commande en tapant : unibot help [commande]" })
          .setColor(variables.colors.SuHex);
 
     message.channel.send({ embeds: [embed] });

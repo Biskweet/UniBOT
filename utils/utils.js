@@ -237,7 +237,7 @@ module.exports.retrieveTweets = async (account) => {
                                         .setAuthor({ name: `${user.name} (@${user.username}) a tweeté :`, iconURL: cache.twitter[account].iconUrl})
                                         .setImage(media)
                                         .setFooter({ text: `Le ${date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "numeric" })}`,
-                                                     iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png"});
+                                                     iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png" });
 
                                     channel.send({ embeds: [embed] });
 
