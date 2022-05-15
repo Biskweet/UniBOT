@@ -10,7 +10,7 @@ module.exports = async (message) => {
         return;  // Do not log messages from bots or moderators
     }
 
-    let logsChannel = client.channels.cache.get(variables.channels.logs);
+    let logsChannel = client.channels.cache.get(variables.channels.deletedMsgs);
 
     let embed = new MessageEmbed();
     embed.setColor(variables.colors.SuHex)
