@@ -6,8 +6,8 @@ const { MessageEmbed } = require("discord.js");
 
 
 module.exports = async (message) => {
-    if (message.author == null || message.author.bot || utils.isModo(message.member)) {
-        return;  // Do not log messages from bots or moderators
+    if (message.channel.type == "DM" || utils.isModo(message.member)) {
+        return;  // Do not log messages from bots or moderators, or from DM channels
     }
 
     let logsChannel = client.channels.cache.get(variables.channels.deletedMsgs);
