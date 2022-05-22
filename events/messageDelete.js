@@ -6,7 +6,7 @@ const { MessageEmbed } = require("discord.js");
 
 
 module.exports = async (message) => {
-    if (message.channel.type == "DM" || utils.isModo(message.member)) {
+    if (message.channel.type == "DM" || message.author.bot || utils.isModo(message.member)) {
         return;  // Do not log messages from bots or moderators, or from DM channels
     }
 
