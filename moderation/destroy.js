@@ -16,6 +16,6 @@ module.exports = async (message, args) => {
         .then( (msg) => {
             console.log(`====================\nShutting down (online for ${(Date.now() - client.readyTimestamp) / 1000} sec).`);
             client.destroy();
-            process.exit();
+            process.exit(0);
         });
 }

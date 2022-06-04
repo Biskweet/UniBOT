@@ -38,25 +38,43 @@ if (fs.existsSync("./temp") == false) {
 
 // Setting up commands
 client.commands = new Discord.Collection();
-for (let commandFile of variables.commandFiles) {
-    let command = {
-        execute: require(commandFile),
-        name: path.parse(commandFile).name
-    };
+for (let cmddir of ["./misc/", "./moderation/"]) {
+    fs.readdir(cmddir, (error, commandFiles) => {
+        if (error) {
+            console.error(`Error when loading commands from ${cmddir}.\nExiting.`);
+            client.destroy();
+            process.exit(1);
+        }
 
-    client.commands.set(command.name, command);
+        for (let commandFile of commandFiles) {
+            let command = {
+                execute: require(commandFile),
+                name: path.parse(commandFile).name
+            };
+
+            client.commands.set(command.name, command);
+        }
+    });
 }
 
 
 // Setting up events
-for (let eventFile of variables.eventFiles) {
-    let event = {
-        execute: require(eventFile),
-        name: path.parse(eventFile).name
-    };
+fs.readdir("./events/", (error, eventFiles) => {
+    if (error) {
+        console.error("Error when loading events from ./events/.\nExiting.");
+        client.destroy();
+        process.exit(1);
+    }
 
-    client.on(event.name, (...args) => event.execute(...args));
-}
+    for (let eventFile of eventFiles) {
+        let event = {
+            execute: require(eventFile),
+            name: path.parse(eventFile).name
+        };
+
+        client.on(event.name, (...args) => event.execute(...args));
+    }
+})
 
 
 // Launch

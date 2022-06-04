@@ -92,41 +92,4 @@ module.exports = {
                   'ady', 'jam', 'tcy', 'dty', 'atj', 'kbp', 'din', 'lfn', 'gor', 'inh', 'sat', 'hyw', 'ban', 'szy', 'awa', 'ary',
                   'lld', 'smn', 'skr', 'mad', 'dag', 'shi', 'lbe', 'ki', 'ltg', 'srn', 'nqo', 'gcr'],
 
-    commandFiles: [
-        // miscellaneous
-        './misc/8ball.js',
-        './misc/answer.js',
-        './misc/coinflip.js',
-        './misc/couleur.js',
-        './misc/help.js',
-        './misc/ping.js',
-        './misc/pong.js',
-        './misc/wiki.js',
-
-        // moderation
-        './moderation/ban.js',
-        './moderation/batch.js',
-        './moderation/clear.js',
-        './moderation/destroy.js',
-        './moderation/kick.js',
-        './moderation/mute.js',
-        './moderation/printcache.js',
-        './moderation/unban.js',
-        './moderation/unmute.js',
-
-        // utils
-        // './utils/utils.js'
-    ],
-
-    eventFiles: [
-        './events/guildBanAdd.js',
-        './events/guildBanRemove.js',
-        './events/guildMemberAdd.js',
-        './events/guildMemberRemove.js',
-        './events/guildMemberUpdate.js',
-        './events/messageCreate.js',
-        './events/messageDelete.js',
-        './events/ready.js'
-    ]
-
 }
