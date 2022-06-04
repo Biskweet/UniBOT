@@ -15,13 +15,13 @@ module.exports = async (message, args) => {
     args = args.slice(1);
     while (args.length > 2) {
         // Some functions can take more than 1 arguments, so to
-        // avoid bugs we give only the 1st three each iteration.
-        // Either way, for example `unibot batch ban 123 456 789`
+        // avoid bugs we give only the 1st three args each iteration.
+        // Either way, `unibot batch ban 123 456 789` for example
         // would be executing:
         //     `unibot ban 123 456 789`
         //     `unibot ban 456 789`
         //     `unibot ban 789`
-        // Which wouldn't work, hence the splice(0, 3).
+        // Which obviously wouldn't work, hence the splice(0, 3) below.
         await command.execute(message, args.slice(0, 3));
 
         args = args.slice(1);
