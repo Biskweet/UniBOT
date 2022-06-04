@@ -48,7 +48,7 @@ for (let cmddir of ["./misc/", "./moderation/"]) {
 
         for (let commandFile of commandFiles) {
             let command = {
-                execute: require(commandFile),
+                execute: require(cmddir + commandFile),
                 name: path.parse(commandFile).name
             };
 
@@ -68,7 +68,7 @@ fs.readdir("./events/", (error, eventFiles) => {
 
     for (let eventFile of eventFiles) {
         let event = {
-            execute: require(eventFile),
+            execute: require("./events/" + eventFile),
             name: path.parse(eventFile).name
         };
 
