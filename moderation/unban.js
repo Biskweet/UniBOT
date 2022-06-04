@@ -8,7 +8,6 @@ module.exports = async (message, args) => {
 
     let targetId = args[2];  // As always, skipping "unibot" and "unban"
     
-    console.log(args, targetId)
     message.guild.members.unban(targetId)
         .then( (user) => message.react('✅'))
         .catch( (error) => utils.errorHandler({ message: `Could not unban user with ID ${targetId} (${error.message})` }, message));
