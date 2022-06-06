@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const variables = require("./utils/variables.js");
 const utils = require("./utils/utils.js");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -79,4 +78,3 @@ fs.readdir("./events/", (error, eventFiles) => {
 
 // Launch
 client.login(process.env.DISCORD_TOKEN);
-
