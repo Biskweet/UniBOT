@@ -1,4 +1,4 @@
-const { MessageEmbed } =  require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const variables = require("../utils/variables.js");
 const utils = require("../utils/utils.js");
 const axios = require("axios");
@@ -11,7 +11,7 @@ module.exports = async (message, args) => {
 
     args = args.slice(2)  // Removing prefix and command from the list of words
     if (args.length === 0) {
-        args = ['fr'];
+        args = ["fr"];
     }
 
     locale = args[0];
@@ -24,7 +24,7 @@ module.exports = async (message, args) => {
 
     if (variables.WikiLocales.includes(locale) === false) {
         embed.setFooter({ text: "Langue non précisée, par défaut en français." })
-        locale = 'fr';
+        locale = "fr";
         wikiTitle = encodeURI(args.slice(0).join('_'));
     } else {
         wikiTitle = encodeURI(args.slice(1).join('_'));

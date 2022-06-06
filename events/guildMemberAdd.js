@@ -1,5 +1,5 @@
-const variables = require('../utils/variables.js');
-const utils = require('../utils/utils.js');
+const variables = require("../utils/variables.js");
+const utils = require("../utils/utils.js");
 
 
 module.exports = async (member) => {

@@ -1,6 +1,6 @@
 const variables = require("../utils/variables.js");
 const utils = require("../utils/utils.js");
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require("discord.js");
 
 
 module.exports = async (message, args) => {

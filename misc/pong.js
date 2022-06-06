@@ -1,5 +1,5 @@
-const { MessageEmbed } = require('discord.js');
-const variables = require('../utils/variables.js');
+const { MessageEmbed } = require("discord.js");
+const variables = require("../utils/variables.js");
 
 
 module.exports = async (message, args) => {

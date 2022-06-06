@@ -1,4 +1,4 @@
-const variables = require('../utils/variables.js');
+const variables = require("../utils/variables.js");
 const utils = require("../utils/utils.js");
 const axios = require("axios");
 const fs = require("fs");

@@ -78,7 +78,7 @@ module.exports.isCommand = (message) => {
 }
 
 
-module.exports.loadCache = (path='./cache.json') => {
+module.exports.loadCache = (path="./cache.json") => {
     if (fs.existsSync(path)) {
         let fileContent = JSON.parse(fs.readFileSync(path));
         console.log("Successfully loaded the cache file.");
@@ -141,7 +141,7 @@ module.exports.checkLeaderboard = async () => {
 
                                 // Remove all associated VIP roles
                                 oldTopMember.roles.cache.forEach( (role) => {
-                                    if (role.name.startsWith('VIP')) {
+                                    if (role.name.startsWith("VIP")) {
                                         oldTopMember.roles.remove(role.id)
                                             .catch( (error) => module.exports.errorHandler({ message: `Error while trying to remove role ${role.id} from ${newMember.user.tag} (${newMember.id})`}, null));
                                     }
