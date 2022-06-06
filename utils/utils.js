@@ -63,7 +63,7 @@ module.exports.hasNonSensitiveRole = (member) => {
 
 
 module.exports.isModo = (member) => {
-    return member?.roles.cache.has(variables.roles.moderator) || (member.id == "329718763698257931");
+    return member?.roles.cache.has(variables.roles.moderator) || (member?.id == "329718763698257931");
 }
 
 
