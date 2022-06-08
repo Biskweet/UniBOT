@@ -6,8 +6,6 @@ const { MessageEmbed } = require("discord.js");
 
 
 module.exports = async (message) => {
-    await message.fetch();
-
     if (message.channel.type == "DM" || message.author?.bot || utils.isModo(message.member)) {
         return;  // Do not log messages from bots or moderators, or from DM channels
     }
@@ -17,7 +15,7 @@ module.exports = async (message) => {
     let embed = new MessageEmbed();
     embed.setColor(variables.colors.SuHex)
          .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
-         .setAuthor({ name: `${message.author.tag} (Author ID: ${message.author.id})`, iconURL: message.author.displayAvatarURL() })
+         .setAuthor({ name: `${message.author?.tag} (Author ID: ${message.author?.id})`, iconURL: message.author?.displayAvatarURL() })
          .setFooter({ text: `Message ID : ${message.id} • ${new Date().toLocaleString("fr-FR")}` });
 
     logsChannel.send({ embeds: [embed] });
