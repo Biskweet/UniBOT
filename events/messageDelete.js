@@ -14,7 +14,7 @@ module.exports = async (message) => {
 
     let embed = new MessageEmbed();
     embed.setColor(variables.colors.SuHex)
-         .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n` + message.content + "\n\n")
+         .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n${message.content}\n\n`)
          .setAuthor({ name: `${message.author?.tag} (Author ID: ${message.author?.id})`, iconURL: message.author?.displayAvatarURL() })
          .setFooter({ text: `Message ID : ${message.id} • ${new Date().toLocaleString("fr-FR")}` });
 
