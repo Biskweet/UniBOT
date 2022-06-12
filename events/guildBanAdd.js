@@ -14,7 +14,7 @@ module.exports = async (guildBan) => {
 
     // Saving log
     let banLog = "\n------------ " + new Date().toJSON() + " -------------" +
-                 `\n${guildBan.user.tag} was banned from the server.` +
+                 `\n${guildBan.user.tag} (${guildBan.user.id}) was banned from the server.` +
                  "\n---------------------------------------------------\n";
 
     utils.saveLogs(banLog);
