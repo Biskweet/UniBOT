@@ -31,7 +31,7 @@ module.exports = {
     channels: {
         deletedMsgs: "776802470089064510",
         logs: "961771798075158578",
-        moderation: "749982348187271299",   
+        moderation: "967508515985969272",
         twitter: "777304594195677225",
         youtube: "749770030954053632",
         newMembers: "752891071553601638",
