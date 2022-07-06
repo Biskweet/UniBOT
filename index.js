@@ -48,7 +48,7 @@ for (let cmddir of ["./misc/", "./moderation/"]) {
         for (let commandFile of commandFiles) {
             let command = {
                 execute: require(cmddir + commandFile),
-                name: path.parse(commandFile).name
+                name: path.parse(commandFile).name.toLowerCase()
             };
 
             client.commands.set(command.name, command);

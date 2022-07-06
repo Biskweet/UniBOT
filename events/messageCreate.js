@@ -13,7 +13,7 @@ module.exports = async (message) => {
     if (utils.isCommand(message)) {
         // Separating the message into words and removing the empty ones (ex: 'a  b'.split(' ') -> ['a', '', ''] -> ['a'])
         const words = message.content.split(' ').filter( (word) => word != '');
-        const commandname = words[1];
+        const commandname = words[1].toLowerCase();
 
         const command = client.commands.find( (command) => command.name == commandname);
         if (command == undefined) return;
