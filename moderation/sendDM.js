@@ -6,7 +6,7 @@ module.exports = async (message, args) => {
 
     if (args.length < 2) {
         message.reply("Nombre d'arguments incorrect (merci de préciser l'ID du destinataire __puis__ le message à envoyer.");
-        message.react("❌");
+        message.react('❌');
         return;
     }
 
@@ -16,7 +16,9 @@ module.exports = async (message, args) => {
 
     client.users.fetch(target)
         .then( (user) => {
-            return user.send(messageContent);
+            user.send(messageContent);
+        }).then( (reply) => {
+            message.react('✅')
         }).catch( (error) => {
             utils.errorHandler(error, message);
             message.reply("Error: " + error);
