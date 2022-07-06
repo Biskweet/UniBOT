@@ -10,7 +10,6 @@ module.exports = async (message, args) => {
         return;
     }
 
-
     let target = args[0];
     let messageContent = args.slice(1).join(' ');
 
