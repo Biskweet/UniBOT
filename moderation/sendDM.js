@@ -2,6 +2,7 @@ const utils = require("../utils/utils.js");
 
 
 module.exports = async (message, args) => {
+    args = args.slice(2);
     let target = args[0];
     let messageContent = args.slice(1).join(' ');
 
