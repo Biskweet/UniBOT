@@ -1,3 +1,6 @@
+const utils = require("../utils/utils.js");
+
+
 module.exports = async (message, args) => {
     let target = args[0];
     let messageContent = args.slice(1).join(' ');
@@ -6,7 +9,7 @@ module.exports = async (message, args) => {
         .then( (user) => {
             return user.send(messageContent);
         }).catch( (error) => {
-            errorHandler(error, message);
+            utils.errorHandler(error, message);
             message.reply("Error: " + error);
         });
 }
