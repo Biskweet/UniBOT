@@ -304,3 +304,59 @@ module.exports.filterMessage = (message) => {
         message.channel.send({ embeds: [embed] }).catch( (error) => utils.errorHandler(error, null));
     }
 }
+
+
+module.exports.deleteOldLogs = () => {
+    if (cache.deleteQueue == undefined) return;  // No deleteQueue created yet
+
+    let today = new Date();
+    let head = cache.deleteQueue[0];
+    let logsChannel = client.channels.cache.get(variables.channels.logs);
+
+    // If the head of the list show the same deletion date as today
+    if (today.getMonth() == head.date.getMonth() && today.getDate() == head.date.getDate()) {
+        for (let messageId of head.messages) {
+            logsChannel.messages.fetch(messageId)
+                .then( (message) => {
+                    if (message == undefined) return;
+
+                    message.delete();
+                }).catch( (err) => {
+                    console.log(`Could not fetch or auto delete a message from the logs channel (${err}).`)
+                });
+        }
+
+        // Removing the head of list
+        cache.deleteQueue.shift();
+    }
+}
+
+
+module.exports.insertLogInCache = (messageId) => {
+    let dateInOneMonth = new Date();
+    dateInOneMonth.setMonth(dateInOneMonth.getMonth() + 1);
+
+    if (cache.deleteQueue == undefined)
+        cache.deleteQueue = [];
+
+    let last = cache.deleteQueue.at(-1);
+
+    if (last == undefined) {
+        // Maybe deleteQueue == [] ? at(-1) would return undefined
+        cache.deleteQueue.push({
+            date: dateInOneMonth,
+            messages: [messageId]
+        });
+    } else if (dateInOneMonth.getMonth() == last.date.getMonth() &&
+               dateInOneMonth.getDate() == last.date.getDate()) {
+        // An object with today's date already exists
+        last.messages.push(messageId);
+    } else {
+        // Inserting a new object with today's date; basically the same as
+        // if `last` was undefined but it is more clear to have simpler `if`
+        cache.deleteQueue.push({
+            date: dateInOneMonth,
+            messages: [messageId]
+        });
+    }
+}

@@ -6,5 +6,6 @@ module.exports = async (client) => {
     await utils.updateClientActivity();
     
     utils.checkSocialMedias();
-    setInterval(utils.checkSocialMedias, 300000);
+    setInterval(utils.checkSocialMedias, 60 * 5 * 1000);    // Look for new posts on social m. every 5 min
+    setInterval(utils.deleteOldLogs, 60 * 60 * 24 * 1000);  // Daily log delete
 }
