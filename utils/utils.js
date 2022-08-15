@@ -197,8 +197,8 @@ module.exports.retrieveTweets = async (account) => {
             newTweets = response.data;
             newTweetId = newTweets.data[0].id;
 
-            if (newTweetId != cache.twitter[account].lastTweetId) {
-                return Promis.reject("No new tweet.");  // Interrupting the Promise chain
+            if (newTweetId == cache.twitter[account].lastTweetId) {
+                throw new Error("No new tweet.");  // Interrupting the Promise chain
             }
 
             return axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
