@@ -197,6 +197,10 @@ module.exports.retrieveTweets = async (account) => {
             newTweets = response.data;
             newTweetId = newTweets.data[0].id;
 
+            if (newTweetId != cache.twitter[account].lastTweetId) {
+                return Promis.reject("No new tweet.");  // Interrupting the Promise chain
+            }
+
             return axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
                              "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", { headers: headers });
 
@@ -240,10 +244,10 @@ module.exports.retrieveTweets = async (account) => {
                 .setFooter({ text: "Le " + date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "numeric" }),
                              iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png" });
 
-            channel.send({ embeds: [embed] });
-
             cache.twitter[account].lastTweetId = newTweetId;
             module.exports.saveCache(cache);
+
+            channel.send({ embeds: [embed] });
         })
 
         .catch( () => {});
