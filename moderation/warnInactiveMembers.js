@@ -36,12 +36,12 @@ module.exports = async (message, args) => {
 
 
             return member.send({ embeds: [embed] })
-                .then( (msg) => {
-                    return member.send("https://discord.gg/sorbonne");
-                }).then( (msg) => {
+                .then( (msg) => member.send("https://discord.gg/sorbonne"))
+                .then( (link) => {
                     success++;
                     successList.push(member.user.tag);
-                }).catch( (error) => {
+                })
+                .catch( (error) => {
                     fail++;
                     console.error(`Failed to send message to ${member.user.tag} (${err})`);
                 });

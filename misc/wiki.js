@@ -20,7 +20,7 @@ module.exports = async (message, args) => {
              .setDescription('```' + variables.WikiLocales.join(' ') + '```')
              .setColor(variables.colors.SuHex);
         return message.channel.send({ embeds: [embed] });
-    }   
+    }
 
     if (variables.WikiLocales.includes(locale) === false) {
         embed.setFooter({ text: "Langue non précisée, par défaut en français." })

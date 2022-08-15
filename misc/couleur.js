@@ -62,7 +62,7 @@ module.exports = async (message, args) => {
 
         }).then( (loadingMsg) => {        
 
-            message.guild.roles.create({
+            return message.guild.roles.create({
                 name: "VIP " + hexcode,
                 color: hexcode,
                 position: message.guild.roles.cache.size - 21

@@ -14,11 +14,9 @@ module.exports = async (message, args) => {
     let messageContent = args.slice(1).join(' ');
 
     client.users.fetch(target)
-        .then( (user) => {
-            user.send(messageContent);
-        }).then( (reply) => {
-            message.react('✅')
-        }).catch( (error) => {
+        .then( (user) => user.send(messageContent))
+        .then( (reply) => message.react('✅'))
+        .catch( (error) => {
             utils.errorHandler(error, message);
             message.reply("Error: " + error);
         });

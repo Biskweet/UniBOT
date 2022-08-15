@@ -42,7 +42,8 @@ module.exports = async (message) => {
                     utils.errorHandler(error, null);
                 }
             });
-        }).catch( (error) => utils.errorHandler(error, null)));
+        })
+        .catch( (error) => utils.errorHandler(error, null)));
     }
 
     // Waiting all downloads to finish

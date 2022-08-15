@@ -7,7 +7,7 @@ const fs = require("fs");
 
 dotenv.config();
 
-const headers = { "Authorization": "Bearer " + process.env.TWITTER_TOKEN }
+const headers = { Authorization: "Bearer " + process.env.TWITTER_TOKEN };
 
 
 module.exports.saveLogs = async (content) => {
@@ -28,7 +28,7 @@ module.exports.errorHandler = async (error, message) => {
         message.react('❌');
     }
 
-    errorMessage += "\n=> " + error.message + 
+    errorMessage += "\n=> " + error.message +
                     "\n---------------------------------------------------\n";
 
     console.error(errorMessage);
@@ -107,14 +107,14 @@ module.exports.checkSocialMedias = async () => {
         module.exports.retrieveTweets(twitterAccount).catch( (error) => console.log(`Error while fetching tweets for account: ${twitterAccount} (${error})`));
     }
 
-    module.exports.retrieveVideos().catch( (error) => {});  // Removed the logger because of spam
+    module.exports.retrieveVideos().catch( () => {});  // Removed the logger because of spam
     module.exports.checkLeaderboard().catch( (error) => console.error(`Error while checking leaderboard (${error}).`));
 }
 
 
 module.exports.checkLeaderboard = async () => {
     let i = 0;
-    let topMember, newTopMemberId, vipRole, oldTopMember;
+    let newTopMemberId, vipRole, oldTopMember;
 
     axios.get("https://mee6.xyz/api/plugins/levels/leaderboard/" + variables.DSUGuildId)
         .then( (response) => {
@@ -131,7 +131,6 @@ module.exports.checkLeaderboard = async () => {
                             i++;
                         } while (!server.members.cache.has(newTopMemberId));
 
-                        topMember = server.members.cache.get(newTopMemberId);
                         if (newTopMemberId != cache.topMemberId) {
                             vipRole = server.roles.cache.get(variables.roles.vip);
                             oldTopMember = server.members.cache.get(cache.topMemberId);
@@ -143,7 +142,7 @@ module.exports.checkLeaderboard = async () => {
                                 oldTopMember.roles.cache.forEach( (role) => {
                                     if (role.name.startsWith("VIP")) {
                                         oldTopMember.roles.remove(role.id)
-                                            .catch( (error) => module.exports.errorHandler({ message: `Error while trying to remove role ${role.id} from ${newMember.user.tag} (${newMember.id})`}, null));
+                                            .catch( () => module.exports.errorHandler({ message: `Error while trying to remove role ${role.id} from ${newMember.user.tag} (${newMember.id})` }, null));
                                     }
                                 });
                             }
@@ -156,7 +155,8 @@ module.exports.checkLeaderboard = async () => {
                         }
                     }).catch( (error) => module.exports.errorHandler(error, null));
             });
-        }).catch( (error) => module.exports.errorHandler(error, null));
+        })
+        .catch( (error) => module.exports.errorHandler(error, null));
 }
 
 
@@ -184,70 +184,69 @@ module.exports.retrieveVideos = async () => {
             }
         })
 
-        .catch( (error) => {});
+        .catch( () => {});
 }
 
 
 module.exports.retrieveTweets = async (account) => {
-    let newTweets, newTweetId;
+    let newTweets, newTweetId, tweetData, media;
 
-    try {
-        axios.get(`https://api.twitter.com/2/users/${ cache.twitter[account].twitterAccount }/tweets`, { headers: headers })
-            .then( (response) => {
-                newTweets = response.data;
-                newTweetId = newTweets.data[0].id;
+    axios.get(`https://api.twitter.com/2/users/${cache.twitter[account].twitterAccount}/tweets`, { headers: headers })
+        .then( (response) => {
 
-                if (newTweetId != cache.twitter[account].lastTweetId) {
+            newTweets = response.data;
+            newTweetId = newTweets.data[0].id;
 
-                    let tweetData, media, date, user, text, channel;
+            return axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
+                             "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", { headers: headers });
 
-                    axios.get("https://api.twitter.com/2/tweets?ids=" + newTweetId + "&expansions=attachments.media_keys" +
-                              "&media.fields=preview_image_url,type,url&tweet.fields=referenced_tweets,created_at", { headers: headers })
-                        .then( (response) => {
+        })
 
-                            tweetData = response.data;
+        .then( (response) => {
 
-                            if (tweetData.data[0].hasOwnProperty("referenced_tweets") && (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
-                                                                                          tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
-                                return; // Do not share if the tweet is a reply/RT
-                            }
+            tweetData = response.data;
 
-                            if (tweetData.hasOwnProperty("includes")) {
-                                if (tweetData.includes.media[0].type == "photo") {
-                                    media = tweetData.includes.media[0].url    
-                                }
-                                else if (tweetData.includes.media[0].type == "video") {
-                                    tweetData.includes.media[0].preview_image_url;
-                                }
-                            }
-
-                            date = new Date(tweetData.data[0].created_at);
-
-                            axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, { headers: headers })
-                                .then( (response) => {
-                                    user = response.data.data[0];
-
-                                    text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${newTweetId})`;
-
-                                    channel = client.channels.cache.get(variables.channels.twitter);
-                                    
-                                    let embed = new MessageEmbed()
-                                        .setDescription(text)
-                                        .setColor(1942002)
-                                        .setAuthor({ name: `${user.name} (@${user.username}) a tweeté :`, iconURL: cache.twitter[account].iconUrl})
-                                        .setImage(media)
-                                        .setFooter({ text: `Le ${date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "numeric" })}`,
-                                                     iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png" });
-
-                                    channel.send({ embeds: [embed] });
-
-                                    cache.twitter[account].lastTweetId = newTweetId;
-                                    module.exports.saveCache(cache);
-                                }).catch( (error) => {});
-                        })
+            if (tweetData.data[0].hasOwnProperty("referenced_tweets") &&
+               (tweetData.data[0].referenced_tweets[0].type.includes("replied_to") ||
+                tweetData.data[0].referenced_tweets[0].type.includes("retweeted"))) {
+                return; // Do not repost if the tweet is a reply/RT
             }
-        }).catch( (error) => {});
-    } catch (error) {}
+
+            if (tweetData.hasOwnProperty("includes")) {
+                if (tweetData.includes.media[0].type == "photo") media = tweetData.includes.media[0].url;
+                else if (tweetData.includes.media[0].type == "video") media = tweetData.includes.media[0].preview_image_url;
+            }
+
+            return axios.get("https://api.twitter.com/2/users?ids=" + cache.twitter[account].twitterAccount, { headers: headers });
+
+        })
+
+        .then( (response) => {
+            let channel, date, text, user;
+
+            date = new Date(tweetData.data[0].created_at);
+
+            user = response.data.data[0];
+
+            text = newTweets.data[0].text.replaceAll('_', '\_') + `\n\n[__Ouvrir__](https://twitter.com/${user.username}/status/${newTweetId})`;
+
+            channel = client.channels.cache.get(variables.channels.twitter);
+
+            let embed = new MessageEmbed()
+                .setDescription(text)
+                .setColor(1942002)
+                .setAuthor({ name: `${user.name} (@${user.username}) a tweeté :`, iconURL: cache.twitter[account].iconUrl })
+                .setImage(media)
+                .setFooter({ text: "Le " + date.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "numeric", minute: "numeric" }),
+                             iconURL: "https://abs.twimg.com/icons/apple-touch-icon-192x192.png" });
+
+            channel.send({ embeds: [embed] });
+
+            cache.twitter[account].lastTweetId = newTweetId;
+            module.exports.saveCache(cache);
+        })
+
+        .catch( () => {});
 }
 
 
@@ -282,7 +281,7 @@ module.exports.filterMessage = (message) => {
     // If the message has a discord invite link
     if (message.channel.id != variables.sharedServers && !module.exports.isModo(message.member) &&
        (message.content.includes("discord.gg/") || message.content.includes("discord.com/invite") || message.content.includes("chat.whatsapp.com/"))) {
-       
+
         message.delete();
 
         let embed = new MessageEmbed()
@@ -294,7 +293,7 @@ module.exports.filterMessage = (message) => {
         message.channel.send({ embeds: [embed] }).catch( (error) => utils.errorHandler(error, null));
     }
 
-    // If the message mentions UniBOT: send a message
+    // If the message mentions the bot: send a message
     if (message.content.includes(`<@${client.id}>`) || message.content.includes(`<@&${variables.roles.unibot}>`)) {
         let embed = new MessageEmbed()
             .setColor(variables.colors.SuHex)
@@ -321,7 +320,8 @@ module.exports.deleteOldLogs = () => {
                     if (message == undefined) return;
 
                     message.delete();
-                }).catch( (err) => {
+                })
+                .catch( (err) => {
                     console.log(`Could not fetch or auto delete a message from the logs channel (${err}).`)
                 });
         }
