@@ -81,7 +81,14 @@ module.exports.isCommand = (message) => {
 module.exports.loadCache = (path="./cache.json") => {
     if (fs.existsSync(path)) {
         let fileContent = JSON.parse(fs.readFileSync(path));
+
+        // Parsing Date objects to enable corresponding methods
+        filecontent.deleteQueue = fileContent.deleteQueue.map( (obj) => {
+            return { date: new Date(obj.date), messages: obj.messages };
+        })
+
         console.log("Successfully loaded the cache file.");
+
         return fileContent;
     } else {
         console.error(`====================\nError while loading the cache file (${error})`);
