@@ -83,7 +83,7 @@ module.exports.loadCache = (path="./cache.json") => {
         let fileContent = JSON.parse(fs.readFileSync(path));
 
         // Parsing Date objects to enable corresponding methods
-        filecontent.deleteQueue = fileContent.deleteQueue.map( (obj) => {
+        fileContent.deleteQueue = fileContent.deleteQueue.map( (obj) => {
             return { date: new Date(obj.date), messages: obj.messages };
         })
 
