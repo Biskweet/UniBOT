@@ -10,7 +10,7 @@ module.exports = async (message, args) => {
 
     let embed = new MessageEmbed();
     embed.setTitle("Bot cache on " + (new Date()).toString().slice(0, 24))
-         .setDescription('```' + JSON.stringify(cache, null, 4) + '```')
+         .setDescription('```' + JSON.stringify(cache, null, 2).slice(0, 4095) + '```')
          .setColor(variables.colors.SuHex);
 
     message.channel.send({ embeds: [embed] });
