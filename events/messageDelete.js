@@ -14,9 +14,9 @@ module.exports = async (message) => {
 
     let embed = new MessageEmbed();
     embed.setColor(variables.colors.SuHex)
-         .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n${message.content}\n\n`)
-         .setAuthor({ name: `${message.author?.tag} (Author ID: ${message.author?.id})`, iconURL: message.author?.displayAvatarURL() })
-         .setFooter({ text: `Message ID : ${message.id} • ${new Date().toLocaleString("fr-FR")}` });
+         .setAuthor({ name: `${message.author?.tag} (Author ID = ${message.author?.id})`, iconURL: message.author?.displayAvatarURL() })
+         .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n${message.content}\n\n`.slice(0, 4096))
+         .setFooter({ text: `Message ID : ${message.id} • ${new Date()} (posted on ${message.createdAt.toLocaleString("fr-FR")})` });
 
     logsChannel.send({ embeds: [embed] }).then( (message) => utils.insertLogInCache(message.id));
 
@@ -46,7 +46,7 @@ module.exports = async (message) => {
         .catch( (error) => utils.errorHandler(error, null)));
     }
 
-    // Waiting all downloads to finish
+    // Waiting for all downloads to finish
     Promise.allSettled(requests)
         .then( async (output) => {
 
