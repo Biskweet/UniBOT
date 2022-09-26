@@ -16,7 +16,7 @@ module.exports = async (message) => {
     embed.setColor(variables.colors.SuHex)
          .setAuthor({ name: `${message.author?.tag} (Author ID = ${message.author?.id})`, iconURL: message.author?.displayAvatarURL() })
          .setDescription(`**🗑️ | Message supprimé dans ${message.channel} :**\n${message.content}\n\n`.slice(0, 4096))
-         .setFooter({ text: `Message ID : ${message.id} • ${new Date()} (posted on ${message.createdAt.toLocaleString("fr-FR")})` });
+         .setFooter({ text: `Message ID : ${message.id} • ${new Date().toLocaleString("fr-FR")} (posted on ${message.createdAt.toLocaleString("fr-FR")})` });
 
     logsChannel.send({ embeds: [embed] }).then( (message) => utils.insertLogInCache(message.id));
 
