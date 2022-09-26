@@ -7,7 +7,7 @@ module.exports = async (member) => {
     await utils.updateClientActivity();
 
     let memberLeaveLog = "\n------------ " + (new Date()).toJSON() + " -------------" +
-                         `\n${member.user.tag} left the server.` +
+                         `\n${member.user?.tag} (UID=${member.id}) left the server.` +
                          "\n---------------------------------------------------\n";
 
     utils.saveLogs(memberLeaveLog);

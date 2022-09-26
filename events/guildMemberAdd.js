@@ -7,12 +7,12 @@ module.exports = async (member) => {
     await utils.updateClientActivity();
 
     let memberJoinMsg = "\n------------ " + (new Date()).toJSON() + " -------------" +
-                        `\n${member.user.tag} joined the server.` +
+                        `\n${member.user?.tag} (UID=${member.id}) joined the server.` +
                         "\n---------------------------------------------------\n";
 
     utils.saveLogs(memberJoinMsg);
 
-    client.channels.cache.get(variables.channels.startHere).send(`${member} choisissez pour accéder au serveur !`)
+    client.channels.cache.get(variables.channels.startHere).send(`${member}, choisissez pour accéder au serveur !`)
         .then( (pingMessage) => {
             setTimeout(() => {
                 pingMessage.delete();
