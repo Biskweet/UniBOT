@@ -1,6 +1,6 @@
 # UniBOT
 
-### This code is deprecated ofr the most part and has many code smells. It was my first actual project using JS, I don't recommend using it.
+#### This code is deprecated for the most part and has many code smells. It was my first actual project using JS, I don't recommend using it.
 
 DSU's bot repository.
 
