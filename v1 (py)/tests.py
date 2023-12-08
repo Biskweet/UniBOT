@@ -37,4 +37,4 @@ def clean_window():
 def ():
     
 
-bot.run("ODc3NDk0Mjg4OTExNTY0ODUy.YRzcPQ.CLiGzQLecYUCHu3MBfG-Uw33dt8")
+bot.run("")  # Previous token revoked
