@@ -1,5 +1,0 @@
-.env
-node_modules/
-cache.json
-logs.txt
-success.txt
