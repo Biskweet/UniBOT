@@ -1,0 +1,25 @@
+{
+  "name": "unibot",
+  "version": "2.5.0",
+  "description": "DSU's bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Biskweet/UniBOT.git"
+  },
+  "author": "github.com/Biskweet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Biskweet/UniBOT/issues"
+  },
+  "homepage": "https://github.com/Biskweet/UniBOT#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.1",
+    "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
+  }
+}
